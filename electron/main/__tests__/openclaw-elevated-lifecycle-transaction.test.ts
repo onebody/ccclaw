@@ -22,8 +22,8 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
         homeDir: '/Users/test/Library/Application Support/OpenClaw/profiles/main',
       })),
       homeDir: '/Users/test',
-      qclawSafeWorkDir: '/Users/test/Library/Application Support/Qclaw Lite/runtime',
-      userDataDir: '/Users/test/Library/Application Support/Qclaw Lite',
+      ccclawSafeWorkDir: '/Users/test/Library/Application Support/Ccclaw Lite/runtime',
+      userDataDir: '/Users/test/Library/Application Support/Ccclaw Lite',
     })
 
     expect(snapshot.stateRootPath).toBe('/Users/test/Library/Application Support/OpenClaw/profiles/main')
@@ -43,16 +43,16 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
           homeDir: '/Volumes/External/OpenClaw',
         })),
         homeDir: '/Users/test',
-        qclawSafeWorkDir: '/Users/test/Library/Application Support/Qclaw Lite/runtime',
-        userDataDir: '/Users/test/Library/Application Support/Qclaw Lite',
+        ccclawSafeWorkDir: '/Users/test/Library/Application Support/Ccclaw Lite/runtime',
+        userDataDir: '/Users/test/Library/Application Support/Ccclaw Lite',
       })
     ).rejects.toThrow('outside trusted repair scopes')
   })
 
   it('rejects symlinked repair targets that resolve outside trusted repair scopes', async () => {
-    const homeDir = await mkdtemp(join(tmpdir(), 'qclaw-home-'))
-    const externalDir = await mkdtemp(join(tmpdir(), 'qclaw-external-'))
-    const userDataDir = join(homeDir, 'Library', 'Application Support', 'Qclaw Lite')
+    const homeDir = await mkdtemp(join(tmpdir(), 'ccclaw-home-'))
+    const externalDir = await mkdtemp(join(tmpdir(), 'ccclaw-external-'))
+    const userDataDir = join(homeDir, 'Library', 'Application Support', 'Ccclaw Lite')
     const symlinkPath = join(homeDir, '.openclaw-link')
 
     await mkdir(userDataDir, { recursive: true })
@@ -66,7 +66,7 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
             homeDir: symlinkPath,
           })),
           homeDir,
-          qclawSafeWorkDir: join(userDataDir, 'runtime'),
+          ccclawSafeWorkDir: join(userDataDir, 'runtime'),
           userDataDir,
         })
       ).rejects.toThrow('outside trusted repair scopes')
@@ -77,9 +77,9 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
   })
 
   it('rejects repair targets whose parent path escapes trusted scopes through a symlink', async () => {
-    const homeDir = await mkdtemp(join(tmpdir(), 'qclaw-home-'))
-    const externalDir = await mkdtemp(join(tmpdir(), 'qclaw-external-'))
-    const userDataDir = join(homeDir, 'Library', 'Application Support', 'Qclaw Lite')
+    const homeDir = await mkdtemp(join(tmpdir(), 'ccclaw-home-'))
+    const externalDir = await mkdtemp(join(tmpdir(), 'ccclaw-external-'))
+    const userDataDir = join(homeDir, 'Library', 'Application Support', 'Ccclaw Lite')
     const symlinkParentPath = join(homeDir, 'profiles-link')
     const escapedStateRootPath = join(symlinkParentPath, 'main')
 
@@ -95,7 +95,7 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
             homeDir: escapedStateRootPath,
           })),
           homeDir,
-          qclawSafeWorkDir: join(userDataDir, 'runtime'),
+          ccclawSafeWorkDir: join(userDataDir, 'runtime'),
           userDataDir,
         })
       ).rejects.toThrow('outside trusted repair scopes')
@@ -106,9 +106,9 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
   })
 
   it('accepts managed installer roots whose realpath stays inside the trusted safe work directory', async () => {
-    const homeDir = await mkdtemp(join(tmpdir(), 'qclaw-home-'))
-    const userDataDir = join(homeDir, 'Library', 'Application Support', 'Qclaw Lite')
-    const safeWorkDir = await mkdtemp(join(tmpdir(), 'qclaw-safe-work-'))
+    const homeDir = await mkdtemp(join(tmpdir(), 'ccclaw-home-'))
+    const userDataDir = join(homeDir, 'Library', 'Application Support', 'Ccclaw Lite')
+    const safeWorkDir = await mkdtemp(join(tmpdir(), 'ccclaw-safe-work-'))
     const managedInstallerRoot = join(safeWorkDir, 'openclaw-installer')
 
     await mkdir(userDataDir, { recursive: true })
@@ -121,7 +121,7 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
           homeDir: join(homeDir, '.openclaw'),
         })),
         homeDir,
-        qclawSafeWorkDir: safeWorkDir,
+        ccclawSafeWorkDir: safeWorkDir,
         userDataDir,
         includeManagedInstallerRoot: true,
       })
@@ -164,13 +164,13 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
       groupId: 20,
     })
 
-    expect(command).toContain("qclaw_lifecycle_status=\"$?\"")
+    expect(command).toContain("ccclaw_lifecycle_status=\"$?\"")
     expect(command).toContain("mkdir -p '/Users/test/.openclaw'")
     expect(command).toContain("chown -R '501':'20' '/Users/test/.openclaw'")
     expect(command).toContain("chown -R '501':'20' '/Users/test/.npm'")
-    expect(command).toContain('printf \'%s\\n\' "__QCLAW_TXN_LIFECYCLE_STATUS__=$qclaw_lifecycle_status"')
-    expect(command).toContain('printf \'%s\\n\' "__QCLAW_TXN_REPAIR_STATUS__=$qclaw_repair_status"')
-    expect(command).not.toContain('&& (__QCLAW_TXN_LIFECYCLE_STATUS__)')
+    expect(command).toContain('printf \'%s\\n\' "__CCCLAW_TXN_LIFECYCLE_STATUS__=$ccclaw_lifecycle_status"')
+    expect(command).toContain('printf \'%s\\n\' "__CCCLAW_TXN_REPAIR_STATUS__=$ccclaw_repair_status"')
+    expect(command).not.toContain('&& (__CCCLAW_TXN_LIFECYCLE_STATUS__)')
   })
 
   it('repairs symlinked targets via chown -h on the link and recursive repair on the resolved real path', () => {
@@ -222,7 +222,7 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
       })),
       runDirect: vi.fn(async () => ({
         ok: false,
-        stdout: '__QCLAW_TXN_LIFECYCLE_STATUS__=1\n__QCLAW_TXN_REPAIR_STATUS__=0\n',
+        stdout: '__CCCLAW_TXN_LIFECYCLE_STATUS__=1\n__CCCLAW_TXN_REPAIR_STATUS__=0\n',
         stderr: 'npm error code EACCES',
         code: 1,
       })),
@@ -264,7 +264,7 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
       })),
       runDirect: vi.fn(async () => ({
         ok: true,
-        stdout: '__QCLAW_TXN_LIFECYCLE_STATUS__=0\n__QCLAW_TXN_REPAIR_STATUS__=0\n',
+        stdout: '__CCCLAW_TXN_LIFECYCLE_STATUS__=0\n__CCCLAW_TXN_REPAIR_STATUS__=0\n',
         stderr: '',
         code: 0,
       })),
@@ -286,7 +286,7 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
   })
 
   it('treats missing uninstall targets as already cleaned up during verification', async () => {
-    const missingStateRoot = await mkdtemp(join(tmpdir(), 'qclaw-missing-uninstall-'))
+    const missingStateRoot = await mkdtemp(join(tmpdir(), 'ccclaw-missing-uninstall-'))
     await rm(missingStateRoot, { recursive: true, force: true })
 
     const result = await runMacOpenClawElevatedLifecycleTransaction({
@@ -309,7 +309,7 @@ describe('openclaw-elevated-lifecycle-transaction', () => {
       })),
       runDirect: vi.fn(async () => ({
         ok: true,
-        stdout: '__QCLAW_TXN_LIFECYCLE_STATUS__=0\n__QCLAW_TXN_REPAIR_STATUS__=0\n',
+        stdout: '__CCCLAW_TXN_LIFECYCLE_STATUS__=0\n__CCCLAW_TXN_REPAIR_STATUS__=0\n',
         stderr: '',
         code: 0,
       })),

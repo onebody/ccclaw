@@ -68,7 +68,7 @@ export default function OpenClawClassify({
       <Text size="xs" tt="uppercase" lts="0.24em" c="success.4" style={{ opacity: 0.8 }}>OpenClaw Classify</Text>
       <Title order={2} size="h4" fw={600} mt="xs" c="var(--app-text-primary)">安装状态与版本分流</Title>
       <Text size="sm" lh="1.625" mt="xs" c="var(--app-text-tertiary)">
-        Qclaw 会根据当前安装状态决定是直接进入控制面板，还是继续进行首次配置。
+        Ccclaw 会根据当前安装状态决定是直接进入控制面板，还是继续进行首次配置。
       </Text>
 
       <div className="mt-5 rounded-xl border app-border app-bg-tertiary p-4">
@@ -122,7 +122,7 @@ export default function OpenClawClassify({
         <div className="mt-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
           <Title order={3} size="sm" fw={500} c="var(--mantine-color-success-3)">
             {freshManagedInstall
-              ? '已安装最新 OpenClaw，并由 Qclaw 管理'
+              ? '已安装最新 OpenClaw，并由 Ccclaw 管理'
               : '已检测到 OpenClaw，但尚未完成首次初始化'}
           </Title>
           <Text size="sm" lh="1.625" mt="xs" style={{ color: 'rgba(167, 243, 208, 0.85)' }}>
@@ -143,7 +143,7 @@ export default function OpenClawClassify({
         <div className="mt-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
           <Title order={3} size="sm" fw={500} c="var(--mantine-color-success-3)">当前 OpenClaw 已与最新版本一致</Title>
           <Text size="sm" lh="1.625" mt="xs" style={{ color: 'rgba(167, 243, 208, 0.85)' }}>
-            Qclaw 不会改写你现有的安装，只会作为监控与控制面板使用。
+            Ccclaw 不会改写你现有的安装，只会作为监控与控制面板使用。
           </Text>
           <Button
             onClick={() => onProceed('dashboard')}

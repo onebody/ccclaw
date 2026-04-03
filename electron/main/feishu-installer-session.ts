@@ -76,7 +76,7 @@ async function prepareConfigForFeishuInstaller(): Promise<void> {
 }
 
 function resolveBundledFeishuInstallerPackage(): string | null {
-  const envOverride = String(process.env.QCLAW_FEISHU_INSTALLER_TGZ || '').trim()
+  const envOverride = String(process.env.CCCLAW_FEISHU_INSTALLER_TGZ || '').trim()
   if (envOverride && fs.existsSync(envOverride)) {
     return envOverride
   }
@@ -234,7 +234,7 @@ export async function startFeishuInstallerSession(
     process: proc,
     phase: 'running',
     output: commandResolution.bundledPackagePath
-      ? `[Qclaw] 使用应用内预置飞书安装器包: ${commandResolution.bundledPackagePath}\n`
+      ? `[Ccclaw] 使用应用内预置飞书安装器包: ${commandResolution.bundledPackagePath}\n`
       : '',
     code: null,
     ok: false,

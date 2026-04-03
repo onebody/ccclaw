@@ -21,7 +21,7 @@ export function isMacSystemGlobalOpenClawPrefix(
 }
 
 export function isMacOpenClawAdminFallbackEnabledByPolicy(
-  raw = process.env.QCLAW_MAC_OPENCLAW_ADMIN_FALLBACK
+  raw = process.env.CCCLAW_MAC_OPENCLAW_ADMIN_FALLBACK
 ): boolean {
   const normalized = String(raw || '')
     .trim()

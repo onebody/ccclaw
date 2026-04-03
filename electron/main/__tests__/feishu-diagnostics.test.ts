@@ -17,7 +17,7 @@ describe('buildFeishuDiagnosticMessageText', () => {
       sentAt: '2026-03-27T12:34:56.000Z',
     })
 
-    expect(text).toContain('Qclaw 故障排查定位消息')
+    expect(text).toContain('Ccclaw 故障排查定位消息')
     expect(text).toContain('Bot: 默认 Bot')
     expect(text).toContain('accountId: default')
     expect(text).toContain('agentId: feishu-default')

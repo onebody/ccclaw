@@ -13,7 +13,7 @@ const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 const tempDirs: string[] = []
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-runtime-cwd-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-runtime-cwd-'))
   tempDirs.push(dir)
   return dir
 }
@@ -45,7 +45,7 @@ describe('isUnsafeWorkingDirectory', () => {
       })
     ).toBe(true)
     expect(
-      isUnsafeWorkingDirectory('/Volumes/Qclaw Lite/Qclaw Lite.app', {
+      isUnsafeWorkingDirectory('/Volumes/Ccclaw Lite/Ccclaw Lite.app', {
         platform: 'darwin',
         homeDir,
       })
@@ -58,7 +58,7 @@ describe('isUnsafeWorkingDirectory', () => {
 
     expect(
       isUnsafeWorkingDirectory(
-        path.join(homeDir, 'Library', 'Application Support', 'Qclaw Lite', 'runtime'),
+        path.join(homeDir, 'Library', 'Application Support', 'Ccclaw Lite', 'runtime'),
         {
           platform: 'darwin',
           homeDir,
@@ -78,7 +78,7 @@ describe('resolveSafeWorkingDirectory', () => {
       homeDir: path.join(tempDir, 'home'),
       tempDir: path.join(tempDir, 'tmp'),
       env: buildTestEnv({
-        QCLAW_USER_DATA_DIR: userDataDir,
+        CCCLAW_USER_DATA_DIR: userDataDir,
       }),
     })
 
@@ -99,7 +99,7 @@ describe('tryNormalizeProcessCwd', () => {
       homeDir,
       tempDir: path.join(tempDir, 'tmp'),
       env: buildTestEnv({
-        QCLAW_USER_DATA_DIR: userDataDir,
+        CCCLAW_USER_DATA_DIR: userDataDir,
       }),
       cwdGetter: () => path.join(homeDir, 'Desktop', 'Qlite'),
       chdir: (directory) => {
@@ -124,7 +124,7 @@ describe('tryNormalizeProcessCwd', () => {
       homeDir: path.join(tempDir, 'home'),
       tempDir: path.join(tempDir, 'tmp'),
       env: buildTestEnv({
-        QCLAW_USER_DATA_DIR: userDataDir,
+        CCCLAW_USER_DATA_DIR: userDataDir,
       }),
       cwdGetter: () => {
         throw new Error('EPERM: operation not permitted, uv_cwd')

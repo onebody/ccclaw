@@ -375,7 +375,7 @@ async function quarantinePlugins(
     }
   }
 
-  const quarantineRoot = path.join(homeDir, 'qclaw-quarantined-extensions')
+  const quarantineRoot = path.join(homeDir, 'ccclaw-quarantined-extensions')
   const mkdirDirectory = options.mkdirDirectory || mkdir
   const renameDirectory = options.renameDirectory || rename
   try {

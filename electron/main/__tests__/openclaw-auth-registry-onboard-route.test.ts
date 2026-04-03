@@ -27,7 +27,7 @@ function createMinimalPackageRoot(input: {
     manifest: Record<string, unknown>
   }>
 }): string {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-auth-registry-minimal-'))
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-auth-registry-minimal-'))
   const distDir = path.join(tempRoot, 'dist')
   fs.mkdirSync(distDir, { recursive: true })
   const extensionsDir = path.join(tempRoot, 'extensions')

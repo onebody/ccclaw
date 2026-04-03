@@ -21,14 +21,14 @@ import { resolveOpenClawBinaryPath } from './openclaw-package'
 const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const { access } = fs.promises
 
-function resolveManualQClawUninstallStep(): string {
+function resolveManualCCClawUninstallStep(): string {
   if (process.platform === 'darwin') {
-    return '请将 Qclaw 应用拖入废纸篓以完成卸载。'
+    return '请将 Ccclaw 应用拖入废纸篓以完成卸载。'
   }
   if (process.platform === 'win32') {
-    return '请通过“应用和功能”或安装器卸载 Qclaw。'
+    return '请通过“应用和功能”或安装器卸载 Ccclaw。'
   }
-  return '请手动删除或卸载 Qclaw 应用本体。'
+  return '请手动删除或卸载 Ccclaw 应用本体。'
 }
 
 async function uninstallHomebrewPackage(): Promise<{ ok: boolean; error?: string }> {
@@ -207,7 +207,7 @@ function normalizeSelectedCandidateIds(candidateIds: string[] | undefined): stri
 }
 
 function isBatchCleanupEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
-  const raw = String(env.QCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED || '').trim().toLowerCase()
+  const raw = String(env.CCCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED || '').trim().toLowerCase()
   if (!raw) return true
   return raw !== '0' && raw !== 'false' && raw !== 'off'
 }
@@ -271,8 +271,8 @@ function buildRunCompletionMessage(options: {
   const { summary, actionType } = options
   if (summary.total === 0) return '当前没有可处理的 OpenClaw 实例。'
   if (summary.failed === 0 && summary.partial === 0) {
-    return actionType === 'qclaw-uninstall-remove-openclaw'
-      ? `OpenClaw 已清理完成（${summary.success}/${summary.total}），Qclaw 可以继续卸载。`
+    return actionType === 'ccclaw-uninstall-remove-openclaw'
+      ? `OpenClaw 已清理完成（${summary.success}/${summary.total}），Ccclaw 可以继续卸载。`
       : `OpenClaw 已清理完成（${summary.success}/${summary.total}）。`
   }
   return `OpenClaw 批量清理完成：成功 ${summary.success}，部分成功 ${summary.partial}，失败 ${summary.failed}，跳过 ${summary.skipped}。`
@@ -296,7 +296,7 @@ export async function runOpenClawCleanup(
     }
   }
 
-  if (request.actionType === 'qclaw-uninstall-keep-openclaw') {
+  if (request.actionType === 'ccclaw-uninstall-keep-openclaw') {
     const selectedTargets = resolveCleanupTargets({
       candidates: preview.availableCandidates || [],
       selectedCandidateIds: request.selectedCandidateIds || preview.selectedCandidateIds || [],
@@ -343,8 +343,8 @@ export async function runOpenClawCleanup(
       errors: [],
       summary,
       perCandidateResults,
-      message: 'Qclaw 卸载准备已完成，当前不会删除 OpenClaw 或用户数据。',
-      manualNextStep: resolveManualQClawUninstallStep(),
+      message: 'Ccclaw 卸载准备已完成，当前不会删除 OpenClaw 或用户数据。',
+      manualNextStep: resolveManualCCClawUninstallStep(),
     }
   }
 
@@ -466,13 +466,13 @@ export async function runOpenClawCleanup(
       summary,
     }),
     manualNextStep:
-      request.actionType === 'qclaw-uninstall-remove-openclaw' ? resolveManualQClawUninstallStep() : undefined,
+      request.actionType === 'ccclaw-uninstall-remove-openclaw' ? resolveManualCCClawUninstallStep() : undefined,
   }
 }
 
-export async function prepareQClawUninstall(
+export async function prepareCCClawUninstall(
   request: {
-    actionType: 'qclaw-uninstall-keep-openclaw' | 'qclaw-uninstall-remove-openclaw'
+    actionType: 'ccclaw-uninstall-keep-openclaw' | 'ccclaw-uninstall-remove-openclaw'
     backupBeforeDelete: boolean
     selectedCandidateIds?: string[]
   }

@@ -100,7 +100,7 @@ async function runNodeEntry(name, entryPath, entryArgs) {
 }
 
 async function main() {
-  console.log('Qclaw 模型中心回归脚本')
+  console.log('Ccclaw 模型中心回归脚本')
   console.log(`项目目录: ${rootDir}`)
   if (skipTypecheck) {
     console.log('模式: 跳过 TypeScript 类型检查（--skip-typecheck）')

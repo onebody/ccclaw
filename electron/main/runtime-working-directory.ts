@@ -2,8 +2,8 @@ const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const os = process.getBuiltinModule('node:os') as typeof import('node:os')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 
-const SAFE_WORK_DIR_ENV = 'QCLAW_SAFE_WORK_DIR'
-const USER_DATA_DIR_ENV = 'QCLAW_USER_DATA_DIR'
+const SAFE_WORK_DIR_ENV = 'CCCLAW_SAFE_WORK_DIR'
+const USER_DATA_DIR_ENV = 'CCCLAW_USER_DATA_DIR'
 
 export type WorkingDirectoryNormalizationReason =
   | 'cwd-unavailable'
@@ -96,10 +96,10 @@ function buildSafeWorkingDirectoryCandidates(
   const userDataDir = normalizePathValue(options.userDataDir || options.env[USER_DATA_DIR_ENV] || '')
   const appSupportDir =
     options.platform === 'darwin' && options.homeDir
-      ? path.join(options.homeDir, 'Library', 'Application Support', 'Qclaw Lite', 'runtime')
+      ? path.join(options.homeDir, 'Library', 'Application Support', 'Ccclaw Lite', 'runtime')
       : ''
-  const homeFallbackDir = options.homeDir ? path.join(options.homeDir, '.qclaw-lite', 'runtime') : ''
-  const tempFallbackDir = options.tempDir ? path.join(options.tempDir, 'qclaw-lite', 'runtime') : ''
+  const homeFallbackDir = options.homeDir ? path.join(options.homeDir, '.ccclaw-lite', 'runtime') : ''
+  const tempFallbackDir = options.tempDir ? path.join(options.tempDir, 'ccclaw-lite', 'runtime') : ''
 
   return uniquePaths(
     [
@@ -182,7 +182,7 @@ export function resolveSafeWorkingDirectory(
   }
 
   throw new Error(
-    lastError?.message || 'Unable to resolve a safe working directory for Qclaw child processes'
+    lastError?.message || 'Unable to resolve a safe working directory for Ccclaw child processes'
   )
 }
 

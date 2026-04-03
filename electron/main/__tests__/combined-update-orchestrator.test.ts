@@ -3,17 +3,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const {
   checkOpenClawUpgradeMock,
   runOpenClawUpgradeMock,
-  checkQClawUpdateMock,
-  downloadQClawUpdateMock,
-  getQClawUpdateStatusMock,
-  installQClawUpdateMock,
+  checkCCClawUpdateMock,
+  downloadCCClawUpdateMock,
+  getCCClawUpdateStatusMock,
+  installCCClawUpdateMock,
 } = vi.hoisted(() => ({
   checkOpenClawUpgradeMock: vi.fn(),
   runOpenClawUpgradeMock: vi.fn(),
-  checkQClawUpdateMock: vi.fn(),
-  downloadQClawUpdateMock: vi.fn(),
-  getQClawUpdateStatusMock: vi.fn(),
-  installQClawUpdateMock: vi.fn(),
+  checkCCClawUpdateMock: vi.fn(),
+  downloadCCClawUpdateMock: vi.fn(),
+  getCCClawUpdateStatusMock: vi.fn(),
+  installCCClawUpdateMock: vi.fn(),
 }))
 
 vi.mock('../openclaw-upgrade-service', () => ({
@@ -21,11 +21,11 @@ vi.mock('../openclaw-upgrade-service', () => ({
   runOpenClawUpgrade: runOpenClawUpgradeMock,
 }))
 
-vi.mock('../qclaw-update-service', () => ({
-  checkQClawUpdate: checkQClawUpdateMock,
-  downloadQClawUpdate: downloadQClawUpdateMock,
-  getQClawUpdateStatus: getQClawUpdateStatusMock,
-  installQClawUpdate: installQClawUpdateMock,
+vi.mock('../ccclaw-update-service', () => ({
+  checkCCClawUpdate: checkCCClawUpdateMock,
+  downloadCCClawUpdate: downloadCCClawUpdateMock,
+  getCCClawUpdateStatus: getCCClawUpdateStatusMock,
+  installCCClawUpdate: installCCClawUpdateMock,
 }))
 
 import { checkCombinedUpdate, runCombinedUpdate } from '../combined-update-orchestrator'
@@ -34,12 +34,12 @@ describe('combined update orchestrator', () => {
   beforeEach(() => {
     checkOpenClawUpgradeMock.mockReset()
     runOpenClawUpgradeMock.mockReset()
-    checkQClawUpdateMock.mockReset()
-    downloadQClawUpdateMock.mockReset()
-    getQClawUpdateStatusMock.mockReset()
-    installQClawUpdateMock.mockReset()
+    checkCCClawUpdateMock.mockReset()
+    downloadCCClawUpdateMock.mockReset()
+    getCCClawUpdateStatusMock.mockReset()
+    installCCClawUpdateMock.mockReset()
 
-    getQClawUpdateStatusMock.mockResolvedValue({
+    getCCClawUpdateStatusMock.mockResolvedValue({
       ok: true,
       supported: true,
       configured: true,
@@ -49,7 +49,7 @@ describe('combined update orchestrator', () => {
       progressPercent: null,
       downloaded: false,
     })
-    checkQClawUpdateMock.mockResolvedValue({
+    checkCCClawUpdateMock.mockResolvedValue({
       ok: true,
       supported: true,
       configured: true,
@@ -59,7 +59,7 @@ describe('combined update orchestrator', () => {
       progressPercent: null,
       downloaded: false,
     })
-    downloadQClawUpdateMock.mockResolvedValue({
+    downloadCCClawUpdateMock.mockResolvedValue({
       ok: true,
       status: {
         ok: true,
@@ -83,7 +83,7 @@ describe('combined update orchestrator', () => {
       gatewayRestored: true,
       warnings: [],
     })
-    installQClawUpdateMock.mockResolvedValue({
+    installCCClawUpdateMock.mockResolvedValue({
       ok: true,
       status: {
         ok: true,

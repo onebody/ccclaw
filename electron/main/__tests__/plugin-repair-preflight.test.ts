@@ -4,7 +4,7 @@ import { runPluginRepairPreflight } from '../plugin-repair-preflight'
 
 describe('runPluginRepairPreflight', () => {
   it('keeps the preflight best-effort when the repair step fails', async () => {
-    const resolveHomeDir = vi.fn(async () => '/tmp/qclaw-openclaw-home')
+    const resolveHomeDir = vi.fn(async () => '/tmp/ccclaw-openclaw-home')
     const repair = vi.fn(async () => {
       throw new Error('repair exploded')
     })
@@ -17,7 +17,7 @@ describe('runPluginRepairPreflight', () => {
     ).resolves.toBeUndefined()
 
     expect(resolveHomeDir).toHaveBeenCalledTimes(1)
-    expect(repair).toHaveBeenCalledWith('/tmp/qclaw-openclaw-home')
+    expect(repair).toHaveBeenCalledWith('/tmp/ccclaw-openclaw-home')
   })
 
   it('skips the repair step when no home directory is available', async () => {

@@ -14,25 +14,25 @@ const fs = (process.getBuiltinModule('node:fs') as typeof import('node:fs')).pro
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 
 describe('openclaw runtime reconcile store', () => {
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
   let userDataDir = ''
 
   beforeEach(async () => {
     userDataDir = path.join(
       '/tmp',
-      `qclaw-runtime-reconcile-${Date.now()}-${Math.random().toString(16).slice(2)}`
+      `ccclaw-runtime-reconcile-${Date.now()}-${Math.random().toString(16).slice(2)}`
     )
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
     await fs.rm(userDataDir, { recursive: true, force: true })
   })
 
   afterEach(async () => {
     await fs.rm(userDataDir, { recursive: true, force: true })
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
       return
     }
-    process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+    process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
   })
 
   it('returns a default store when no persisted state exists', async () => {

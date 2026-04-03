@@ -59,7 +59,7 @@ describe('openclaw model config isolation boundaries', () => {
       },
       {
         runCommandWithEnv,
-        createTempDir: vi.fn(async () => '/tmp/qclaw-provider-validate-isolation-test'),
+        createTempDir: vi.fn(async () => '/tmp/ccclaw-provider-validate-isolation-test'),
         removeTempDir: vi.fn(async () => {}),
       }
     )

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
-  QCLAW_PERMISSION_REPAIR_MARKER,
+  CCCLAW_PERMISSION_REPAIR_MARKER,
   runCliLikeWithPermissionAutoRepair,
   runFsWithPermissionAutoRepair,
 } from '../openclaw-permission-auto-repair'
@@ -11,12 +11,12 @@ function createOpenClawPaths(homeDir: string) {
     configFile: `${homeDir}/openclaw.json`,
     envFile: `${homeDir}/.env`,
     credentialsDir: `${homeDir}/credentials`,
-    modelCatalogCacheFile: `${homeDir}/qclaw-model-catalog-cache.json`,
+    modelCatalogCacheFile: `${homeDir}/ccclaw-model-catalog-cache.json`,
     displayHomeDir: '~/.openclaw',
     displayConfigFile: '~/.openclaw/openclaw.json',
     displayEnvFile: '~/.openclaw/.env',
     displayCredentialsDir: '~/.openclaw/credentials',
-    displayModelCatalogCacheFile: '~/.openclaw/qclaw-model-catalog-cache.json',
+    displayModelCatalogCacheFile: '~/.openclaw/ccclaw-model-catalog-cache.json',
   }
 }
 
@@ -53,9 +53,9 @@ describe('openclaw permission auto repair', () => {
       {
         platform: 'darwin',
         homeDir: '/Users/tester',
-        userDataDir: '/Users/tester/Library/Application Support/Qclaw',
-        safeWorkDir: '/Users/tester/Library/Application Support/Qclaw/runtime',
-        pluginNpmCacheDir: '/tmp/qclaw-lite/npm-cache',
+        userDataDir: '/Users/tester/Library/Application Support/Ccclaw',
+        safeWorkDir: '/Users/tester/Library/Application Support/Ccclaw/runtime',
+        pluginNpmCacheDir: '/tmp/ccclaw-lite/npm-cache',
         currentUser: {
           uid: 501,
           gid: 20,
@@ -112,9 +112,9 @@ describe('openclaw permission auto repair', () => {
       {
         platform: 'darwin',
         homeDir: '/Users/tester',
-        userDataDir: '/Users/tester/Library/Application Support/Qclaw',
-        safeWorkDir: '/Users/tester/Library/Application Support/Qclaw/runtime',
-        pluginNpmCacheDir: '/tmp/qclaw-lite/npm-cache',
+        userDataDir: '/Users/tester/Library/Application Support/Ccclaw',
+        safeWorkDir: '/Users/tester/Library/Application Support/Ccclaw/runtime',
+        pluginNpmCacheDir: '/tmp/ccclaw-lite/npm-cache',
         currentUser: {
           uid: 501,
           gid: 20,
@@ -159,9 +159,9 @@ describe('openclaw permission auto repair', () => {
       {
         platform: 'darwin',
         homeDir: '/Users/tester',
-        userDataDir: '/Users/tester/Library/Application Support/Qclaw',
-        safeWorkDir: '/Users/tester/Library/Application Support/Qclaw/runtime',
-        pluginNpmCacheDir: '/tmp/qclaw-lite/npm-cache',
+        userDataDir: '/Users/tester/Library/Application Support/Ccclaw',
+        safeWorkDir: '/Users/tester/Library/Application Support/Ccclaw/runtime',
+        pluginNpmCacheDir: '/tmp/ccclaw-lite/npm-cache',
         currentUser: {
           uid: 501,
           gid: 20,
@@ -183,8 +183,8 @@ describe('openclaw permission auto repair', () => {
     expect(execute).toHaveBeenCalledTimes(1)
     expect(runPrivilegedRepair).not.toHaveBeenCalled()
     expect(result.ok).toBe(false)
-    expect(result.stderr).toContain(QCLAW_PERMISSION_REPAIR_MARKER)
-    expect(result.stderr).toContain('当前故障路径不在 Qclaw 的安全自动修复范围内')
+    expect(result.stderr).toContain(CCCLAW_PERMISSION_REPAIR_MARKER)
+    expect(result.stderr).toContain('当前故障路径不在 Ccclaw 的安全自动修复范围内')
   })
 
   it('fails closed for direct commands without path context in system domains', async () => {
@@ -202,14 +202,14 @@ describe('openclaw permission auto repair', () => {
         operation: 'direct',
         controlDomain: 'upgrade',
         command: 'launchctl',
-        args: ['remove', 'com.example.qclaw'],
+        args: ['remove', 'com.example.ccclaw'],
       },
       {
         platform: 'darwin',
         homeDir: '/Users/tester',
-        userDataDir: '/Users/tester/Library/Application Support/Qclaw',
-        safeWorkDir: '/Users/tester/Library/Application Support/Qclaw/runtime',
-        pluginNpmCacheDir: '/tmp/qclaw-lite/npm-cache',
+        userDataDir: '/Users/tester/Library/Application Support/Ccclaw',
+        safeWorkDir: '/Users/tester/Library/Application Support/Ccclaw/runtime',
+        pluginNpmCacheDir: '/tmp/ccclaw-lite/npm-cache',
         currentUser: {
           uid: 501,
           gid: 20,

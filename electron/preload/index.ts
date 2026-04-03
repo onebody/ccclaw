@@ -85,10 +85,10 @@ export const api = {
     ipcRenderer.invoke('openclaw:cleanup:run', request),
   runOpenClawDataCleanup: (request: OpenClawDataCleanupRunRequest) =>
     ipcRenderer.invoke('openclaw:data-cleanup:run', request),
-  previewQClawUninstall: (request: OpenClawCleanupPreviewRequest) =>
-    ipcRenderer.invoke('qclaw:uninstall:preview', request),
-  prepareQClawUninstall: (request: OpenClawCleanupRunRequest) =>
-    ipcRenderer.invoke('qclaw:uninstall:prepare', request),
+  previewCCClawUninstall: (request: OpenClawCleanupPreviewRequest) =>
+    ipcRenderer.invoke('ccclaw:uninstall:preview', request),
+  prepareCCClawUninstall: (request: OpenClawCleanupRunRequest) =>
+    ipcRenderer.invoke('ccclaw:uninstall:prepare', request),
   listOpenClawBackups: () => ipcRenderer.invoke('openclaw:backup:list'),
   getOpenClawBackupRoot: (): Promise<OpenClawBackupRootInfo> => ipcRenderer.invoke('openclaw:backup:get-root'),
   deleteOpenClawBackup: (backupId: string) => ipcRenderer.invoke('openclaw:backup:delete', backupId),
@@ -101,11 +101,11 @@ export const api = {
     ipcRenderer.invoke('openclaw:restore:run', backupId, scope),
   checkOpenClawUpgrade: () => ipcRenderer.invoke('openclaw:upgrade:check'),
   runOpenClawUpgrade: () => ipcRenderer.invoke('openclaw:upgrade:run'),
-  getQClawUpdateStatus: () => ipcRenderer.invoke('qclaw:update:status'),
-  checkQClawUpdate: () => ipcRenderer.invoke('qclaw:update:check'),
-  downloadQClawUpdate: () => ipcRenderer.invoke('qclaw:update:download'),
-  installQClawUpdate: () => ipcRenderer.invoke('qclaw:update:install'),
-  openQClawUpdateDownloadUrl: () => ipcRenderer.invoke('qclaw:update:open-download-url'),
+  getCCClawUpdateStatus: () => ipcRenderer.invoke('ccclaw:update:status'),
+  checkCCClawUpdate: () => ipcRenderer.invoke('ccclaw:update:check'),
+  downloadCCClawUpdate: () => ipcRenderer.invoke('ccclaw:update:download'),
+  installCCClawUpdate: () => ipcRenderer.invoke('ccclaw:update:install'),
+  openCCClawUpdateDownloadUrl: () => ipcRenderer.invoke('ccclaw:update:open-download-url'),
   checkCombinedUpdate: () => ipcRenderer.invoke('combined:update:check'),
   runCombinedUpdate: () => ipcRenderer.invoke('combined:update:run'),
 

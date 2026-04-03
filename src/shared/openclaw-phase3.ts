@@ -78,8 +78,8 @@ export interface OpenClawBackupDeleteResult {
 
 export type OpenClawCleanupActionType =
   | 'remove-openclaw'
-  | 'qclaw-uninstall-keep-openclaw'
-  | 'qclaw-uninstall-remove-openclaw'
+  | 'ccclaw-uninstall-keep-openclaw'
+  | 'ccclaw-uninstall-remove-openclaw'
 
 export interface OpenClawCleanupPreviewRequest {
   actionType: OpenClawCleanupActionType

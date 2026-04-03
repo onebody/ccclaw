@@ -22,7 +22,7 @@ const STORE_VERSION = 1
 const STORE_RELATIVE_PATH = path.join('data-guard', 'ownership-store.json')
 
 function resolveUserDataDirectory(): string {
-  return String(process.env.QCLAW_USER_DATA_DIR || path.join(homedir(), '.qclaw-lite')).trim()
+  return String(process.env.CCCLAW_USER_DATA_DIR || path.join(homedir(), '.ccclaw-lite')).trim()
 }
 
 function resolveStorePath(): string {
@@ -139,7 +139,7 @@ function touchManagedFileRecord(
       {
         filePath,
         kind,
-        source: 'qclaw-lite',
+        source: 'ccclaw-lite',
         firstManagedAt: now,
         lastManagedAt: now,
       },
@@ -172,7 +172,7 @@ function touchJsonPathRecords(
     nextRecords.push({
       filePath,
       jsonPath,
-      source: 'qclaw-lite',
+      source: 'ccclaw-lite',
       firstManagedAt: now,
       lastManagedAt: now,
     })
@@ -201,7 +201,7 @@ function touchShellBlockRecords(
       ...shellBlock,
       firstManagedAt: shellBlock.firstManagedAt || now,
       lastManagedAt: now,
-      source: 'qclaw-lite',
+      source: 'ccclaw-lite',
     })
   }
 

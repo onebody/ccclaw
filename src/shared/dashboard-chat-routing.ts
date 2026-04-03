@@ -55,8 +55,8 @@ function describeSessionSource(session: ChatSessionSummary | null | undefined, o
   if (!session) return '未选择会话'
   if (origin === 'local-direct') {
     return session.cachePresence === 'local-shell' && !session.hasLocalTranscript
-      ? 'Qclaw 本地空会话'
-      : 'Qclaw 本地会话'
+      ? 'Ccclaw 本地空会话'
+      : 'Ccclaw 本地会话'
   }
   if (origin === 'external-direct') {
     if (isUpstreamConfirmedDirectShadow(session)) {

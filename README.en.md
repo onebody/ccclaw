@@ -1,10 +1,10 @@
 <br />
 <div align="center">
-  <a href="https://github.com/qiuzhi2046/Qclaw">
-    <img src="src/assets/logo.png" alt="Qclaw Logo" width="128" height="128">
+  <a href="https://github.com/onebody/Ccclaw">
+    <img src="src/assets/logo.png" alt="Ccclaw Logo" width="128" height="128">
   </a>
 
-  <h1 align="center" style="margin-top: 0.2em;">Qclaw</h1>
+  <h1 align="center" style="margin-top: 0.2em;">Ccclaw</h1>
 
   [![Electron][electron-badge]][electron-url]
   [![React][react-badge]][react-url]
@@ -15,14 +15,14 @@
   <p align="center">
     <h3>OpenClaw for everyone, without touching the command line</h3>
     <br />
-    <a href="https://qclawai.com/"><strong>Visit Website &raquo;</strong></a>
+    <a href="https://ccclawai.com/"><strong>Visit Website &raquo;</strong></a>
     <br />
     <br />
-    <a href="https://github.com/qiuzhi2046/Qclaw/blob/main/README.md">简体中文</a>
+    <a href="https://github.com/onebody/Ccclaw/blob/main/README.md">简体中文</a>
     &middot;
-    <a href="https://github.com/qiuzhi2046/Qclaw/issues/new?labels=bug">Report Bug</a>
+    <a href="https://github.com/onebody/Ccclaw/issues/new?labels=bug">Report Bug</a>
     &middot;
-    <a href="https://github.com/qiuzhi2046/Qclaw/issues/new?labels=enhancement">Request Feature</a>
+    <a href="https://github.com/onebody/Ccclaw/issues/new?labels=enhancement">Request Feature</a>
   </p>
 </div>
 
@@ -68,7 +68,7 @@
 
 ## Why This Project Exists
 
-Qclaw started with a simple goal: build a practical desktop companion for OpenClaw so everyone can install it, configure it, and actually use it with confidence.
+Ccclaw started with a simple goal: build a practical desktop companion for OpenClaw so everyone can install it, configure it, and actually use it with confidence.
 
 - Lower the barrier by turning complex CLI and config steps into simple desktop interactions
 - Make powerful AI tooling more accessible to everyone
@@ -78,15 +78,15 @@ Qclaw started with a simple goal: build a practical desktop companion for OpenCl
 
 ### Step 1: Download and install
 
-- Download and open the Qclaw Lite client
-  - Website: https://qclawai.com/
-  - GitHub Releases: [Download the latest version](https://github.com/qiuzhi2046/Qclaw/releases)
+- Download and open the Ccclaw Lite client
+  - Website: https://ccclawai.com/
+  - GitHub Releases: [Download the latest version](https://github.com/onebody/Ccclaw/releases)
 - Read the safety notice and confirm before continuing
 
 ### Step 2: Prepare the environment
 
 - Run the environment check
-  - If an existing OpenClaw setup is detected, Qclaw can import it directly
+  - If an existing OpenClaw setup is detected, Ccclaw can import it directly
 - Follow the on-screen guidance to begin configuration
 
 ### Step 3: Configure models
@@ -110,14 +110,14 @@ Qclaw started with a simple goal: build a practical desktop companion for OpenCl
 - Start conversations directly in the desktop client
 - Or test your AI assistant inside the IM tools you just connected
 
-> 💡 Closing the Qclaw Lite window does not stop OpenClaw in the background. Your IM channels continue to work normally.
+> 💡 Closing the Ccclaw Lite window does not stop OpenClaw in the background. Your IM channels continue to work normally.
 
 ## Development
 
 ### Recommended development environment
 
 - macOS
-- Qclaw (OpenClaw)
+- Ccclaw (OpenClaw)
 - [Codex](https://github.com/openai/codex) or [Claude Code](https://claude.ai/code)
 - Node.js 24, with 22 as the minimum supported version for local development
 
@@ -125,8 +125,8 @@ Qclaw started with a simple goal: build a practical desktop companion for OpenCl
 
 ```bash
 # Clone the repository
-git clone https://github.com/qiuzhi2046/Qclaw.git
-cd Qclaw
+git clone https://github.com/onebody/Ccclaw.git
+cd Ccclaw
 
 # Install dependencies
 npm install
@@ -176,7 +176,7 @@ build/              App icons and packaging resources
 
 ```text
 ┌─────────────────────────────────────────────────────────┐
-│                           Qclaw                         │
+│                           Ccclaw                         │
 │                                                         │
 │  ┌──────────────────┐         ┌──────────────────────┐  │
 │  │   Main Process   │         │  Renderer Process    │  │
@@ -207,7 +207,7 @@ build/              App icons and packaging resources
 ## Known Issues
 
 - This document tracks the current known limitations and bugs
-- Please check [Issues](https://github.com/qiuzhi2046/Qclaw/issues) for specific bug reports and feature requests
+- Please check [Issues](https://github.com/onebody/Ccclaw/issues) for specific bug reports and feature requests
 
 ## Supported Platforms
 
@@ -217,13 +217,13 @@ build/              App icons and packaging resources
 
 ## Contributing
 
-We welcome everyone with ideas and a willingness to contribute to Qclaw. It is thanks to contributors like you that this project continues to improve.
+We welcome everyone with ideas and a willingness to contribute to Ccclaw. It is thanks to contributors like you that this project continues to improve.
 
 This guide will help you understand how to get involved in the project. Whether you want to report a bug, propose a new feature, or submit code, you are very welcome here.
 
 We also actively welcome contributions created with AI coding tools. You do not need to be a professional developer to contribute something valuable.
 
-If Qclaw becomes your first open-source contribution, we would be happy to see it happen here.
+If Ccclaw becomes your first open-source contribution, we would be happy to see it happen here.
 
 Contribution guide:
 
@@ -231,10 +231,10 @@ Beginner-friendly contribution guide:
 
 ## Community
 
-- **Qclaw open-source community group**
+- **Ccclaw open-source community group**
 
 <p>
-  <img src="docs/images/feishu_qrcode.png" alt="Qclaw community QR code" height="180">
+  <img src="docs/images/feishu_qrcode.png" alt="Ccclaw community QR code" height="180">
 </p>
 
 ### Community guidelines
@@ -253,12 +253,12 @@ Beginner-friendly contribution guide:
 **WeChat official account**
 
 <p>
-  <img src="docs/images/wechat-search.png" alt="Search Qclaw on WeChat" height="120">
+  <img src="docs/images/wechat-search.png" alt="Search Ccclaw on WeChat" height="120">
 </p>
 
 ## Join Us
 
-We welcome developers and related talent to join us. Please send your resume to: join@qiuzhi2046.com
+We welcome developers and related talent to join us. Please send your resume to: join@onebody.com
 
 We may not offer the benefits of a large company yet, but we can offer a focused environment with minimal process overhead and unrestricted access to AI tooling.
 
@@ -272,11 +272,11 @@ Distributed under the Apache-2.0 License. See [LICENSE](LICENSE) for details.
 
 See the contributors list on GitHub:
 
-- https://github.com/qiuzhi2046/Qclaw/graphs/contributors
+- https://github.com/onebody/Ccclaw/graphs/contributors
 
 ## Acknowledgements
 
-Thanks to OpenClaw. Without it, Qclaw would not exist. We are simply building a more approachable bridge on top of something powerful.
+Thanks to OpenClaw. Without it, Ccclaw would not exist. We are simply building a more approachable bridge on top of something powerful.
 
 Thanks to Electron, React, Vite, Mantine, and the many open-source authors whose work makes this project possible.
 
@@ -321,4 +321,4 @@ Finally, thanks to everyone willing to try, share, and bring more warmth to tech
 [xiaohongshu-shield]: https://img.shields.io/badge/Xiaohongshu-FF2442?style=for-the-badge&logo=xiaohongshu&logoColor=white
 [xiaohongshu-url]: https://www.xiaohongshu.com/user/profile/63b622ab00000000260066bd
 [youtube-shield]: https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white
-[youtube-url]: https://www.youtube.com/@qiuzhi2046
+[youtube-url]: https://www.youtube.com/@onebody

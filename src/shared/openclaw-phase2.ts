@@ -5,7 +5,7 @@ export type OpenClawManagedFileKind = 'config' | 'env' | 'credentials' | 'backup
 export interface OpenClawManagedFileRecord {
   filePath: string
   kind: OpenClawManagedFileKind
-  source: 'qclaw-lite'
+  source: 'ccclaw-lite'
   firstManagedAt: string
   lastManagedAt: string
 }
@@ -13,7 +13,7 @@ export interface OpenClawManagedFileRecord {
 export interface OpenClawJsonPathOwnershipRecord {
   filePath: string
   jsonPath: string
-  source: 'qclaw-lite'
+  source: 'ccclaw-lite'
   firstManagedAt: string
   lastManagedAt: string
 }
@@ -26,7 +26,7 @@ export interface OpenClawShellManagedBlockRecord {
   blockType: OpenClawShellManagedBlockType
   startMarker: string
   endMarker: string
-  source: 'qclaw-lite'
+  source: 'ccclaw-lite'
   firstManagedAt: string
   lastManagedAt: string
 }

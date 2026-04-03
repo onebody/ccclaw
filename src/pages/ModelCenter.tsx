@@ -411,7 +411,7 @@ function buildCapabilityMismatchReason(
     method.route.cliFlag &&
     !capabilities.onboardFlags.includes(method.route.cliFlag)
   ) {
-    return '当前 OpenClaw 版本未暴露该认证所需的 CLI flag，Qclaw 无法安全执行该认证方式。'
+    return '当前 OpenClaw 版本未暴露该认证所需的 CLI flag，Ccclaw 无法安全执行该认证方式。'
   }
 
   if (method.route.kind === 'models-auth-login' && !capabilities.supports.modelsAuthLogin) {

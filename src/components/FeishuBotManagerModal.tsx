@@ -230,8 +230,8 @@ export default function FeishuBotManagerModal({
     feishuInstallerPromptAutoReplyKeyRef.current = promptKey
     setFeishuInstallerNotice(
       feishuBotSetupMode === 'link'
-        ? '检测到官方安装器询问是否复用已存在的飞书机器人，Qclaw 已自动回复 "Y"。'
-        : '检测到官方安装器询问是否复用已存在的飞书机器人，Qclaw 已自动回复 "n"，继续走新建机器人流程。'
+        ? '检测到官方安装器询问是否复用已存在的飞书机器人，Ccclaw 已自动回复 "Y"。'
+        : '检测到官方安装器询问是否复用已存在的飞书机器人，Ccclaw 已自动回复 "n"，继续走新建机器人流程。'
     )
 
     void sendFeishuInstallerInput(`${autoReply}\n`).then((ok) => {

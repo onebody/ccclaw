@@ -1528,7 +1528,7 @@ export default function Dashboard({
         withCloseButton={!pluginCenterRunning}
       >
         <Text size="sm" className="app-text-secondary" mb="md">
-          选择一个渠道后，Qclaw 会先检查并修复坏插件环境，再安装对应插件。整个过程中都会显示进度条。
+          选择一个渠道后，Ccclaw 会先检查并修复坏插件环境，再安装对应插件。整个过程中都会显示进度条。
         </Text>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

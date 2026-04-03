@@ -94,12 +94,12 @@ describe('createEnvCheckRestartState', () => {
   it('tracks the active takeover failure and clears it once manual backup is acknowledged', () => {
     const summary = {
       detected: true,
-      backupRootDirectory: '~/Documents/Qclaw Lite Backups',
+      backupRootDirectory: '~/Documents/Ccclaw Lite Backups',
       failures: [
         {
           candidateId: 'candidate-1',
           displaySourcePath: '~/.openclaw',
-          displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/baseline-manual',
+          displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/baseline-manual',
           message: 'backup failed',
         },
       ],
@@ -110,7 +110,7 @@ describe('createEnvCheckRestartState', () => {
     })
 
     expect(formatTakeoverFailureManualBackupWarning(summary.failures[0])).toContain(
-      '请将 ~/.openclaw 复制到 ~/Documents/Qclaw Lite Backups/baseline-manual'
+      '请将 ~/.openclaw 复制到 ~/Documents/Ccclaw Lite Backups/baseline-manual'
     )
 
     expect(clearTakeoverFailure(summary, 'candidate-1')).toMatchObject({
@@ -130,8 +130,8 @@ describe('createEnvCheckRestartState', () => {
             reason: 'manual-backup-required',
             sourcePath: '/Users/test/.openclaw',
             displaySourcePath: '~/.openclaw',
-            suggestedArchivePath: '/Users/test/Documents/Qclaw Lite Backups/manual-baseline',
-            displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/manual-baseline',
+            suggestedArchivePath: '/Users/test/Documents/Ccclaw Lite Backups/manual-baseline',
+            displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/manual-baseline',
           },
         },
         {
@@ -159,21 +159,21 @@ describe('createEnvCheckRestartState', () => {
   it('uses the effective backup root for takeover prompts when backup lookup resolves a fallback root', async () => {
     await expect(
       resolveTakeoverBackupRootDirectory(
-        { defaultBackupDirectory: '~/Documents/Qclaw Lite Backups' },
-        async () => ({ displayRootDirectory: '~/Library/Application Support/Qclaw Lite/Backups' })
+        { defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups' },
+        async () => ({ displayRootDirectory: '~/Library/Application Support/Ccclaw Lite/Backups' })
       )
-    ).resolves.toBe('~/Library/Application Support/Qclaw Lite/Backups')
+    ).resolves.toBe('~/Library/Application Support/Ccclaw Lite/Backups')
   })
 
   it('falls back to the discovery backup directory when backup lookup fails', async () => {
     await expect(
       resolveTakeoverBackupRootDirectory(
-        { defaultBackupDirectory: '~/Documents/Qclaw Lite Backups' },
+        { defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups' },
         async () => {
           throw new Error('backup root unavailable')
         }
       )
-    ).resolves.toBe('~/Documents/Qclaw Lite Backups')
+    ).resolves.toBe('~/Documents/Ccclaw Lite Backups')
   })
 
   it('starts startup plugin repair without blocking env checks', async () => {
@@ -253,7 +253,7 @@ describe('createEnvCheckRestartState', () => {
         historyDataCandidates: [],
         errors: [],
         warnings: [],
-        defaultBackupDirectory: '~/Documents/Qclaw Lite Backups',
+        defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups',
       },
       {
         ok: true,
@@ -323,7 +323,7 @@ describe('createEnvCheckRestartState', () => {
         historyDataCandidates: [],
         errors: [],
         warnings: [],
-        defaultBackupDirectory: '~/Documents/Qclaw Lite Backups',
+        defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups',
       },
       {
         ok: false,
@@ -381,7 +381,7 @@ describe('createEnvCheckRestartState', () => {
         stateRoot: '/Users/test/.openclaw',
         displayConfigPath: '~/.openclaw/openclaw.json',
         displayStateRoot: '~/.openclaw',
-        ownershipState: 'qclaw-installed',
+        ownershipState: 'ccclaw-installed',
         installFingerprint: 'fingerprint-1',
         baselineBackup: null,
         baselineBackupBypass: null,
@@ -407,7 +407,7 @@ describe('createEnvCheckRestartState', () => {
     expect(message).toContain('当前版本：2026.3.28')
     expect(message).toContain('目标版本：2026.3.24')
     expect(message).toContain('自动回退 OpenClaw')
-    expect(message).toContain('Qclaw 将立即退出')
+    expect(message).toContain('Ccclaw 将立即退出')
   })
 
   it('keeps supported custom installs non-blocking while requiring manual upgrade outside the app', () => {
@@ -438,7 +438,7 @@ describe('createEnvCheckRestartState', () => {
         historyDataCandidates: [],
         errors: [],
         warnings: [],
-        defaultBackupDirectory: '~/Documents/Qclaw Lite Backups',
+        defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups',
       },
       {
         ok: true,

@@ -354,7 +354,7 @@ describe('validateProviderCredential', () => {
         })
       )
     )
-    const createTempDir = vi.fn(async () => '/tmp/qclaw-provider-validate-test')
+    const createTempDir = vi.fn(async () => '/tmp/ccclaw-provider-validate-test')
     const removeTempDir = vi.fn(async () => {})
 
     const result = await validateProviderCredential(
@@ -399,11 +399,11 @@ describe('validateProviderCredential', () => {
         MOLTBOT_STATE_DIR: undefined,
         OPENAI_API_KEY: 'sk-openai-test',
         OPENAI_BASE_URL: undefined,
-        OPENCLAW_HOME: '/tmp/qclaw-provider-validate-test',
+        OPENCLAW_HOME: '/tmp/ccclaw-provider-validate-test',
         OPENCLAW_AUTH_STORE_READONLY: '1',
       })
     )
-    expect(removeTempDir).toHaveBeenCalledWith('/tmp/qclaw-provider-validate-test')
+    expect(removeTempDir).toHaveBeenCalledWith('/tmp/ccclaw-provider-validate-test')
   })
 
   it('fails closed when probe results are missing even if the command itself succeeds', async () => {
@@ -417,7 +417,7 @@ describe('validateProviderCredential', () => {
       },
       {
         runCommandWithEnv,
-        createTempDir: async () => '/tmp/qclaw-provider-validate-empty',
+        createTempDir: async () => '/tmp/ccclaw-provider-validate-empty',
         removeTempDir: async () => {},
       }
     )
@@ -448,7 +448,7 @@ describe('validateProviderCredential', () => {
       },
       {
         runCommandWithEnv,
-        createTempDir: async () => '/tmp/qclaw-provider-validate-missing',
+        createTempDir: async () => '/tmp/ccclaw-provider-validate-missing',
         removeTempDir: async () => {},
       }
     )

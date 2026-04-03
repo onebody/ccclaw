@@ -149,7 +149,7 @@ async function fetchNotaryLog(submissionId, credentials) {
 
 export async function notarizeApp(appPath) {
   const credentials = resolveNotaryCredentials()
-  const tempDir = await mkdtemp(path.join(tmpdir(), 'qclaw-notary-'))
+  const tempDir = await mkdtemp(path.join(tmpdir(), 'ccclaw-notary-'))
   const zipPath = path.join(tempDir, `${path.parse(appPath).name}.zip`)
 
   try {

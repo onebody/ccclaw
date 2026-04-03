@@ -48,7 +48,7 @@ describe('resolveOpenClawNodeRequirement', () => {
   it('prefers env override when provided explicitly', async () => {
     const result = await resolveOpenClawNodeRequirement({
       env: buildTestEnv({
-        QCLAW_NODE_MIN_VERSION: '20.0.0',
+        CCCLAW_NODE_MIN_VERSION: '20.0.0',
       }),
     })
 
@@ -155,9 +155,9 @@ describe('resolveNodeInstallPlan', () => {
       platform: 'win32',
       processArch: 'x64',
       env: buildTestEnv({
-        QCLAW_NODE_INSTALL_VERSION: 'v20.20.1',
-        QCLAW_NODE_DIST_BASE_URL: 'https://mirror.example.com/node',
-        QCLAW_NODE_MIN_VERSION: '20.0.0',
+        CCCLAW_NODE_INSTALL_VERSION: 'v20.20.1',
+        CCCLAW_NODE_DIST_BASE_URL: 'https://mirror.example.com/node',
+        CCCLAW_NODE_MIN_VERSION: '20.0.0',
       }),
       readInstalledOpenClawPackageJson: async () => null,
     })
@@ -198,14 +198,14 @@ describe('resolveNodeInstallPlan', () => {
   it('refreshes the default cached plan when env overrides change after a bundled fallback', async () => {
     if (process.platform !== 'darwin' && process.platform !== 'win32') return
 
-    const originalInstallVersion = process.env.QCLAW_NODE_INSTALL_VERSION
-    const originalMinVersion = process.env.QCLAW_NODE_MIN_VERSION
-    const originalDistBaseUrl = process.env.QCLAW_NODE_DIST_BASE_URL
+    const originalInstallVersion = process.env.CCCLAW_NODE_INSTALL_VERSION
+    const originalMinVersion = process.env.CCCLAW_NODE_MIN_VERSION
+    const originalDistBaseUrl = process.env.CCCLAW_NODE_DIST_BASE_URL
 
     resetNodeInstallationPolicyCache()
-    delete process.env.QCLAW_NODE_INSTALL_VERSION
-    process.env.QCLAW_NODE_MIN_VERSION = '22.16.0'
-    process.env.QCLAW_NODE_DIST_BASE_URL = 'http://127.0.0.1:1'
+    delete process.env.CCCLAW_NODE_INSTALL_VERSION
+    process.env.CCCLAW_NODE_MIN_VERSION = '22.16.0'
+    process.env.CCCLAW_NODE_DIST_BASE_URL = 'http://127.0.0.1:1'
 
     try {
       const fallbackPlan = await resolveNodeInstallPlan()
@@ -216,7 +216,7 @@ describe('resolveNodeInstallPlan', () => {
         requiredVersion: '22.16.0',
       })
 
-      process.env.QCLAW_NODE_INSTALL_VERSION = '24.14.0'
+      process.env.CCCLAW_NODE_INSTALL_VERSION = '24.14.0'
       const plan = await resolveNodeInstallPlan()
 
       expect(plan).toMatchObject({
@@ -227,19 +227,19 @@ describe('resolveNodeInstallPlan', () => {
     } finally {
       resetNodeInstallationPolicyCache()
       if (originalInstallVersion === undefined) {
-        delete process.env.QCLAW_NODE_INSTALL_VERSION
+        delete process.env.CCCLAW_NODE_INSTALL_VERSION
       } else {
-        process.env.QCLAW_NODE_INSTALL_VERSION = originalInstallVersion
+        process.env.CCCLAW_NODE_INSTALL_VERSION = originalInstallVersion
       }
       if (originalMinVersion === undefined) {
-        delete process.env.QCLAW_NODE_MIN_VERSION
+        delete process.env.CCCLAW_NODE_MIN_VERSION
       } else {
-        process.env.QCLAW_NODE_MIN_VERSION = originalMinVersion
+        process.env.CCCLAW_NODE_MIN_VERSION = originalMinVersion
       }
       if (originalDistBaseUrl === undefined) {
-        delete process.env.QCLAW_NODE_DIST_BASE_URL
+        delete process.env.CCCLAW_NODE_DIST_BASE_URL
       } else {
-        process.env.QCLAW_NODE_DIST_BASE_URL = originalDistBaseUrl
+        process.env.CCCLAW_NODE_DIST_BASE_URL = originalDistBaseUrl
       }
     }
   })

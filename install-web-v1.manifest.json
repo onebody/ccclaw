@@ -7,9 +7,9 @@
     "doctorArgs": ["doctor", "--fix"]
   },
   "discovery": {
-    "sharedExtraBinDirsEnv": "QCLAW_CLI_EXTRA_BIN_DIRS",
-    "nodeExtraBinDirsEnv": "QCLAW_NODE_EXTRA_BIN_DIRS",
-    "openclawExtraBinDirsEnv": "QCLAW_OPENCLAW_EXTRA_BIN_DIRS",
+    "sharedExtraBinDirsEnv": "CCCLAW_CLI_EXTRA_BIN_DIRS",
+    "nodeExtraBinDirsEnv": "CCCLAW_NODE_EXTRA_BIN_DIRS",
+    "openclawExtraBinDirsEnv": "CCCLAW_OPENCLAW_EXTRA_BIN_DIRS",
     "npmPrefixEnvNames": ["npm_config_prefix", "NPM_CONFIG_PREFIX"],
     "managerEnvNames": {
       "nvmBin": "NVM_BIN",
@@ -57,8 +57,8 @@
     "oauth": {
       "openaiCodex": {
         "defaultCallbackUrl": "http://127.0.0.1:1455/auth/callback",
-        "callbackUrlEnv": "QCLAW_OPENAI_CALLBACK_URL",
-        "callbackPortEnv": "QCLAW_OPENAI_CALLBACK_PORT",
+        "callbackUrlEnv": "CCCLAW_OPENAI_CALLBACK_URL",
+        "callbackPortEnv": "CCCLAW_OPENAI_CALLBACK_PORT",
         "probeHosts": ["127.0.0.1", "localhost"]
       }
     }

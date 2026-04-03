@@ -2,8 +2,8 @@ const path = require('node:path')
 
 async function afterSign(context) {
   if (process.platform !== 'darwin') return
-  if (String(process.env.QCLAW_SKIP_NOTARIZE || '').trim() === '1') {
-    console.log('[after-sign-notarize] 检测到 QCLAW_SKIP_NOTARIZE=1，本次仅签名，不执行公证。')
+  if (String(process.env.CCCLAW_SKIP_NOTARIZE || '').trim() === '1') {
+    console.log('[after-sign-notarize] 检测到 CCCLAW_SKIP_NOTARIZE=1，本次仅签名，不执行公证。')
     return
   }
 

@@ -1,9 +1,9 @@
 import type { ProgressInfo, UpdateInfo } from 'builder-util-runtime'
 import type {
-  QClawUpdateActionResult,
-  QClawUpdateErrorCode,
-  QClawUpdateOpenDownloadResult,
-  QClawUpdateStatus,
+  CCClawUpdateActionResult,
+  CCClawUpdateErrorCode,
+  CCClawUpdateOpenDownloadResult,
+  CCClawUpdateStatus,
 } from '../../src/shared/openclaw-phase4'
 import { app, shell } from 'electron'
 import { createRequire } from 'node:module'
@@ -16,7 +16,7 @@ const { autoUpdater } = require('electron-updater') as typeof import('electron-u
 
 let listenersBound = false
 
-let currentStatus: QClawUpdateStatus = {
+let currentStatus: CCClawUpdateStatus = {
   ok: true,
   supported: process.platform === 'darwin' || process.platform === 'win32',
   configured: false,
@@ -25,7 +25,7 @@ let currentStatus: QClawUpdateStatus = {
   status: 'disabled',
   progressPercent: null,
   downloaded: false,
-  message: 'Qclaw 自动更新尚未启用。',
+  message: 'Ccclaw 自动更新尚未启用。',
 }
 
 async function pathExists(targetPath: string): Promise<boolean> {
@@ -184,7 +184,7 @@ function isAllowedExternalUrl(url: string): boolean {
   }
 }
 
-function classifyUpdaterError(input: unknown): QClawUpdateErrorCode {
+function classifyUpdaterError(input: unknown): CCClawUpdateErrorCode {
   const message = normalizeText(input instanceof Error ? input.message : input).toLowerCase()
 
   if (!message) return 'unknown'
@@ -196,14 +196,14 @@ function classifyUpdaterError(input: unknown): QClawUpdateErrorCode {
   return 'unknown'
 }
 
-function explainUpdaterError(code: QClawUpdateErrorCode, fallback: string): string {
+function explainUpdaterError(code: CCClawUpdateErrorCode, fallback: string): string {
   if (code === 'network') return '无法连接更新服务器，请检查网络后重试。'
   if (code === 'metadata_missing') return '更新元数据不存在或配置不完整，请联系管理员检查发布目录。'
   if (code === 'signature_invalid') return '更新包签名或校验失败，已停止更新以保护本机安全。'
   return fallback
 }
 
-function cloneStatus(): QClawUpdateStatus {
+function cloneStatus(): CCClawUpdateStatus {
   return {
     ...currentStatus,
     currentVersion: app.getVersion(),
@@ -211,7 +211,7 @@ function cloneStatus(): QClawUpdateStatus {
   }
 }
 
-function setStatus(patch: Partial<QClawUpdateStatus>): QClawUpdateStatus {
+function setStatus(patch: Partial<CCClawUpdateStatus>): CCClawUpdateStatus {
   const nextFeedUrl = patch.feedUrl !== undefined ? patch.feedUrl : currentStatus.feedUrl || resolveFeedUrl()
   currentStatus = {
     ...currentStatus,
@@ -232,7 +232,7 @@ async function resolveUpdateConfigurationState(): Promise<{
     return {
       supported: false,
       configured: false,
-      message: '当前平台暂未接入 Qclaw 自动更新。',
+      message: '当前平台暂未接入 Ccclaw 自动更新。',
     }
   }
 
@@ -246,20 +246,20 @@ async function resolveUpdateConfigurationState(): Promise<{
           return {
             supported: true,
             configured: false,
-            message: '当前打包产物仍使用占位更新源，Qclaw 自动更新尚未启用。',
+            message: '当前打包产物仍使用占位更新源，Ccclaw 自动更新尚未启用。',
           }
         }
 
         return {
           supported: true,
           configured: true,
-          message: 'Qclaw 自动更新已就绪。',
+          message: 'Ccclaw 自动更新已就绪。',
         }
       } catch {
         return {
           supported: true,
           configured: false,
-          message: 'app-update.yml 读取失败，Qclaw 自动更新当前不可用。',
+          message: 'app-update.yml 读取失败，Ccclaw 自动更新当前不可用。',
         }
       }
     }
@@ -267,7 +267,7 @@ async function resolveUpdateConfigurationState(): Promise<{
     return {
       supported: true,
       configured: false,
-      message: '未检测到 app-update.yml，Qclaw 自动更新配置尚未补齐。',
+      message: '未检测到 app-update.yml，Ccclaw 自动更新配置尚未补齐。',
     }
   }
 
@@ -277,7 +277,7 @@ async function resolveUpdateConfigurationState(): Promise<{
     return {
       supported: true,
       configured: false,
-      message: '当前为开发环境，Qclaw 自动更新需在打包产物中验证。',
+      message: '当前为开发环境，Ccclaw 自动更新需在打包产物中验证。',
     }
   }
 
@@ -299,14 +299,14 @@ async function resolveUpdateConfigurationState(): Promise<{
       supported: true,
       configured: false,
       message: looksPlaceholder
-        ? '当前仍是占位发布配置，Qclaw 自动更新尚未启用。'
-        : '当前为开发环境，Qclaw 自动更新需在打包产物中验证。',
+        ? '当前仍是占位发布配置，Ccclaw 自动更新尚未启用。'
+        : '当前为开发环境，Ccclaw 自动更新需在打包产物中验证。',
     }
   } catch {
     return {
       supported: true,
       configured: false,
-      message: 'Qclaw 更新配置读取失败，当前不会执行自动更新。',
+      message: 'Ccclaw 更新配置读取失败，当前不会执行自动更新。',
     }
   }
 }
@@ -325,7 +325,7 @@ function bindUpdaterEvents() {
       progressPercent: null,
       error: undefined,
       errorCode: undefined,
-      message: '正在检查 Qclaw 更新...',
+      message: '正在检查 Ccclaw 更新...',
     })
   })
 
@@ -343,7 +343,7 @@ function bindUpdaterEvents() {
       error: undefined,
       errorCode: undefined,
       feedUrl,
-      message: `检测到 Qclaw 新版本 ${info.version}。`,
+      message: `检测到 Ccclaw 新版本 ${info.version}。`,
     })
   })
 
@@ -359,7 +359,7 @@ function bindUpdaterEvents() {
       progressPercent: null,
       error: undefined,
       errorCode: undefined,
-      message: '当前 Qclaw 已是最新版本。',
+      message: '当前 Ccclaw 已是最新版本。',
     })
   })
 
@@ -370,7 +370,7 @@ function bindUpdaterEvents() {
       progressPercent: Number.isFinite(info.percent) ? Math.max(0, Math.min(100, Math.round(info.percent))) : null,
       error: undefined,
       errorCode: undefined,
-      message: 'Qclaw Lite 更新包下载中...',
+      message: 'Ccclaw Lite 更新包下载中...',
     })
   })
 
@@ -383,7 +383,7 @@ function bindUpdaterEvents() {
       progressPercent: 100,
       error: undefined,
       errorCode: undefined,
-      message: 'Qclaw Lite 更新包已下载完成，确认后可安装。',
+      message: 'Ccclaw Lite 更新包已下载完成，确认后可安装。',
     })
   })
 
@@ -395,16 +395,16 @@ function bindUpdaterEvents() {
       progressPercent: null,
       error: error.message || 'unknown updater error',
       errorCode,
-      message: explainUpdaterError(errorCode, error.message || 'Qclaw 更新失败。'),
+      message: explainUpdaterError(errorCode, error.message || 'Ccclaw 更新失败。'),
     })
   })
 }
 
-async function ensureUpdaterAvailability(): Promise<QClawUpdateStatus> {
+async function ensureUpdaterAvailability(): Promise<CCClawUpdateStatus> {
   const state = await resolveUpdateConfigurationState()
   bindUpdaterEvents()
 
-  const errorCode: QClawUpdateErrorCode | undefined = !state.supported
+  const errorCode: CCClawUpdateErrorCode | undefined = !state.supported
     ? 'unsupported'
     : !state.configured
     ? 'not_configured'
@@ -433,11 +433,11 @@ async function ensureUpdaterAvailability(): Promise<QClawUpdateStatus> {
   return baseStatus
 }
 
-export async function getQClawUpdateStatus(): Promise<QClawUpdateStatus> {
+export async function getCCClawUpdateStatus(): Promise<CCClawUpdateStatus> {
   return ensureUpdaterAvailability()
 }
 
-export async function checkQClawUpdate(): Promise<QClawUpdateStatus> {
+export async function checkCCClawUpdate(): Promise<CCClawUpdateStatus> {
   const baseStatus = await ensureUpdaterAvailability()
   if (!baseStatus.supported || !baseStatus.configured) {
     return baseStatus
@@ -453,13 +453,13 @@ export async function checkQClawUpdate(): Promise<QClawUpdateStatus> {
       status: 'error',
       error: error instanceof Error ? error.message : String(error),
       errorCode,
-      message: explainUpdaterError(errorCode, '检查 Qclaw 更新失败。'),
+      message: explainUpdaterError(errorCode, '检查 Ccclaw 更新失败。'),
       progressPercent: null,
     })
   }
 }
 
-export async function downloadQClawUpdate(): Promise<QClawUpdateActionResult> {
+export async function downloadCCClawUpdate(): Promise<CCClawUpdateActionResult> {
   const baseStatus = await ensureUpdaterAvailability()
   if (!baseStatus.supported || !baseStatus.configured) {
     return {
@@ -473,14 +473,14 @@ export async function downloadQClawUpdate(): Promise<QClawUpdateActionResult> {
 
   let status = cloneStatus()
   if (status.status !== 'available' && status.status !== 'downloaded' && !status.availableVersion) {
-    status = await checkQClawUpdate()
+    status = await checkCCClawUpdate()
   }
 
   if (status.status === 'downloaded') {
     return {
       ok: true,
       status,
-      message: 'Qclaw Lite 更新包已经下载完成。',
+      message: 'Ccclaw Lite 更新包已经下载完成。',
     }
   }
 
@@ -501,13 +501,13 @@ export async function downloadQClawUpdate(): Promise<QClawUpdateActionResult> {
       progressPercent: 0,
       error: undefined,
       errorCode: undefined,
-      message: 'Qclaw Lite 更新包下载中...',
+      message: 'Ccclaw Lite 更新包下载中...',
     })
     await autoUpdater.downloadUpdate()
     return {
       ok: true,
       status: cloneStatus(),
-      message: cloneStatus().message || 'Qclaw Lite 更新包下载完成。',
+      message: cloneStatus().message || 'Ccclaw Lite 更新包下载完成。',
     }
   } catch (error) {
     const errorCode = classifyUpdaterError(error)
@@ -519,16 +519,16 @@ export async function downloadQClawUpdate(): Promise<QClawUpdateActionResult> {
         progressPercent: null,
         error: error instanceof Error ? error.message : String(error),
         errorCode,
-        message: explainUpdaterError(errorCode, 'Qclaw Lite 更新包下载失败。'),
+        message: explainUpdaterError(errorCode, 'Ccclaw Lite 更新包下载失败。'),
       }),
       errorCode,
       error: error instanceof Error ? error.message : String(error),
-      message: explainUpdaterError(errorCode, 'Qclaw Lite 更新包下载失败。'),
+      message: explainUpdaterError(errorCode, 'Ccclaw Lite 更新包下载失败。'),
     }
   }
 }
 
-export async function installQClawUpdate(): Promise<QClawUpdateActionResult> {
+export async function installCCClawUpdate(): Promise<CCClawUpdateActionResult> {
   const baseStatus = await ensureUpdaterAvailability()
   if (!baseStatus.supported || !baseStatus.configured) {
     return {
@@ -545,8 +545,8 @@ export async function installQClawUpdate(): Promise<QClawUpdateActionResult> {
       ok: false,
       status: cloneStatus(),
       errorCode: 'no_update',
-      error: '当前还没有可安装的 Qclaw Lite 更新包。',
-      message: '当前还没有可安装的 Qclaw Lite 更新包。',
+      error: '当前还没有可安装的 Ccclaw Lite 更新包。',
+      message: '当前还没有可安装的 Ccclaw Lite 更新包。',
     }
   }
 
@@ -554,7 +554,7 @@ export async function installQClawUpdate(): Promise<QClawUpdateActionResult> {
     ok: true,
     status: 'installing',
     progressPercent: 100,
-    message: 'Qclaw 即将退出并安装更新...',
+    message: 'Ccclaw 即将退出并安装更新...',
     error: undefined,
     errorCode: undefined,
   })
@@ -566,12 +566,12 @@ export async function installQClawUpdate(): Promise<QClawUpdateActionResult> {
   return {
     ok: true,
     status,
-    message: 'Qclaw 即将退出并安装更新。',
+    message: 'Ccclaw 即将退出并安装更新。',
     willQuitAndInstall: true,
   }
 }
 
-export async function openQClawUpdateDownloadUrl(): Promise<QClawUpdateOpenDownloadResult> {
+export async function openCCClawUpdateDownloadUrl(): Promise<CCClawUpdateOpenDownloadResult> {
   const baseStatus = await ensureUpdaterAvailability()
   if (!baseStatus.supported || !baseStatus.configured) {
     return {
@@ -585,7 +585,7 @@ export async function openQClawUpdateDownloadUrl(): Promise<QClawUpdateOpenDownl
 
   let status = cloneStatus()
   if (!status.manualDownloadUrl || !status.availableVersion) {
-    status = await checkQClawUpdate()
+    status = await checkCCClawUpdate()
   }
 
   const manualDownloadUrl = normalizeText(status.manualDownloadUrl)
@@ -594,8 +594,8 @@ export async function openQClawUpdateDownloadUrl(): Promise<QClawUpdateOpenDownl
       ok: false,
       status,
       errorCode: 'no_update',
-      error: '当前没有可下载的 Qclaw 新版本。',
-      message: '当前没有可下载的 Qclaw 新版本。',
+      error: '当前没有可下载的 Ccclaw 新版本。',
+      message: '当前没有可下载的 Ccclaw 新版本。',
     }
   }
 
@@ -622,7 +622,7 @@ export async function openQClawUpdateDownloadUrl(): Promise<QClawUpdateOpenDownl
       ok: true,
       status,
       openedUrl: manualDownloadUrl,
-      message: '已在浏览器打开 Qclaw Lite 最新安装包下载链接。',
+      message: '已在浏览器打开 Ccclaw Lite 最新安装包下载链接。',
     }
   } catch (error) {
     const errorCode = classifyUpdaterError(error)

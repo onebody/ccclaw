@@ -828,7 +828,7 @@ type OpenClawInstallSource =
 
 type OpenClawOwnershipState =
   | 'external-preexisting'
-  | 'qclaw-installed'
+  | 'ccclaw-installed'
   | 'mixed-managed'
   | 'unknown-external'
 
@@ -923,7 +923,7 @@ type OpenClawManagedFileKind = 'config' | 'env' | 'credentials' | 'backup-manife
 interface OpenClawManagedFileRecord {
   filePath: string
   kind: OpenClawManagedFileKind
-  source: 'qclaw-lite'
+  source: 'ccclaw-lite'
   firstManagedAt: string
   lastManagedAt: string
 }
@@ -931,7 +931,7 @@ interface OpenClawManagedFileRecord {
 interface OpenClawJsonPathOwnershipRecord {
   filePath: string
   jsonPath: string
-  source: 'qclaw-lite'
+  source: 'ccclaw-lite'
   firstManagedAt: string
   lastManagedAt: string
 }
@@ -950,7 +950,7 @@ interface OpenClawShellManagedBlockRecord {
   blockType: 'openclaw-shell-init'
   startMarker: string
   endMarker: string
-  source: 'qclaw-lite'
+  source: 'ccclaw-lite'
   firstManagedAt: string
   lastManagedAt: string
 }
@@ -1139,8 +1139,8 @@ interface OpenClawBackupDeleteResult {
 
 type OpenClawCleanupActionType =
   | 'remove-openclaw'
-  | 'qclaw-uninstall-keep-openclaw'
-  | 'qclaw-uninstall-remove-openclaw'
+  | 'ccclaw-uninstall-keep-openclaw'
+  | 'ccclaw-uninstall-remove-openclaw'
 
 interface OpenClawCleanupPreviewRequest {
   actionType: OpenClawCleanupActionType
@@ -1293,7 +1293,7 @@ interface OpenClawUpgradeRunResult {
     | 'upgrade_failed'
 }
 
-type QClawUpdateStatusState =
+type CCClawUpdateStatusState =
   | 'disabled'
   | 'idle'
   | 'checking'
@@ -1304,7 +1304,7 @@ type QClawUpdateStatusState =
   | 'installing'
   | 'error'
 
-type QClawUpdateErrorCode =
+type CCClawUpdateErrorCode =
   | 'network'
   | 'metadata_missing'
   | 'signature_invalid'
@@ -1314,7 +1314,7 @@ type QClawUpdateErrorCode =
   | 'invalid_download_url'
   | 'unknown'
 
-interface QClawUpdateStatus {
+interface CCClawUpdateStatus {
   ok: boolean
   supported: boolean
   configured: boolean
@@ -1324,31 +1324,31 @@ interface QClawUpdateStatus {
   releaseDate?: string
   releaseNotes?: string
   feedUrl?: string
-  status: QClawUpdateStatusState
+  status: CCClawUpdateStatusState
   progressPercent: number | null
   downloaded: boolean
   message?: string
   error?: string
-  errorCode?: QClawUpdateErrorCode
+  errorCode?: CCClawUpdateErrorCode
 }
 
-interface QClawUpdateActionResult {
+interface CCClawUpdateActionResult {
   ok: boolean
-  status: QClawUpdateStatus
+  status: CCClawUpdateStatus
   message?: string
   error?: string
-  errorCode?: QClawUpdateErrorCode
+  errorCode?: CCClawUpdateErrorCode
   willQuitAndInstall?: boolean
 }
 
-interface QClawUpdateOpenDownloadResult extends QClawUpdateActionResult {
+interface CCClawUpdateOpenDownloadResult extends CCClawUpdateActionResult {
   openedUrl?: string
 }
 
 interface CombinedUpdateCheckResult {
   ok: boolean
   openclaw: OpenClawUpgradeCheckResult
-  qclaw: QClawUpdateStatus
+  ccclaw: CCClawUpdateStatus
   canRun: boolean
   warnings: string[]
 }
@@ -1357,10 +1357,10 @@ interface CombinedUpdateRunResult {
   ok: boolean
   blocked: boolean
   openclawResult: OpenClawUpgradeRunResult | null
-  qclawStatus: QClawUpdateStatus
+  ccclawStatus: CCClawUpdateStatus
   warnings: string[]
   message?: string
-  errorCode?: 'openclaw_blocked' | 'qclaw_unavailable' | 'qclaw_download_failed' | 'openclaw_upgrade_failed'
+  errorCode?: 'openclaw_blocked' | 'ccclaw_unavailable' | 'ccclaw_download_failed' | 'openclaw_upgrade_failed'
 }
 
 type DashboardChatAvailabilityReason =
@@ -1632,8 +1632,8 @@ interface ElectronApi {
   listOpenClawOwnershipChanges: (installFingerprint: string) => Promise<OpenClawOwnershipChangeList | null>
   previewOpenClawCleanup: (request: OpenClawCleanupPreviewRequest) => Promise<OpenClawCleanupPreviewResult>
   runOpenClawCleanup: (request: OpenClawCleanupRunRequest) => Promise<OpenClawCleanupRunResult>
-  previewQClawUninstall: (request: OpenClawCleanupPreviewRequest) => Promise<OpenClawCleanupPreviewResult>
-  prepareQClawUninstall: (request: OpenClawCleanupRunRequest) => Promise<OpenClawCleanupRunResult>
+  previewCCClawUninstall: (request: OpenClawCleanupPreviewRequest) => Promise<OpenClawCleanupPreviewResult>
+  prepareCCClawUninstall: (request: OpenClawCleanupRunRequest) => Promise<OpenClawCleanupRunResult>
   listOpenClawBackups: () => Promise<OpenClawBackupListResult>
   getOpenClawBackupRoot: () => Promise<OpenClawBackupRootInfo>
   runOpenClawManualBackup: () => Promise<OpenClawManualBackupRunResult>
@@ -1646,11 +1646,11 @@ interface ElectronApi {
   runOpenClawRestore: (backupId: string, scope: OpenClawRestoreScope) => Promise<OpenClawRestoreRunResult>
   checkOpenClawUpgrade: () => Promise<OpenClawUpgradeCheckResult>
   runOpenClawUpgrade: () => Promise<OpenClawUpgradeRunResult>
-  getQClawUpdateStatus: () => Promise<QClawUpdateStatus>
-  checkQClawUpdate: () => Promise<QClawUpdateStatus>
-  downloadQClawUpdate: () => Promise<QClawUpdateActionResult>
-  installQClawUpdate: () => Promise<QClawUpdateActionResult>
-  openQClawUpdateDownloadUrl: () => Promise<QClawUpdateOpenDownloadResult>
+  getCCClawUpdateStatus: () => Promise<CCClawUpdateStatus>
+  checkCCClawUpdate: () => Promise<CCClawUpdateStatus>
+  downloadCCClawUpdate: () => Promise<CCClawUpdateActionResult>
+  installCCClawUpdate: () => Promise<CCClawUpdateActionResult>
+  openCCClawUpdateDownloadUrl: () => Promise<CCClawUpdateOpenDownloadResult>
   checkCombinedUpdate: () => Promise<CombinedUpdateCheckResult>
   runCombinedUpdate: () => Promise<CombinedUpdateRunResult>
 

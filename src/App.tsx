@@ -301,12 +301,12 @@ function App() {
       ...nextDiscoveryResult,
       candidates: nextDiscoveryResult.candidates.map((candidate) =>
         candidate.candidateId === nextDiscoveryResult.activeCandidateId
-          ? { ...candidate, ownershipState: 'qclaw-installed' }
+          ? { ...candidate, ownershipState: 'ccclaw-installed' }
           : candidate
       ),
-      warnings: nextDiscoveryResult.warnings.includes('本次启动已由 Qclaw 安装 OpenClaw。')
+      warnings: nextDiscoveryResult.warnings.includes('本次启动已由 Ccclaw 安装 OpenClaw。')
         ? nextDiscoveryResult.warnings
-        : [...nextDiscoveryResult.warnings, '本次启动已由 Qclaw 安装 OpenClaw。'],
+        : [...nextDiscoveryResult.warnings, '本次启动已由 Ccclaw 安装 OpenClaw。'],
     }
   }
 
@@ -658,7 +658,7 @@ function App() {
     <div className="h-screen flex flex-col app-bg-primary app-text-primary">
       <div className="h-10 flex-shrink-0 flex items-center justify-center gap-1.5" style={{ WebkitAppRegion: 'drag' } as any}>
         <img src={logoSrc} alt="" className="w-6 h-6 select-none pointer-events-none" />
-        <span className="text-xs app-text-faint select-none">Qclaw</span>
+        <span className="text-xs app-text-faint select-none">Ccclaw</span>
       </div>
       <div className={`flex-1 flex items-center justify-center px-6 pb-6 ${scrollable ? 'overflow-y-auto' : 'overflow-hidden'}`}>{content}</div>
     </div>
@@ -750,7 +750,7 @@ function App() {
     <div className="h-screen app-bg-primary app-text-primary flex flex-col">
       <div className="h-8 flex-shrink-0 flex items-center justify-center gap-1.5" style={{ WebkitAppRegion: 'drag' } as any}>
         <img src={logoSrc} alt="" className="w-4 h-4 select-none pointer-events-none" />
-        <span className="text-[10px] app-text-faint select-none">Qclaw</span>
+        <span className="text-[10px] app-text-faint select-none">Ccclaw</span>
       </div>
 
       {/* Step labels */}

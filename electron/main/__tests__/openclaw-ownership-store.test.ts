@@ -31,7 +31,7 @@ function createCandidate(): OpenClawInstallCandidate {
     baselineBackup: {
       backupId: 'baseline-1',
       createdAt: '2026-03-13T08:00:00.000Z',
-      archivePath: '/Users/test/Documents/Qclaw Lite Backups/baseline-1',
+      archivePath: '/Users/test/Documents/Ccclaw Lite Backups/baseline-1',
       installFingerprint: 'fingerprint-1',
     },
     baselineBackupBypass: null,
@@ -39,25 +39,25 @@ function createCandidate(): OpenClawInstallCandidate {
 }
 
 describe('openclaw ownership store', () => {
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
   let userDataDir = ''
 
   beforeEach(async () => {
     userDataDir = path.join(
       '/tmp',
-      `qclaw-ownership-store-${Date.now()}-${Math.random().toString(16).slice(2)}`
+      `ccclaw-ownership-store-${Date.now()}-${Math.random().toString(16).slice(2)}`
     )
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
     await fs.rm(userDataDir, { recursive: true, force: true })
   })
 
   afterEach(async () => {
     await fs.rm(userDataDir, { recursive: true, force: true })
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
       return
     }
-    process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+    process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
   })
 
   it('records file, json path, snapshot, and shell block ownership for an install fingerprint', async () => {
@@ -66,7 +66,7 @@ describe('openclaw ownership store', () => {
     await setFirstManagedWriteSnapshot(candidate, {
       snapshotId: 'config-snapshot-1',
       createdAt: '2026-03-13T09:00:00.000Z',
-      archivePath: '/Users/test/Documents/Qclaw Lite Backups/config-snapshot-1',
+      archivePath: '/Users/test/Documents/Ccclaw Lite Backups/config-snapshot-1',
       installFingerprint: candidate.installFingerprint,
       snapshotType: 'config-snapshot',
     })
@@ -82,9 +82,9 @@ describe('openclaw ownership store', () => {
         filePath: '/Users/test/.zshrc',
         blockId: 'shell-init:/Users/test/.zshrc',
         blockType: 'openclaw-shell-init',
-        startMarker: '# >>> qclaw-lite openclaw managed block >>>',
-        endMarker: '# <<< qclaw-lite openclaw managed block <<<',
-        source: 'qclaw-lite',
+        startMarker: '# >>> ccclaw-lite openclaw managed block >>>',
+        endMarker: '# <<< ccclaw-lite openclaw managed block <<<',
+        source: 'ccclaw-lite',
         firstManagedAt: '2026-03-13T09:10:00.000Z',
         lastManagedAt: '2026-03-13T09:10:00.000Z',
       },

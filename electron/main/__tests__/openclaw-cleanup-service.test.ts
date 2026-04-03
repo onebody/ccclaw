@@ -61,7 +61,7 @@ function buildCandidate(input: { id: string; source: string }) {
 
 describe('openclaw cleanup service', () => {
   const tempDirs: string[] = []
-  const originalBatchCleanupFlag = process.env.QCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED
+  const originalBatchCleanupFlag = process.env.CCCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED
 
   beforeEach(() => {
     cleanupOpenClawStateAndDataMock.mockReset()
@@ -74,16 +74,16 @@ describe('openclaw cleanup service', () => {
   })
 
   function makeTempDir(): string {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-cleanup-verify-'))
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-cleanup-verify-'))
     tempDirs.push(dir)
     return dir
   }
 
   afterEach(() => {
     if (originalBatchCleanupFlag === undefined) {
-      delete process.env.QCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED
+      delete process.env.CCCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED
     } else {
-      process.env.QCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED = originalBatchCleanupFlag
+      process.env.CCCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED = originalBatchCleanupFlag
     }
     while (tempDirs.length > 0) {
       const dir = tempDirs.pop()
@@ -107,7 +107,7 @@ describe('openclaw cleanup service', () => {
       backupItems: [],
       warnings: [],
       blockedReasons: [],
-      backupDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      backupDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
     })
     cleanupOpenClawStateAndDataMock.mockResolvedValue({
       ok: true,
@@ -190,7 +190,7 @@ describe('openclaw cleanup service', () => {
       backupItems: [],
       warnings: [],
       blockedReasons: [],
-      backupDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      backupDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
     })
     cleanupOpenClawStateAndDataMock.mockResolvedValue({
       ok: true,
@@ -235,7 +235,7 @@ describe('openclaw cleanup service', () => {
       backupItems: [],
       warnings: [],
       blockedReasons: [],
-      backupDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      backupDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
     })
     cleanupOpenClawStateAndDataMock.mockResolvedValue({
       ok: true,
@@ -296,7 +296,7 @@ describe('openclaw cleanup service', () => {
     buildOpenClawCleanupPreviewMock.mockResolvedValue({
       ok: true,
       canRun: true,
-      actionType: 'qclaw-uninstall-keep-openclaw',
+      actionType: 'ccclaw-uninstall-keep-openclaw',
       activeCandidate: candidate1,
       availableCandidates: [candidate1],
       selectedCandidateIds: [candidate1.candidateId],
@@ -305,12 +305,12 @@ describe('openclaw cleanup service', () => {
       backupItems: [],
       warnings: [],
       blockedReasons: [],
-      backupDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      backupDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
       manualNextStep: 'manual',
     })
 
     const result = await runOpenClawCleanup({
-      actionType: 'qclaw-uninstall-keep-openclaw',
+      actionType: 'ccclaw-uninstall-keep-openclaw',
       backupBeforeDelete: false,
       selectedCandidateIds: [candidate1.candidateId],
     })
@@ -359,7 +359,7 @@ describe('openclaw cleanup service', () => {
       backupItems: [],
       warnings: [],
       blockedReasons: [],
-      backupDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      backupDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
     })
     cleanupOpenClawStateAndDataMock.mockResolvedValue({
       ok: true,
@@ -422,7 +422,7 @@ describe('openclaw cleanup service', () => {
       backupItems: [],
       warnings: [],
       blockedReasons: [],
-      backupDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      backupDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
     })
     cleanupOpenClawStateAndDataMock.mockResolvedValue({
       ok: true,
@@ -450,7 +450,7 @@ describe('openclaw cleanup service', () => {
   })
 
   it('falls back to single-target cleanup when batch feature flag is disabled', async () => {
-    process.env.QCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED = '0'
+    process.env.CCCLAW_OPENCLAW_BATCH_CLEANUP_ENABLED = '0'
     const candidate1 = buildCandidate({ id: 'candidate-1', source: 'homebrew' })
     const candidate2 = buildCandidate({ id: 'candidate-2', source: 'npm-global' })
 
@@ -466,7 +466,7 @@ describe('openclaw cleanup service', () => {
       backupItems: [],
       warnings: [],
       blockedReasons: [],
-      backupDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      backupDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
     })
     cleanupOpenClawStateAndDataMock.mockResolvedValue({
       ok: true,

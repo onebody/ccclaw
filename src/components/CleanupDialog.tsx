@@ -8,12 +8,12 @@ import type {
 } from '../shared/openclaw-phase3'
 import type { OpenClawInstallCandidate } from '../shared/openclaw-phase1'
 
-type CleanupMode = 'remove-openclaw' | 'uninstall-qclaw'
+type CleanupMode = 'remove-openclaw' | 'uninstall-ccclaw'
 
 function optionLabel(actionType: OpenClawCleanupActionType): string {
   if (actionType === 'remove-openclaw') return '彻底删除 OpenClaw'
-  if (actionType === 'qclaw-uninstall-keep-openclaw') return '仅卸载 Qclaw，保留 OpenClaw'
-  return '卸载 Qclaw，同时删除 OpenClaw'
+  if (actionType === 'ccclaw-uninstall-keep-openclaw') return '仅卸载 Ccclaw，保留 OpenClaw'
+  return '卸载 Ccclaw，同时删除 OpenClaw'
 }
 
 export default function CleanupDialog({
@@ -26,7 +26,7 @@ export default function CleanupDialog({
   onClose: () => void
 }) {
   const [actionType, setActionType] = useState<OpenClawCleanupActionType>(
-    mode === 'remove-openclaw' ? 'remove-openclaw' : 'qclaw-uninstall-keep-openclaw'
+    mode === 'remove-openclaw' ? 'remove-openclaw' : 'ccclaw-uninstall-keep-openclaw'
   )
   const [backupBeforeDelete, setBackupBeforeDelete] = useState(true)
   const [preview, setPreview] = useState<OpenClawCleanupPreviewResult | null>(null)
@@ -40,7 +40,7 @@ export default function CleanupDialog({
     setPreview(null)
     setAvailableCandidates([])
     setSelectedCandidateIds([])
-    setActionType(mode === 'remove-openclaw' ? 'remove-openclaw' : 'qclaw-uninstall-keep-openclaw')
+    setActionType(mode === 'remove-openclaw' ? 'remove-openclaw' : 'ccclaw-uninstall-keep-openclaw')
     setBackupBeforeDelete(true)
   }, [open, mode])
 
@@ -76,7 +76,7 @@ export default function CleanupDialog({
     }
   }, [open, mode])
 
-  const requiresCandidateSelection = actionType !== 'qclaw-uninstall-keep-openclaw'
+  const requiresCandidateSelection = actionType !== 'ccclaw-uninstall-keep-openclaw'
   const hasSelectedCandidates = selectedCandidateIds.length > 0
 
   const previewRequest: OpenClawCleanupPreviewRequest = useMemo(
@@ -95,7 +95,7 @@ export default function CleanupDialog({
       const nextPreview =
         mode === 'remove-openclaw'
           ? await window.api.previewOpenClawCleanup(previewRequest)
-          : await window.api.previewQClawUninstall(previewRequest)
+          : await window.api.previewCCClawUninstall(previewRequest)
       if (!disposed) {
         setPreview(nextPreview)
       }
@@ -111,9 +111,9 @@ export default function CleanupDialog({
   const actionOptions: OpenClawCleanupActionType[] =
     mode === 'remove-openclaw'
       ? ['remove-openclaw']
-      : ['qclaw-uninstall-keep-openclaw', 'qclaw-uninstall-remove-openclaw']
+      : ['ccclaw-uninstall-keep-openclaw', 'ccclaw-uninstall-remove-openclaw']
 
-  const canBackup = actionType !== 'qclaw-uninstall-keep-openclaw'
+  const canBackup = actionType !== 'ccclaw-uninstall-keep-openclaw'
 
   const toggleCandidate = (candidateId: string) => {
     setSelectedCandidateIds((current) =>
@@ -142,7 +142,7 @@ export default function CleanupDialog({
       const nextResult =
         mode === 'remove-openclaw'
           ? await window.api.runOpenClawCleanup(previewRequest)
-          : await window.api.prepareQClawUninstall(previewRequest)
+          : await window.api.prepareCCClawUninstall(previewRequest)
 
       const messageParts: string[] = []
       messageParts.push(nextResult.message || (nextResult.ok ? '执行完成。' : '执行失败。'))
@@ -207,7 +207,7 @@ export default function CleanupDialog({
               {mode === 'remove-openclaw' ? 'Cleanup Center' : 'Uninstall Prep'}
             </Text>
             <Title order={3} mt="xs" size="lg" fw={600} className="app-text-primary">
-              {mode === 'remove-openclaw' ? '清理 OpenClaw' : '准备卸载 Qclaw'}
+              {mode === 'remove-openclaw' ? '清理 OpenClaw' : '准备卸载 Ccclaw'}
             </Title>
           </div>
           <Button variant="subtle" size="xs" onClick={onClose} className="app-text-muted transition hover:app-text-secondary">

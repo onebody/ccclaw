@@ -8,7 +8,7 @@ const { join } = process.getBuiltinModule('node:path') as typeof import('node:pa
 
 describe('createIsolatedNpmCacheEnv', () => {
   it('creates a unique npm cache directory for each install attempt', async () => {
-    const rootDir = await mkdtemp(join(tmpdir(), 'qclaw-npm-cache-root-'))
+    const rootDir = await mkdtemp(join(tmpdir(), 'ccclaw-npm-cache-root-'))
 
     const first = await createIsolatedNpmCacheEnv(rootDir)
     const second = await createIsolatedNpmCacheEnv(rootDir)

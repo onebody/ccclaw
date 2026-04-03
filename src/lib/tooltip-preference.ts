@@ -1,4 +1,4 @@
-const TOOLTIP_ENABLED_STORAGE_KEY = 'qclaw-tooltip-enabled'
+const TOOLTIP_ENABLED_STORAGE_KEY = 'ccclaw-tooltip-enabled'
 
 function getLocalStorage(): Storage | null {
   try {

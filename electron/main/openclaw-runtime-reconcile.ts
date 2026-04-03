@@ -28,7 +28,7 @@ const { homedir } = os
 const STORE_RELATIVE_PATH = path.join('runtime', 'openclaw-runtime-reconcile.json')
 
 function resolveUserDataDirectory(): string {
-  return String(process.env.QCLAW_USER_DATA_DIR || path.join(homedir(), '.qclaw-lite')).trim()
+  return String(process.env.CCCLAW_USER_DATA_DIR || path.join(homedir(), '.ccclaw-lite')).trim()
 }
 
 export function resolveOpenClawRuntimeReconcileStorePath(): string {

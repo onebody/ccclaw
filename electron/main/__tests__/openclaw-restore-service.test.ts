@@ -55,7 +55,7 @@ describe('openclaw restore service', () => {
   let rootDir = ''
 
   beforeEach(async () => {
-    rootDir = path.join('/tmp', `qclaw-restore-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    rootDir = path.join('/tmp', `ccclaw-restore-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     await fs.mkdir(rootDir, { recursive: true })
 
     getOpenClawBackupEntryMock.mockReset()

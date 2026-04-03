@@ -9,8 +9,8 @@ import {
 
 const originalExecPath = process.execPath
 const TEST_ENV = {
-  APP_ROOT: '/tmp/qclaw-test-app-root',
-  VITE_PUBLIC: '/tmp/qclaw-test-public',
+  APP_ROOT: '/tmp/ccclaw-test-app-root',
+  VITE_PUBLIC: '/tmp/ccclaw-test-public',
 } as NodeJS.ProcessEnv
 
 function makeNodeCapability(
@@ -241,7 +241,7 @@ describe('runNodeEvalWithQualifiedRuntime', () => {
 
   it('does not fall back to Electron process.execPath when the host runtime is Electron', async () => {
     Object.defineProperty(process, 'execPath', {
-      value: '/Applications/Qclaw.app/Contents/MacOS/Qclaw',
+      value: '/Applications/Ccclaw.app/Contents/MacOS/Ccclaw',
       configurable: true,
     })
 

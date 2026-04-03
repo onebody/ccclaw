@@ -12,7 +12,7 @@ const { tmpdir } = process.getBuiltinModule('node:os') as typeof import('node:os
 const { mkdtemp, mkdir, readFile, rm, writeFile } = process.getBuiltinModule('node:fs/promises') as typeof import('node:fs/promises')
 
 async function createTempHome(): Promise<string> {
-  const homeDir = await mkdtemp(path.join(tmpdir(), 'qclaw-plugin-safety-'))
+  const homeDir = await mkdtemp(path.join(tmpdir(), 'ccclaw-plugin-safety-'))
   tempDirs.push(homeDir)
   await mkdir(path.join(homeDir, 'extensions'), { recursive: true })
   return homeDir
@@ -102,7 +102,7 @@ describe('reconcileIncompatibleExtensionPlugins', () => {
     ])
 
     const quarantinedEntry = await readFile(
-      path.join(homeDir, 'qclaw-quarantined-extensions', 'broken-sdk-plugin-123', 'package.json'),
+      path.join(homeDir, 'ccclaw-quarantined-extensions', 'broken-sdk-plugin-123', 'package.json'),
       'utf8'
     )
     expect(quarantinedEntry).toContain('@demo/broken-sdk-plugin')
@@ -522,7 +522,7 @@ describe('reconcileIncompatibleExtensionPlugins', () => {
     })
 
     const quarantinedEntry = await readFile(
-      path.join(homeDir, 'qclaw-quarantined-extensions', 'openclaw-lark-0', 'package.json'),
+      path.join(homeDir, 'ccclaw-quarantined-extensions', 'openclaw-lark-0', 'package.json'),
       'utf8'
     )
     expect(quarantinedEntry).toContain('@larksuite/openclaw-lark')

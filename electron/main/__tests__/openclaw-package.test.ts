@@ -15,7 +15,7 @@ const path = process.getBuiltinModule('path') as typeof import('node:path')
 const tempDirs: string[] = []
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-openclaw-package-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-openclaw-package-'))
   tempDirs.push(dir)
   return dir
 }

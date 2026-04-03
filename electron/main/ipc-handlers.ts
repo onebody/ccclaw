@@ -111,7 +111,7 @@ import { deleteAllOpenClawBackups, deleteOpenClawBackup } from './openclaw-backu
 import { getOpenClawEffectiveBackupRootInfo } from './openclaw-backup-roots'
 import { runOpenClawManualBackup } from './openclaw-manual-backup-service'
 import { buildOpenClawCleanupPreview } from './openclaw-cleanup-planner'
-import { prepareQClawUninstall, runOpenClawCleanup } from './openclaw-cleanup-service'
+import { prepareCCClawUninstall, runOpenClawCleanup } from './openclaw-cleanup-service'
 import { runOpenClawDataCleanup } from './openclaw-data-cleanup-service'
 import { previewOpenClawRestore, runOpenClawRestore } from './openclaw-restore-service'
 import { checkOpenClawUpgrade, runOpenClawUpgrade } from './openclaw-upgrade-service'
@@ -120,12 +120,12 @@ import { withManagedOperationLock } from './managed-operation-lock'
 import { buildAppleScriptDoShellScript } from './node-runtime'
 import type { FeishuBotDiagnosticSendRequest } from '../../src/shared/feishu-diagnostics'
 import {
-  checkQClawUpdate,
-  downloadQClawUpdate,
-  getQClawUpdateStatus,
-  installQClawUpdate,
-  openQClawUpdateDownloadUrl,
-} from './qclaw-update-service'
+  checkCCClawUpdate,
+  downloadCCClawUpdate,
+  getCCClawUpdateStatus,
+  installCCClawUpdate,
+  openCCClawUpdateDownloadUrl,
+} from './ccclaw-update-service'
 import { checkCombinedUpdate, runCombinedUpdate } from './combined-update-orchestrator'
 import { wecomQrGenerate, wecomQrCheckResult } from './wecom-qr'
 import {
@@ -580,8 +580,8 @@ export function registerIpcHandlers() {
   ipcMain.handle('openclaw:cleanup:preview', (_e, request) => buildOpenClawCleanupPreview(request))
   ipcMain.handle('openclaw:cleanup:run', (_e, request) => runOpenClawCleanup(request))
   ipcMain.handle('openclaw:data-cleanup:run', (_e, request) => runOpenClawDataCleanup(request))
-  ipcMain.handle('qclaw:uninstall:preview', (_e, request) => buildOpenClawCleanupPreview(request))
-  ipcMain.handle('qclaw:uninstall:prepare', (_e, request) => prepareQClawUninstall(request))
+  ipcMain.handle('ccclaw:uninstall:preview', (_e, request) => buildOpenClawCleanupPreview(request))
+  ipcMain.handle('ccclaw:uninstall:prepare', (_e, request) => prepareCCClawUninstall(request))
   ipcMain.handle('openclaw:backup:list', () => listOpenClawBackups())
   ipcMain.handle('openclaw:backup:get-root', () => getOpenClawEffectiveBackupRootInfo())
   ipcMain.handle('openclaw:backup:delete', (_e, backupId: string) => deleteOpenClawBackup(backupId))
@@ -613,11 +613,11 @@ export function registerIpcHandlers() {
   ipcMain.handle('openclaw:upgrade:run', () =>
     withModelCenterCapabilitiesInvalidatedOnSuccess(() => runOpenClawUpgrade())
   )
-  ipcMain.handle('qclaw:update:status', () => getQClawUpdateStatus())
-  ipcMain.handle('qclaw:update:check', () => checkQClawUpdate())
-  ipcMain.handle('qclaw:update:download', () => downloadQClawUpdate())
-  ipcMain.handle('qclaw:update:install', () => installQClawUpdate())
-  ipcMain.handle('qclaw:update:open-download-url', () => openQClawUpdateDownloadUrl())
+  ipcMain.handle('ccclaw:update:status', () => getCCClawUpdateStatus())
+  ipcMain.handle('ccclaw:update:check', () => checkCCClawUpdate())
+  ipcMain.handle('ccclaw:update:download', () => downloadCCClawUpdate())
+  ipcMain.handle('ccclaw:update:install', () => installCCClawUpdate())
+  ipcMain.handle('ccclaw:update:open-download-url', () => openCCClawUpdateDownloadUrl())
   ipcMain.handle('combined:update:check', () => checkCombinedUpdate())
   ipcMain.handle('combined:update:run', () =>
     withModelCenterCapabilitiesInvalidatedOnSuccess(() => runCombinedUpdate())

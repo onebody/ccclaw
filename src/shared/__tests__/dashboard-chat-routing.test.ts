@@ -182,7 +182,7 @@ describe('dashboard chat routing', () => {
       }),
     })
 
-    expect(status.sessionSource).toBe('Qclaw 本地会话')
+    expect(status.sessionSource).toBe('Ccclaw 本地会话')
     expect(status.notice).toBe('')
   })
 

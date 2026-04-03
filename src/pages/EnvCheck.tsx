@@ -113,7 +113,7 @@ function buildTakeoverFailure(
 }
 
 function shouldShowTakeoverNotice(candidate: OpenClawInstallCandidate): boolean {
-  return candidate.ownershipState !== 'qclaw-installed'
+  return candidate.ownershipState !== 'ccclaw-installed'
 }
 
 interface OpenClawLatestRetryResult {
@@ -430,11 +430,11 @@ export function buildOpenClawAutoCorrectionConsentMessage(
   const action = gateState?.upgradeCheck?.targetAction === 'downgrade' ? '回退' : '升级'
 
   return [
-    '检测到当前 OpenClaw 版本不在 Qclaw 的支持范围内。',
+    '检测到当前 OpenClaw 版本不在 Ccclaw 的支持范围内。',
     `当前版本：${currentVersion}`,
     `目标版本：${targetVersion}`,
-    `Qclaw 将自动${action} OpenClaw 到受支持版本后再继续。`,
-    '如果你不接受本次自动处理，Qclaw 将立即退出。',
+    `Ccclaw 将自动${action} OpenClaw 到受支持版本后再继续。`,
+    '如果你不接受本次自动处理，Ccclaw 将立即退出。',
     '',
     '是否继续？',
   ].join('\n')
@@ -523,7 +523,7 @@ function TakeoverNotification({
     notifications.show({
       id,
       title: '检测到已有 OpenClaw',
-      message: `Qclaw 将额外备份配置数据，继续使用原有 OpenClaw。备份目录：${backupRootDirectory}`,
+      message: `Ccclaw 将额外备份配置数据，继续使用原有 OpenClaw。备份目录：${backupRootDirectory}`,
       color: 'brand',
       autoClose: 8000,
     })
@@ -588,7 +588,7 @@ function StartupIssueDialog({
                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5)',
                   }}
                 >
-                  <img src={logoSrc} alt="Qclaw" className="h-11 w-11 object-contain" />
+                  <img src={logoSrc} alt="Ccclaw" className="h-11 w-11 object-contain" />
                 </div>
                 <div className="h-2 w-2 rounded-full" style={{ backgroundColor: 'var(--app-text-primary)' }} />
               </div>
@@ -894,7 +894,7 @@ export default function EnvCheck({
         updateStep('openclaw', {
           status: 'pending-install',
           version: nextGateState.activeCandidate?.version || activeCandidate.version,
-          description: '你未接受 OpenClaw 自动版本处理，Qclaw 即将退出。',
+          description: '你未接受 OpenClaw 自动版本处理，Ccclaw 即将退出。',
           progress: 100,
         })
         void window.api.quitApp().catch(() => null)
@@ -1701,8 +1701,8 @@ export default function EnvCheck({
     <div className="w-full max-w-md">
       <div className="text-center mb-3">
         <div className="flex items-center justify-center gap-2.5 mb-1">
-          <img src={logoSrc} alt="Qclaw" style={{ width: 48, height: 48, userSelect: 'none', pointerEvents: 'none' }} />
-          <Title order={3} fw={400}>Qclaw</Title>
+          <img src={logoSrc} alt="Ccclaw" style={{ width: 48, height: 48, userSelect: 'none', pointerEvents: 'none' }} />
+          <Title order={3} fw={400}>Ccclaw</Title>
         </div>
         <Text size="xs" c="dimmed" className="h-4 transition-opacity duration-500">
           {steps[currentStep]?.status === 'checking' || steps[currentStep]?.status === 'installing'
@@ -2046,7 +2046,7 @@ export default function EnvCheck({
             {formatTakeoverFailureManualBackupWarning(activeTakeoverFailure)}
           </Text>
           <Text size="xs" c="dimmed" mt="xs">
-            为了避免在没有兜底备份的情况下直接接管旧安装，Qclaw 先阻止进入控制面板。你可以重试自动备份；如果已经按上面的路径完成手动备份，也可以继续接管。
+            为了避免在没有兜底备份的情况下直接接管旧安装，Ccclaw 先阻止进入控制面板。你可以重试自动备份；如果已经按上面的路径完成手动备份，也可以继续接管。
           </Text>
           {activeTakeoverFailure.message && activeTakeoverFailure.message !== '自动备份失败，请稍后重试。' && (
             <Text size="xs" c="yellow" mt="xs">

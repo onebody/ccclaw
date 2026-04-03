@@ -9,7 +9,7 @@ const { join } = process.getBuiltinModule('node:path') as typeof import('node:pa
 
 describe('openclaw-npm-runtime', () => {
   it('creates managed npm runtime files and returns stable command options', async () => {
-    const workspace = await mkdtemp(join(tmpdir(), 'qclaw-openclaw-runtime-'))
+    const workspace = await mkdtemp(join(tmpdir(), 'ccclaw-openclaw-runtime-'))
     const runtime = await ensureManagedOpenClawNpmRuntime({
       workingDirectory: workspace,
       fetchTimeoutMs: 20000,
@@ -32,7 +32,7 @@ describe('openclaw-npm-runtime', () => {
   })
 
   it('allocates a fresh cache directory for each managed runtime call', async () => {
-    const workspace = await mkdtemp(join(tmpdir(), 'qclaw-openclaw-runtime-'))
+    const workspace = await mkdtemp(join(tmpdir(), 'ccclaw-openclaw-runtime-'))
 
     const first = await ensureManagedOpenClawNpmRuntime({
       workingDirectory: workspace,
@@ -67,7 +67,7 @@ describe('openclaw-npm-runtime', () => {
       }
     )
 
-    expect(options.cachePath).toBe('/private/tmp/qclaw-openclaw-admin-npm-admin-run/cache')
+    expect(options.cachePath).toBe('/private/tmp/ccclaw-openclaw-admin-npm-admin-run/cache')
     expect(options.cachePath).not.toContain('/tmp/openclaw-installer/npm/cache')
     expect(options.userConfigPath).toBe('/tmp/openclaw-installer/npm/user.npmrc')
     expect(options.globalConfigPath).toBe('/tmp/openclaw-installer/npm/global.npmrc')

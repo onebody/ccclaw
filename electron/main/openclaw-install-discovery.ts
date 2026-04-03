@@ -28,7 +28,7 @@ const { spawn } = childProcess
 const DEFAULT_VERSION_PROBE_TIMEOUT_MS = 5_000
 
 function resolveVersionProbeTimeoutMs(env: NodeJS.ProcessEnv = process.env): number {
-  const raw = String(env.QCLAW_RUNTIME_LIGHTWEIGHT_PROBE_TIMEOUT_MS || '').trim()
+  const raw = String(env.CCCLAW_RUNTIME_LIGHTWEIGHT_PROBE_TIMEOUT_MS || '').trim()
   if (!raw) return DEFAULT_VERSION_PROBE_TIMEOUT_MS
 
   const parsed = Number(raw)
@@ -63,7 +63,7 @@ function normalizeForCompare(value: string): string {
 }
 
 function resolveManagedInstallStorePath(): string {
-  return path.join(String(process.env.QCLAW_USER_DATA_DIR || path.join(homedir(), '.qclaw-lite')).trim(), MANAGED_INSTALL_STORE_PATH)
+  return path.join(String(process.env.CCCLAW_USER_DATA_DIR || path.join(homedir(), '.ccclaw-lite')).trim(), MANAGED_INSTALL_STORE_PATH)
 }
 
 async function loadManagedInstallStore(): Promise<ManagedInstallStore> {
@@ -97,7 +97,7 @@ async function loadManagedInstallStore(): Promise<ManagedInstallStore> {
             installFingerprint,
             markedAt: '',
             // Legacy stores only persisted fingerprints, which is insufficient to
-            // prove that Qclaw created this install. Treat them as historical hints
+            // prove that Ccclaw created this install. Treat them as historical hints
             // instead of authoritative ownership records.
             verified: false,
           })),
@@ -268,7 +268,7 @@ async function buildCandidateFromBinary(
       stateRoot: openClawPaths.homeDir,
       displayConfigPath: openClawPaths.displayConfigFile,
       displayStateRoot: openClawPaths.displayHomeDir,
-      ownershipState: managedInstall ? 'qclaw-installed' : baselineBackup ? 'mixed-managed' : 'external-preexisting',
+      ownershipState: managedInstall ? 'ccclaw-installed' : baselineBackup ? 'mixed-managed' : 'external-preexisting',
       installFingerprint,
       baselineBackup,
       baselineBackupBypass,
@@ -304,7 +304,7 @@ async function buildCandidateFromBinary(
       stateRoot: openClawPaths.homeDir,
       displayConfigPath: openClawPaths.displayConfigFile,
       displayStateRoot: openClawPaths.displayHomeDir,
-      ownershipState: managedInstall ? 'qclaw-installed' : baselineBackup ? 'mixed-managed' : 'unknown-external',
+      ownershipState: managedInstall ? 'ccclaw-installed' : baselineBackup ? 'mixed-managed' : 'unknown-external',
       installFingerprint,
       baselineBackup,
       baselineBackupBypass,

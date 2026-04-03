@@ -640,7 +640,7 @@ export async function validateProviderCredential(
   const runCommandWithEnv = options.runCommandWithEnv ?? defaultRunCommandWithEnv
   const createTempDir = options.createTempDir ?? ((prefix: string) => mkdtemp(prefix))
   const removeTempDir = options.removeTempDir ?? ((pathname: string) => rm(pathname, { recursive: true, force: true }))
-  const isolatedHomeDir = await createTempDir(join(tmpdir(), 'qclaw-provider-validate-'))
+  const isolatedHomeDir = await createTempDir(join(tmpdir(), 'ccclaw-provider-validate-'))
 
   try {
     const statusResult = await getModelStatus<Record<string, any>>(

@@ -120,7 +120,7 @@ function buildGeminiCliMissingMessage(): string {
   return [
     '未检测到 Gemini CLI。',
     'Google Gemini CLI OAuth 依赖本机安装 gemini CLI，或显式设置 GEMINI_CLI_OAUTH_CLIENT_ID / GEMINI_CLI_OAUTH_CLIENT_SECRET。',
-    'Qclaw 会先静默探测 npm / Homebrew 是否可用，只展示当前机器可执行的一键安装入口。',
+    'Ccclaw 会先静默探测 npm / Homebrew 是否可用，只展示当前机器可执行的一键安装入口。',
   ].join(' ')
 }
 
@@ -326,7 +326,7 @@ export async function installOAuthExternalDependency(
     return failureInstallResult(
       'gemini-cli',
       method,
-      `当前环境不可用安装方式：${method}。请使用 Qclaw 当前推荐的可用安装方式。`
+      `当前环境不可用安装方式：${method}。请使用 Ccclaw 当前推荐的可用安装方式。`
     )
   }
 
@@ -356,7 +356,7 @@ export async function installOAuthExternalDependency(
           '-e',
           buildAppleScriptDoShellScript(cmd, {
             prompt:
-              'Qclaw 需要安装 Gemini CLI。\n\n这是 Google Gemini CLI OAuth 的前置依赖。\n\n请输入您的 Mac 登录密码以继续。',
+              'Ccclaw 需要安装 Gemini CLI。\n\n这是 Google Gemini CLI OAuth 的前置依赖。\n\n请输入您的 Mac 登录密码以继续。',
           })
         ],
         MAIN_RUNTIME_POLICY.node.installOpenClawTimeoutMs

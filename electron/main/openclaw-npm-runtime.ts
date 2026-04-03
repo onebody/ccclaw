@@ -10,7 +10,7 @@ const OPENCLAW_MANAGED_NPM_SUBDIR = join('openclaw-installer', 'npm')
 const OPENCLAW_MANAGED_NPM_USERCONFIG = 'user.npmrc'
 const OPENCLAW_MANAGED_NPM_GLOBALCONFIG = 'global.npmrc'
 const OPENCLAW_MANAGED_NPM_CACHE_DIR = 'cache'
-const OPENCLAW_PRIVILEGED_NPM_CACHE_PREFIX = 'qclaw-openclaw-admin-npm'
+const OPENCLAW_PRIVILEGED_NPM_CACHE_PREFIX = 'ccclaw-openclaw-admin-npm'
 const DEFAULT_FETCH_TIMEOUT_MS = 30_000
 const DEFAULT_FETCH_RETRIES = 2
 

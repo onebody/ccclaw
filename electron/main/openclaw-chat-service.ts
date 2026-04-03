@@ -75,7 +75,7 @@ import {
   type LocalChatSessionState,
   readLocalChatSessionState,
   readLocalChatTranscript,
-} from './qclaw-chat-store'
+} from './ccclaw-chat-store'
 import { setActiveAbortController as trackActiveAbortController } from './command-control'
 
 const { randomUUID } = process.getBuiltinModule('node:crypto') as typeof import('node:crypto')
@@ -630,7 +630,7 @@ export async function getChatCapabilitySnapshot(
         supportsChatHistory
           ? 'chat.history primary path is enabled behind the current history flag and capability gate.'
           : 'chat.history remains disabled until both the history flag and capability gate are satisfied.',
-        'gateway chat.send and gateway call based flows are implemented in Qclaw main process today.',
+        'gateway chat.send and gateway call based flows are implemented in Ccclaw main process today.',
       ],
     }
   } catch (error) {
@@ -676,7 +676,7 @@ export async function getChatSessionDebugSnapshot(
     notes.push('This session currently mixes upstream metadata with local cache state.')
   }
   if (unifiedSemantics.authorityKind === 'local-cache-only') {
-    notes.push('This session currently resolves from Qclaw local cache state without upstream authority.')
+    notes.push('This session currently resolves from Ccclaw local cache state without upstream authority.')
   }
   if (unifiedSemantics.cachePresence === 'local-transcript') {
     notes.push('Local transcript cache exists and can currently influence transcript reads.')
@@ -1137,9 +1137,9 @@ async function defaultCallGatewayRpc(
     method,
     params,
     {
-      clientId: 'qclaw-ui',
+      clientId: 'ccclaw-ui',
       clientMode: 'ui',
-      clientVersion: 'qclaw-lite',
+      clientVersion: 'ccclaw-lite',
       timeoutMs,
     }
   )
@@ -2052,7 +2052,7 @@ function resolveChatHistoryPrimaryEnabled(options: OpenClawChatServiceOptions = 
   if (typeof options.chatHistoryPrimaryEnabled === 'boolean') {
     return options.chatHistoryPrimaryEnabled
   }
-  const raw = String(process.env.QCLAW_CHAT_USE_HISTORY_PRIMARY || '').trim().toLowerCase()
+  const raw = String(process.env.CCCLAW_CHAT_USE_HISTORY_PRIMARY || '').trim().toLowerCase()
   return raw === '1' || raw === 'true' || raw === 'yes' || raw === 'on'
 }
 
@@ -3275,7 +3275,7 @@ export async function sendChatMessage(
 ): Promise<ChatSendResult> {
   // Important invariant: sending a message must never decide or override the
   // session model. OpenClaw Control UI changes models via `sessions.patch`;
-  // Qclaw mirrors that contract and only sends against the session's current
+  // Ccclaw mirrors that contract and only sends against the session's current
   // resolved model.
   const requestedSessionId = String(request.sessionId || '').trim()
   const text = String(request.text || '').trim()

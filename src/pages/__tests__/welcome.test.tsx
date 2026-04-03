@@ -22,6 +22,6 @@ describe('Welcome', () => {
     expect(html).toContain('环境风险')
     expect(html).toContain('Openclaw权限较大，不建议使用含有重要文件的工作电脑')
     expect(html).toContain('当前Openclaw 要求 Node.js 版本高于22.16')
-    expect(html).toContain('Qclaw 会自动安装最新版node，可能造成node版本覆盖')
+    expect(html).toContain('Ccclaw 会自动安装最新版node，可能造成node版本覆盖')
   })
 })

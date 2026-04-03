@@ -10,12 +10,12 @@ describe('model verification store', () => {
   let userDataDir = ''
 
   beforeEach(async () => {
-    userDataDir = await mkdtemp(path.join(os.tmpdir(), 'qclaw-model-verification-'))
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    userDataDir = await mkdtemp(path.join(os.tmpdir(), 'ccclaw-model-verification-'))
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
   })
 
   afterEach(async () => {
-    delete process.env.QCLAW_USER_DATA_DIR
+    delete process.env.CCCLAW_USER_DATA_DIR
     if (userDataDir) {
       await rm(userDataDir, { recursive: true, force: true })
       userDataDir = ''

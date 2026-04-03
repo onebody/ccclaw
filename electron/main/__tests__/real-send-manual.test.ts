@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 const itWithRealSendEnvironment =
-  process.env.QCLAW_ENABLE_REAL_SEND_MANUAL_TEST === '1' ? it : it.skip
+  process.env.CCCLAW_ENABLE_REAL_SEND_MANUAL_TEST === '1' ? it : it.skip
 
 describe('real send manual verification', () => {
   itWithRealSendEnvironment('can enumerate live chat sessions and send to a trusted upstream session', async () => {
@@ -22,10 +22,10 @@ describe('real send manual verification', () => {
 
     const result = await sendChatMessage({
       sessionId: candidate!.sessionId,
-      text: 'Reply with exactly: QCLAW_REAL_SEND_OK',
+      text: 'Reply with exactly: CCCLAW_REAL_SEND_OK',
     })
 
     expect(result.ok).toBe(true)
-    expect(String(result.message?.text || '')).toContain('QCLAW_REAL_SEND_OK')
+    expect(String(result.message?.text || '')).toContain('CCCLAW_REAL_SEND_OK')
   }, 180_000)
 })

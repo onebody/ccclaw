@@ -7,7 +7,7 @@ function fail(message) {
 
 const LOCK_WAIT_SIGNAL = new Int32Array(new SharedArrayBuffer(4))
 
-export const DEFAULT_PACKAGE_VERSION_STATE_PATH = '.qclaw-package-version.json'
+export const DEFAULT_PACKAGE_VERSION_STATE_PATH = '.ccclaw-package-version.json'
 export const PACKAGE_VERSION_LOCK_SUFFIX = '.lock'
 export const DEFAULT_PACKAGE_VERSION_LOCK_TIMEOUT_MS = 5000
 export const PACKAGE_VERSION_SEQUENCE_SLOT_SIZE = 100
@@ -22,7 +22,7 @@ function sleepForLockRetry(delayMs) {
 
 function resolveLockTimeoutMs(options = {}) {
   const env = resolveEnv(options.env)
-  const candidate = Number(options.lockTimeoutMs ?? env.QCLAW_PACKAGE_VERSION_LOCK_TIMEOUT_MS)
+  const candidate = Number(options.lockTimeoutMs ?? env.CCCLAW_PACKAGE_VERSION_LOCK_TIMEOUT_MS)
   if (!Number.isFinite(candidate) || candidate <= 0) {
     return DEFAULT_PACKAGE_VERSION_LOCK_TIMEOUT_MS
   }
@@ -53,7 +53,7 @@ function normalizeSequence(sequence) {
   }
   if (normalized >= PACKAGE_VERSION_SEQUENCE_SLOT_SIZE) {
     fail(
-      `当天打包次数已达到上限 ${PACKAGE_VERSION_SEQUENCE_SLOT_SIZE}。如需继续，请设置 QCLAW_PACKAGE_VERSION 手动覆盖版本号。`
+      `当天打包次数已达到上限 ${PACKAGE_VERSION_SEQUENCE_SLOT_SIZE}。如需继续，请设置 CCCLAW_PACKAGE_VERSION 手动覆盖版本号。`
     )
   }
   return normalized
@@ -197,7 +197,7 @@ function withPackageVersionLock(options, action) {
 }
 
 export function resolveVersionTimeZone(env = process.env) {
-  return String(resolveEnv(env).QCLAW_VERSION_TIMEZONE || 'Asia/Shanghai').trim() || 'Asia/Shanghai'
+  return String(resolveEnv(env).CCCLAW_VERSION_TIMEZONE || 'Asia/Shanghai').trim() || 'Asia/Shanghai'
 }
 
 export function buildDateVersion(date = new Date(), timeZone = resolveVersionTimeZone()) {
@@ -226,7 +226,7 @@ export function isValidPackageVersion(value) {
 export function resolvePackageVersionStatePath(options = {}) {
   const env = resolveEnv(options.env)
   const configuredPath =
-    String(options.statePath || env.QCLAW_PACKAGE_VERSION_STATE_PATH || DEFAULT_PACKAGE_VERSION_STATE_PATH).trim() ||
+    String(options.statePath || env.CCCLAW_PACKAGE_VERSION_STATE_PATH || DEFAULT_PACKAGE_VERSION_STATE_PATH).trim() ||
     DEFAULT_PACKAGE_VERSION_STATE_PATH
   const cwd = options.cwd || process.cwd()
   return resolve(cwd, configuredPath)
@@ -270,8 +270,8 @@ function buildStateVersionMetadata(baseVersion, sequence) {
 export function resolvePackageVersion(options = {}) {
   const env = resolveEnv(options.env)
   const timeZone = options.timeZone || resolveVersionTimeZone(env)
-  const override = String(env.QCLAW_PACKAGE_VERSION || '').trim()
-  const displayOverride = String(env.QCLAW_DISPLAY_VERSION || '').trim()
+  const override = String(env.CCCLAW_PACKAGE_VERSION || '').trim()
+  const displayOverride = String(env.CCCLAW_DISPLAY_VERSION || '').trim()
   const baseVersion = buildDateVersion(options.date, timeZone)
   const statePath = resolvePackageVersionStatePath({
     statePath: options.statePath,

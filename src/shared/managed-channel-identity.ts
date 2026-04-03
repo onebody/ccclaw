@@ -5,7 +5,7 @@ import {
 } from './managed-channel-plugin-registry'
 
 export type ManagedChannelKind = 'official-managed' | 'unmanaged'
-export type ManagedChannelSourceOfTruth = 'qclaw-shared-registry' | 'config'
+export type ManagedChannelSourceOfTruth = 'ccclaw-shared-registry' | 'config'
 
 export interface ManagedChannelIdentity {
   channelId: string
@@ -57,7 +57,7 @@ export function resolveManagedChannelIdentity(params: {
     platform: platform || record.channelId,
     pluginId: record.pluginId,
     managementKind: 'official-managed',
-    sourceOfTruth: 'qclaw-shared-registry',
+    sourceOfTruth: 'ccclaw-shared-registry',
     ...(officialAdapterId ? { officialAdapterId } : {}),
   }
 }

@@ -157,7 +157,7 @@ describe('openclaw gateway service', () => {
   }
 
   async function createOpenClawHome() {
-    const homeDir = await mkdtemp(join(tmpdir(), 'qclaw-gateway-feishu-'))
+    const homeDir = await mkdtemp(join(tmpdir(), 'ccclaw-gateway-feishu-'))
     tempDirs.push(homeDir)
     return homeDir
   }

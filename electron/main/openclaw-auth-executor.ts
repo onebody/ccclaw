@@ -506,7 +506,7 @@ function buildOAuthConfigRecoveryFailureMessage(params: {
 }): string {
   return [
     `OpenClaw 在执行 auth flow "${params.authChoice}" 时检测到当前本地配置与新版本契约不兼容。`,
-    `Qclaw 已尝试自动修复配置并恢复 Gateway，但仍未成功：${params.recoverySummary}`,
+    `Ccclaw 已尝试自动修复配置并恢复 Gateway，但仍未成功：${params.recoverySummary}`,
     `原始认证错误：${params.authError}`,
   ].join('\n')
 }
@@ -524,7 +524,7 @@ function buildGatewayRestartFailureMessage(params: {
 
   return [
     intro,
-    `Qclaw 已尝试自动重启 gateway，但失败了：${params.restartError}`,
+    `Ccclaw 已尝试自动重启 gateway，但失败了：${params.restartError}`,
     `原始登录错误：${params.loginError}`,
   ].join('\n')
 }
@@ -542,7 +542,7 @@ function buildGatewayTokenReloadFailureMessage(params: {
 }): string {
   return [
     `OpenClaw 已完成认证写入，但 auth flow "${params.authChoice}" 同时更新了 gateway.auth.token。`,
-    `Qclaw 已先尝试热重载 secrets，并在失败后回退重启 gateway，但仍未成功：${params.applyError}`,
+    `Ccclaw 已先尝试热重载 secrets，并在失败后回退重启 gateway，但仍未成功：${params.applyError}`,
   ].join('\n')
 }
 
@@ -552,7 +552,7 @@ function buildGatewayTokenConfirmFailureMessage(params: {
 }): string {
   return [
     `OpenClaw 已完成 auth flow "${params.authChoice}" 的写入，并已触发 gateway token apply。`,
-    `但 Qclaw 仍未确认 Gateway 已消费最新 token：${params.gatewaySummary}`,
+    `但 Ccclaw 仍未确认 Gateway 已消费最新 token：${params.gatewaySummary}`,
   ].join('\n')
 }
 
@@ -563,7 +563,7 @@ function buildProviderConfigRepairFailureMessage(params: {
   const repairedPaths =
     params.repairedJsonPaths.length > 0 ? params.repairedJsonPaths.join(', ') : '$.models.providers.minimax-portal.api'
   return [
-    'OpenClaw 已完成认证写入，但 Qclaw 在修复 MiniMax provider 运行时配置时失败了。',
+    'OpenClaw 已完成认证写入，但 Ccclaw 在修复 MiniMax provider 运行时配置时失败了。',
     `需要补齐的字段：${repairedPaths}`,
     `修复失败原因：${params.error}`,
   ].join('\n')
@@ -574,7 +574,7 @@ function buildMainAuthProfileSyncFailureMessage(params: {
   error: string
 }): string {
   return [
-    `OpenClaw 已完成 provider "${params.providerId}" 的认证写入，但 Qclaw 在同步 main agent 的 auth profile 时失败了。`,
+    `OpenClaw 已完成 provider "${params.providerId}" 的认证写入，但 Ccclaw 在同步 main agent 的 auth profile 时失败了。`,
     `失败原因：${params.error}`,
   ].join('\n')
 }
@@ -595,7 +595,7 @@ function buildMissingCustomProviderMatchMessage(params: {
 }): string {
   const providerId = String(params.providerId || '').trim()
   return [
-    'OpenClaw 已完成认证写入，但 Qclaw 尚未在配置中确认自定义 Provider ID。',
+    'OpenClaw 已完成认证写入，但 Ccclaw 尚未在配置中确认自定义 Provider ID。',
     providerId ? `当前填写的 Provider ID："${providerId}"。` : '当前未填写 Provider ID。',
     '请等待配置落盘后重试，避免将 API Key 同步到错误的 provider。',
   ].join('\n')
@@ -858,7 +858,7 @@ function buildOnboardGatewayRecoveryFailureMessage(params: {
 }): string {
   return [
     `OpenClaw 在执行 auth flow "${params.authChoice}" 时检测到 Gateway 运行时未就绪。`,
-    `Qclaw 已尝试自动恢复 Gateway 并等待其重新就绪，但恢复失败了：${params.recoverySummary || params.recoveryError}`,
+    `Ccclaw 已尝试自动恢复 Gateway 并等待其重新就绪，但恢复失败了：${params.recoverySummary || params.recoveryError}`,
     `原始认证错误：${params.onboardError}`,
   ].join('\n')
 }

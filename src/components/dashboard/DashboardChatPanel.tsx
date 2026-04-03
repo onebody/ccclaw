@@ -739,7 +739,7 @@ export default function DashboardChatPanel({
     if (!activeSession) return
     if (!activeSession.hasLocalTranscript || clearingTranscript) return
 
-    const confirmed = window.confirm('确认清空这个会话在 Qclaw 本地保存的聊天记录吗？OpenClaw 原始会话不会被删除。')
+    const confirmed = window.confirm('确认清空这个会话在 Ccclaw 本地保存的聊天记录吗？OpenClaw 原始会话不会被删除。')
     if (!confirmed) return
 
     setClearingTranscript(true)
@@ -1253,7 +1253,7 @@ export default function DashboardChatPanel({
                 <div>
                   <Text size="xs" fw={500}>最近会话</Text>
                   <Text size="xs" c="dimmed" mt={4}>
-                    展示最近 OpenClaw / Qclaw 会话，并明确区分本地会话与历史来源会话。
+                    展示最近 OpenClaw / Ccclaw 会话，并明确区分本地会话与历史来源会话。
                   </Text>
                 </div>
                 <Button
@@ -1549,7 +1549,7 @@ export default function DashboardChatPanel({
                         ? '这是一个渠道来源的历史会话，Direct Chat 不会直接续写它。'
                         : '这是一个渠道来源会话，Direct Chat 会继续写入该会话。'
                       : activeSession
-                        ? '这是当前 Qclaw 本地 direct 会话，新的消息会继续写入本地 transcript。'
+                        ? '这是当前 Ccclaw 本地 direct 会话，新的消息会继续写入本地 transcript。'
                         : '这里会直接复用当前默认模型，让您快速验证模型是否正常响应。'}
                 </Text>
                 <Text size="xs" c="dimmed" mt={4}>

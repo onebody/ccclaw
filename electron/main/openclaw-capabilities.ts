@@ -184,7 +184,7 @@ function buildRecoveredMethodLabel(providerId: string, authChoice: string, kind:
 function buildRecoveredOAuthFallbackHint(authChoice: string): string {
   return [
     '从 onboard 帮助文本恢复了该 OAuth 入口；当前版本的官方元数据不可见时，将回退到官方 onboard 认证入口。',
-    `Qclaw 会直接尝试 "openclaw onboard --auth-choice ${authChoice}"，以保持该 Provider 仍可完成配置。`,
+    `Ccclaw 会直接尝试 "openclaw onboard --auth-choice ${authChoice}"，以保持该 Provider 仍可完成配置。`,
   ].join(' ')
 }
 
@@ -337,7 +337,7 @@ function recoverAuthRegistryFromOnboardHelp(
     providers: [...providersById.values()],
     message: [
       authRegistry.message || 'OpenClaw auth metadata is unavailable.',
-      'Qclaw 已基于 onboard 帮助文本恢复部分 Provider 列表，某些高级认证选项可能缺失。',
+      'Ccclaw 已基于 onboard 帮助文本恢复部分 Provider 列表，某些高级认证选项可能缺失。',
     ].join(' '),
   })
 }

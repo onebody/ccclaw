@@ -6,20 +6,20 @@ const os = process.getBuiltinModule('node:os') as typeof import('node:os')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 
 describe('markManagedOpenClawInstall', () => {
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
   let userDataDir = ''
 
   beforeEach(async () => {
-    userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'qclaw-managed-install-store-'))
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'ccclaw-managed-install-store-'))
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
   })
 
   afterEach(async () => {
     await fs.rm(userDataDir, { recursive: true, force: true })
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
     } else {
-      process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+      process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
     }
   })
 

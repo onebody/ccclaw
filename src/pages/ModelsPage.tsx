@@ -1273,7 +1273,7 @@ export default function ModelsPage() {
 
       const providerDisplayName = String(provider?.name || provider?.id || '').trim() || '该服务商'
       const confirmed = window.confirm(
-        `服务商「${providerDisplayName}」仍会从外部 Codex 登录自动恢复。\n\n要彻底删除，Qclaw 需要同时退出这台 Mac 上的 Codex 登录，并再次清理 OpenClaw 认证档案。\n\n是否继续？`
+        `服务商「${providerDisplayName}」仍会从外部 Codex 登录自动恢复。\n\n要彻底删除，Ccclaw 需要同时退出这台 Mac 上的 Codex 登录，并再次清理 OpenClaw 认证档案。\n\n是否继续？`
       )
       if (!confirmed) {
         return {

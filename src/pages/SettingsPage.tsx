@@ -177,7 +177,7 @@ export default function SettingsPage({
         onClick={() => setShowAbout(true)}
         styles={{ inner: { justifyContent: 'space-between' } }}
       >
-        <span>关于 Qclaw</span>
+        <span>关于 Ccclaw</span>
         <IconChevronRight size={14} />
       </Button>
 

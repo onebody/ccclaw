@@ -60,8 +60,8 @@ const secureSchemes = desktopPolicy?.externalOpen.secureSchemes || ['https:']
 const loopbackHttpSchemes = desktopPolicy?.externalOpen.loopbackHttpSchemes || ['http:']
 const openAICodexPolicy = desktopPolicy?.oauth.openaiCodex || {
   defaultCallbackUrl: 'http://127.0.0.1:1455/auth/callback',
-  callbackUrlEnv: 'QCLAW_OPENAI_CALLBACK_URL',
-  callbackPortEnv: 'QCLAW_OPENAI_CALLBACK_PORT',
+  callbackUrlEnv: 'CCCLAW_OPENAI_CALLBACK_URL',
+  callbackPortEnv: 'CCCLAW_OPENAI_CALLBACK_PORT',
   probeHosts: ['127.0.0.1', 'localhost'],
 }
 
@@ -138,8 +138,8 @@ export function buildOpenAICodexCallbackProbeUrls(
   return candidateHosts.map((host) => {
     const probeUrl = new URL(callbackUrl.toString())
     probeUrl.hostname = host
-    probeUrl.searchParams.set('code', 'qclaw_probe')
-    probeUrl.searchParams.set('state', 'qclaw_probe')
+    probeUrl.searchParams.set('code', 'ccclaw_probe')
+    probeUrl.searchParams.set('state', 'ccclaw_probe')
     return probeUrl.toString()
   })
 }

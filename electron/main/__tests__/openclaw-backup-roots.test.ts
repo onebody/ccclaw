@@ -5,16 +5,16 @@ const fs = (process.getBuiltinModule('node:fs') as typeof import('node:fs')).pro
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 
 describe('openclaw backup roots', () => {
-  const originalBackupDir = process.env.QCLAW_BACKUP_DIR
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
+  const originalBackupDir = process.env.CCCLAW_BACKUP_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
   let blockedRoot = ''
   let userDataDir = ''
 
   beforeEach(async () => {
-    blockedRoot = path.join('/tmp', `qclaw-backup-root-blocked-${Date.now()}-${Math.random().toString(16).slice(2)}`)
-    userDataDir = path.join('/tmp', `qclaw-backup-root-user-data-${Date.now()}-${Math.random().toString(16).slice(2)}`)
-    process.env.QCLAW_BACKUP_DIR = blockedRoot
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    blockedRoot = path.join('/tmp', `ccclaw-backup-root-blocked-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    userDataDir = path.join('/tmp', `ccclaw-backup-root-user-data-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    process.env.CCCLAW_BACKUP_DIR = blockedRoot
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
     await fs.rm(blockedRoot, { recursive: true, force: true }).catch(() => undefined)
     await fs.rm(userDataDir, { recursive: true, force: true })
     await fs.writeFile(blockedRoot, 'not-a-directory', 'utf8')
@@ -24,15 +24,15 @@ describe('openclaw backup roots', () => {
     await fs.rm(blockedRoot, { recursive: true, force: true }).catch(() => undefined)
     await fs.rm(userDataDir, { recursive: true, force: true })
     if (originalBackupDir === undefined) {
-      delete process.env.QCLAW_BACKUP_DIR
+      delete process.env.CCCLAW_BACKUP_DIR
     } else {
-      process.env.QCLAW_BACKUP_DIR = originalBackupDir
+      process.env.CCCLAW_BACKUP_DIR = originalBackupDir
     }
 
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
     } else {
-      process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+      process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
     }
   })
 

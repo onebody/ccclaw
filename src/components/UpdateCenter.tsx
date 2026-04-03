@@ -4,7 +4,7 @@ import { IconRefresh } from '@tabler/icons-react'
 import type { CombinedUpdateCheckResult } from '../shared/openclaw-phase4'
 import CombinedUpdateDialog from './CombinedUpdateDialog'
 import OpenClawUpgradeDialog from './OpenClawUpgradeDialog'
-import QClawUpdateDialog from './QClawUpdateDialog'
+import CCClawUpdateDialog from './CCClawUpdateDialog'
 
 function summarizeOpenClaw(check: CombinedUpdateCheckResult | null): string {
   if (!check) return '读取中...'
@@ -20,12 +20,12 @@ function summarizeOpenClaw(check: CombinedUpdateCheckResult | null): string {
   return '无法确认 OpenClaw 版本状态'
 }
 
-function summarizeQClaw(check: CombinedUpdateCheckResult | null): string {
+function summarizeCCClaw(check: CombinedUpdateCheckResult | null): string {
   if (!check) return '读取中...'
-  if (check.qclaw.availableVersion) {
-    return `${check.qclaw.currentVersion} → ${check.qclaw.availableVersion}`
+  if (check.ccclaw.availableVersion) {
+    return `${check.ccclaw.currentVersion} → ${check.ccclaw.availableVersion}`
   }
-  return `当前版本 ${check.qclaw.currentVersion}`
+  return `当前版本 ${check.ccclaw.currentVersion}`
 }
 
 export default function UpdateCenter({
@@ -39,7 +39,7 @@ export default function UpdateCenter({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showOpenClawDialog, setShowOpenClawDialog] = useState(false)
-  const [showQClawDialog, setShowQClawDialog] = useState(false)
+  const [showCCClawDialog, setShowCCClawDialog] = useState(false)
   const [showCombinedDialog, setShowCombinedDialog] = useState(false)
 
   const loadCheck = async () => {
@@ -71,10 +71,10 @@ export default function UpdateCenter({
       btnText: '查看升级',
     },
     {
-      label: 'Qclaw',
+      label: 'Ccclaw',
       desc: '只更新面板，不影响 OpenClaw 配置与运行',
-      status: summarizeQClaw(check),
-      action: () => setShowQClawDialog(true),
+      status: summarizeCCClaw(check),
+      action: () => setShowCCClawDialog(true),
       btnText: '查看更新',
     },
     {
@@ -162,7 +162,7 @@ export default function UpdateCenter({
         onClose={() => setShowOpenClawDialog(false)}
         onUpdated={() => void loadCheck()}
       />
-      <QClawUpdateDialog open={showQClawDialog} onClose={() => setShowQClawDialog(false)} />
+      <CCClawUpdateDialog open={showCCClawDialog} onClose={() => setShowCCClawDialog(false)} />
       <CombinedUpdateDialog
         open={showCombinedDialog}
         onClose={() => setShowCombinedDialog(false)}

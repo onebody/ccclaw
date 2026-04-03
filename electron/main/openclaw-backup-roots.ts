@@ -22,7 +22,7 @@ function uniquePaths(values: string[]): string[] {
 function buildBackupWriteProbePath(rootDirectory: string): string {
   return path.join(
     rootDirectory,
-    `.qclaw-backup-write-probe-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`
+    `.ccclaw-backup-write-probe-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`
   )
 }
 
@@ -39,26 +39,26 @@ function formatRootFailure(rootDirectory: string, error: unknown): string {
 }
 
 export function resolveOpenClawUserDataDirectory(): string {
-  return String(process.env.QCLAW_USER_DATA_DIR || path.join(homedir(), '.qclaw-lite')).trim()
+  return String(process.env.CCCLAW_USER_DATA_DIR || path.join(homedir(), '.ccclaw-lite')).trim()
 }
 
 export function resolvePreferredOpenClawBackupDirectory(): string {
   return String(
-    process.env.QCLAW_BACKUP_DIR || path.join(homedir(), 'Documents', 'Qclaw Lite Backups')
+    process.env.CCCLAW_BACKUP_DIR || path.join(homedir(), 'Documents', 'Ccclaw Lite Backups')
   ).trim()
 }
 
 export function resolveFallbackOpenClawBackupDirectory(): string {
-  const explicitFallback = String(process.env.QCLAW_FALLBACK_BACKUP_DIR || '').trim()
+  const explicitFallback = String(process.env.CCCLAW_FALLBACK_BACKUP_DIR || '').trim()
   if (explicitFallback) return explicitFallback
 
-  const configuredUserDataDirectory = String(process.env.QCLAW_USER_DATA_DIR || '').trim()
+  const configuredUserDataDirectory = String(process.env.CCCLAW_USER_DATA_DIR || '').trim()
   if (configuredUserDataDirectory) {
     return path.join(configuredUserDataDirectory, 'backups')
   }
 
   if (process.platform === 'darwin') {
-    return path.join(homedir(), 'Library', 'Application Support', 'Qclaw Lite', 'Backups')
+    return path.join(homedir(), 'Library', 'Application Support', 'Ccclaw Lite', 'Backups')
   }
 
   return path.join(resolveOpenClawUserDataDirectory(), 'backups')

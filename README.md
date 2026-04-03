@@ -1,10 +1,10 @@
 <br />
 <div align="center">
-  <a href="https://github.com/qiuzhi2046/Qclaw">
+  <a href="https://github.com/onebody/Ccclaw">
     <img src="src/assets/logo.png" alt="Logo" width="128" height="128">
   </a>
 
-  <h1 align="center" style="margin-top: 0.2em;">Qclaw</h1>
+  <h1 align="center" style="margin-top: 0.2em;">Ccclaw</h1>
 
   [![Electron][electron-badge]][electron-url]
   [![React][react-badge]][react-url]
@@ -15,26 +15,26 @@
   <p align="center">
     <h3>不用命令行，小白也能轻松玩转 OpenClaw</h3>
     <br />
-    <a href="https://qclawai.com/"><strong>访问官网 &raquo;</strong></a>
+    <a href="https://ccclawai.com/"><strong>访问官网 &raquo;</strong></a>
     <br />
     <br />
-    <a href="https://github.com/qiuzhi2046/Qclaw/blob/main/README.en.md">English</a>
+    <a href="https://github.com/onebody/Ccclaw/blob/main/README.en.md">English</a>
     &middot;
-    <a href="https://github.com/qiuzhi2046/Qclaw/blob/main/README.md">简体中文</a>
+    <a href="https://github.com/onebody/Ccclaw/blob/main/README.md">简体中文</a>
     &middot;
-    <a href="https://github.com/qiuzhi2046/qclaw/issues/new?labels=bug">报告 Bug</a>
+    <a href="https://github.com/onebody/ccclaw/issues/new?labels=bug">报告 Bug</a>
     &middot;
-    <a href="https://github.com/qiuzhi2046/qclaw/issues/new?labels=enhancement">功能建议</a>
+    <a href="https://github.com/onebody/ccclaw/issues/new?labels=enhancement">功能建议</a>
   </p>
 </div>
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=qiuzhi2046%2FQclaw&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=onebody%2FCcclaw&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=qiuzhi2046/Qclaw&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=qiuzhi2046/Qclaw&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=qiuzhi2046/Qclaw&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=onebody/Ccclaw&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=onebody/Ccclaw&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=onebody/Ccclaw&type=date&legend=top-left" />
  </picture>
 </a>
 
@@ -80,7 +80,7 @@
 
 ## 为什么会有这个项目
 
-开发 Qclaw 的初心很简单：做一个简单好用的 OpenClaw 桌面管家，让每个人都能轻松装上、用上OpenClaw。
+开发 Ccclaw 的初心很简单：做一个简单好用的 OpenClaw 桌面管家，让每个人都能轻松装上、用上OpenClaw。
 - 降低门槛：将复杂的配置转化为简单的桌面交互
 - 打破壁垒：让人人都能用上好用、强大的AI工具
 - 零基础上手——教程即操作，边看边用，快速入门
@@ -91,9 +91,9 @@
 
 ### Step 1：下载安装
 
-- 下载并打开 Qclaw Lite 客户端
-  - 官网：https://qclawai.com/
-  - GitHub Release：[下载最新版本](https://github.com/qiuzhi2046/Qclaw/releases)
+- 下载并打开 Ccclaw Lite 客户端
+  - 官网：https://ccclawai.com/
+  - GitHub Release：[下载最新版本](https://github.com/onebody/Ccclaw/releases)
 - 阅读安全提醒内容并确认继续
 
 ### Step 2：环境准备
@@ -122,14 +122,14 @@
 - 在客户端直接发起对话
 - 或者前往你刚刚配置的 IM 工具中，测试你的专属 AI 助手
 
-> 💡 关闭 Qclaw Lite 窗口不会影响后台的 OpenClaw 运行，IM 渠道照常可用。
+> 💡 关闭 Ccclaw Lite 窗口不会影响后台的 OpenClaw 运行，IM 渠道照常可用。
 
 ## 快速开发
 
 ### 推荐开发环境
 
 - macOS
-- Qclaw(OpenClaw)
+- Ccclaw(OpenClaw)
 - [Codex](https://github.com/openai/codex) 或 [Claude Code](https://claude.ai/code)
 - Node.js 24（至少22）
 
@@ -137,8 +137,8 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/qiuzhi2046/Qclaw.git
-cd Qclaw
+git clone https://github.com/onebody/Ccclaw.git
+cd Ccclaw
 
 # 安装依赖
 npm install
@@ -188,7 +188,7 @@ build/              应用图标与打包资源
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                           Qclaw                         │
+│                           Ccclaw                         │
 │                                                         │
 │  ┌──────────────────┐         ┌──────────────────────┐  │
 │  │   Main Process   │         │  Renderer Process    │  │
@@ -219,7 +219,7 @@ build/              应用图标与打包资源
 ## 已知问题
 
 - 这个文档记录了当前项目的已知缺陷和bug（AI有待调教，多多包容）
-- 请查看 [Issues](https://github.com/qiuzhi2046/Qclaw/issues) 了解具体问题和功能建议。
+- 请查看 [Issues](https://github.com/onebody/Ccclaw/issues) 了解具体问题和功能建议。
 
 ## 支持环境
 
@@ -233,21 +233,21 @@ build/              应用图标与打包资源
 
 [贡献指南](CONTRIBUTING.md)
 
-- **Qclaw贡献者交流群**
+- **Ccclaw贡献者交流群**
 <p>
-  <img src="docs/images/feishu_contributor.png" alt="Qclaw贡献者交流群" height="160">
+  <img src="docs/images/feishu_contributor.png" alt="Ccclaw贡献者交流群" height="160">
   <br />
-  <mark>如果你希望给 Qclaw 做贡献，欢迎加入贡献者交流群！</mark>
+  <mark>如果你希望给 Ccclaw 做贡献，欢迎加入贡献者交流群！</mark>
 </p>
 
 ## 加入社区
 
-- **Qclaw用户交流群**
+- **Ccclaw用户交流群**
 
 <p>
-  <img src="docs/images/feishu_qrcode.png" alt="Qclaw用户交流群二维码" height="180">
+  <img src="docs/images/feishu_qrcode.png" alt="Ccclaw用户交流群二维码" height="180">
   <br />
-  <mark>如果你对Qclaw有疑问、希望与其他朋友交流等，欢迎加入用户交流群！</mark>
+  <mark>如果你对Ccclaw有疑问、希望与其他朋友交流等，欢迎加入用户交流群！</mark>
 </p>
 
 
@@ -274,7 +274,7 @@ build/              应用图标与打包资源
 
 ## 加入我们
 
-欢迎开发相关的人才加入我们（简历请投：join@qiuzhi2046.com）。
+欢迎开发相关的人才加入我们（简历请投：4308451@qq.com）。
 
 虽然暂时不能提供大厂级别的薪资福利，但我们能给你一个纯粹、没有会议和 PPT 内耗的创造环境——AI 工具不限量！
 
@@ -286,14 +286,14 @@ build/              应用图标与打包资源
 
 ## 贡献者
 
-<a href="https://github.com/qiuzhi2046/Qclaw/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=qiuzhi2046/Qclaw" alt="contributors" />
+<a href="https://github.com/onebody/Ccclaw/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=onebody/Ccclaw" alt="contributors" />
 </a>
 
 ## 致谢
-感谢 OpenClaw——没有它就没有 Qclaw，我们只是站在巨人肩膀上搭了个小梯子。
+感谢 OpenClaw——没有它就没有 Ccclaw，我们只是站在巨人肩膀上搭了个小梯子。
 
-感谢 Electron、React、Vite、Mantine 等众多开源项目，以及所有默默贡献的开源作者。Qclaw 的每一行代码背后，都有你们的影子。
+感谢 Electron、React、Vite、Mantine 等众多开源项目，以及所有默默贡献的开源作者。Ccclaw 的每一行代码背后，都有你们的影子。
 
 感谢参与内测的朋友们，你们的每一条 bug 反馈和建议都在让产品进步。你们的飞书 ID 我们都记下了 👀
 
@@ -338,4 +338,4 @@ build/              应用图标与打包资源
 [xiaohongshu-shield]: https://img.shields.io/badge/小红书-FF2442?style=for-the-badge&logo=xiaohongshu&logoColor=white
 [xiaohongshu-url]: https://www.xiaohongshu.com/user/profile/63b622ab00000000260066bd
 [youtube-shield]: https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white
-[youtube-url]: https://www.youtube.com/@qiuzhi2046
+[youtube-url]: https://www.youtube.com/@onebody

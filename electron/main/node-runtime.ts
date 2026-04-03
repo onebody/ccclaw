@@ -174,23 +174,23 @@ export function buildMacNpmCommand(
     ...buildGitHubHttpsRewriteEnvCommands(),
     'unset NODE_OPTIONS npm_config_userconfig NPM_CONFIG_USERCONFIG npm_config_globalconfig NPM_CONFIG_GLOBALCONFIG npm_config_prefix NPM_CONFIG_PREFIX npm_config_registry NPM_CONFIG_REGISTRY npm_config_cache NPM_CONFIG_CACHE npm_config_cafile NPM_CONFIG_CAFILE npm_config_ca NPM_CONFIG_CA SSL_CERT_FILE SSL_CERT_DIR NODE_EXTRA_CA_CERTS',
     [
-      'qclaw_npm_log="$(mktemp -t qclaw-npm-log.XXXXXX)"',
-      `${npmCommand} >"$qclaw_npm_log" 2>&1`,
-      'qclaw_npm_status="$?"',
-      'cat "$qclaw_npm_log"',
-      `if [ "$qclaw_npm_status" -ne 0 ] && grep -Eiq ${quotePosixShellArg(
+      'ccclaw_npm_log="$(mktemp -t ccclaw-npm-log.XXXXXX)"',
+      `${npmCommand} >"$ccclaw_npm_log" 2>&1`,
+      'ccclaw_npm_status="$?"',
+      'cat "$ccclaw_npm_log"',
+      `if [ "$ccclaw_npm_status" -ne 0 ] && grep -Eiq ${quotePosixShellArg(
         NPM_TLS_CERT_FAILURE_REGEX
-      )} "$qclaw_npm_log"; then`,
+      )} "$ccclaw_npm_log"; then`,
       '  unset npm_config_cafile NPM_CONFIG_CAFILE npm_config_ca NPM_CONFIG_CA',
       `  if [ -f ${quotePosixShellArg(
         MAC_SYSTEM_CERT_FILE_PATH
       )} ]; then export SSL_CERT_FILE=${quotePosixShellArg(MAC_SYSTEM_CERT_FILE_PATH)}; fi`,
-      `  ${npmCommand} >"$qclaw_npm_log" 2>&1`,
-      '  qclaw_npm_status="$?"',
-      '  cat "$qclaw_npm_log"',
+      `  ${npmCommand} >"$ccclaw_npm_log" 2>&1`,
+      '  ccclaw_npm_status="$?"',
+      '  cat "$ccclaw_npm_log"',
       'fi',
-      'rm -f "$qclaw_npm_log"',
-      '[ "$qclaw_npm_status" -eq 0 ]',
+      'rm -f "$ccclaw_npm_log"',
+      '[ "$ccclaw_npm_status" -eq 0 ]',
     ].join('\n'),
   ]
 

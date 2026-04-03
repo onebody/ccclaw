@@ -123,7 +123,7 @@ describe('openclaw-download-fallbacks', () => {
       buildOpenClawUninstallArgs({
         userConfigPath: '/tmp/openclaw-installer/npm/user.npmrc',
         globalConfigPath: '/tmp/openclaw-installer/npm/global.npmrc',
-        cachePath: '/private/tmp/qclaw-openclaw-admin-npm/cache',
+        cachePath: '/private/tmp/ccclaw-openclaw-admin-npm/cache',
         fetchTimeoutMs: 30000,
         fetchRetries: 2,
       })
@@ -133,7 +133,7 @@ describe('openclaw-download-fallbacks', () => {
       'openclaw',
       '--userconfig=/tmp/openclaw-installer/npm/user.npmrc',
       '--globalconfig=/tmp/openclaw-installer/npm/global.npmrc',
-      '--cache=/private/tmp/qclaw-openclaw-admin-npm/cache',
+      '--cache=/private/tmp/ccclaw-openclaw-admin-npm/cache',
       '--fetch-timeout=30000',
       '--fetch-retries=2',
     ])

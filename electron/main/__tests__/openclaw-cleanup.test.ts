@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
-  QCLAW_OPENCLAW_SHELL_BLOCK_END,
-  QCLAW_OPENCLAW_SHELL_BLOCK_START,
+  CCCLAW_OPENCLAW_SHELL_BLOCK_END,
+  CCCLAW_OPENCLAW_SHELL_BLOCK_START,
   buildOpenClawGatewayUninstallArgs,
   buildOpenClawStateUninstallArgs,
   resolveLaunchAgentCleanupPlan,
@@ -15,9 +15,9 @@ describe('stripManagedShellBlocks', () => {
     const content = [
       'export PATH="$HOME/bin:$PATH"',
       '# keep my openclaw helper comment',
-      QCLAW_OPENCLAW_SHELL_BLOCK_START,
+      CCCLAW_OPENCLAW_SHELL_BLOCK_START,
       'export PATH="$HOME/.openclaw/bin:$PATH"',
-      QCLAW_OPENCLAW_SHELL_BLOCK_END,
+      CCCLAW_OPENCLAW_SHELL_BLOCK_END,
       'alias openclaw-dev="openclaw --dev"',
     ].join('\n')
 
@@ -33,7 +33,7 @@ describe('stripManagedShellBlocks', () => {
   it('keeps the file unchanged when the marker block is incomplete', () => {
     const content = [
       'export PATH="$HOME/bin:$PATH"',
-      QCLAW_OPENCLAW_SHELL_BLOCK_START,
+      CCCLAW_OPENCLAW_SHELL_BLOCK_START,
       'export PATH="$HOME/.openclaw/bin:$PATH"',
     ].join('\n')
 
@@ -69,7 +69,7 @@ describe('resolveLaunchAgentCleanupPlan', () => {
       homeDir: '/Users/alice',
       platform: 'darwin',
       env: buildTestEnv({
-        QCLAW_OPENCLAW_LAUNCHD_LABELS: 'com.openclaw.gateway,com.openclaw.gateway.beta',
+        CCCLAW_OPENCLAW_LAUNCHD_LABELS: 'com.openclaw.gateway,com.openclaw.gateway.beta',
       }),
     })
 

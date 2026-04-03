@@ -13,7 +13,7 @@ const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 const tempDirs: string[] = []
 
 function makeStatePath() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-package-version-'))
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-package-version-'))
   tempDirs.push(dir)
   return path.join(dir, 'package-version-state.json')
 }
@@ -140,7 +140,7 @@ describe('resolvePackageVersion', () => {
     expect(compareStableVersions(result.version, '2026.3.2702')).toBeGreaterThan(0)
   })
 
-  it('keeps honoring an explicit QCLAW_PACKAGE_VERSION override', () => {
+  it('keeps honoring an explicit CCCLAW_PACKAGE_VERSION override', () => {
     const statePath = makeStatePath()
 
     const result = resolvePackageVersion({
@@ -148,8 +148,8 @@ describe('resolvePackageVersion', () => {
       timeZone: 'Asia/Shanghai',
       statePath,
       env: {
-        QCLAW_PACKAGE_VERSION: '2026.3.2709',
-        QCLAW_DISPLAY_VERSION: '2026.3.27-v9',
+        CCCLAW_PACKAGE_VERSION: '2026.3.2709',
+        CCCLAW_DISPLAY_VERSION: '2026.3.27-v9',
       },
     })
 
@@ -232,8 +232,8 @@ describe('persistPackageVersionState', () => {
       timeZone: 'Asia/Shanghai',
       statePath,
       env: {
-        QCLAW_PACKAGE_VERSION: '2026.3.2709',
-        QCLAW_DISPLAY_VERSION: '2026.3.27-v9',
+        CCCLAW_PACKAGE_VERSION: '2026.3.2709',
+        CCCLAW_DISPLAY_VERSION: '2026.3.27-v9',
       },
     })
 

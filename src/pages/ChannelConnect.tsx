@@ -608,7 +608,7 @@ export function resolveFeishuManualBindingPreparationCopy(
   if (phase === 'syncing') {
     return {
       title: '正在同步飞书插件配置',
-      description: '检测到官方插件已存在，正在补齐 Qclaw 需要的配置，随后直接进入手动绑定。',
+      description: '检测到官方插件已存在，正在补齐 Ccclaw 需要的配置，随后直接进入手动绑定。',
     }
   }
 
@@ -1005,7 +1005,7 @@ export default function ChannelConnect({
           if (recoveryTarget === 'recover-create') {
             void stopBackgroundFeishuInstaller()
             setFeishuInstallerNotice(
-              '已刷新到最新配置，检测到飞书机器人信息，Qclaw 会停止后台安装器；现在可以直接点击“完成配置”。'
+              '已刷新到最新配置，检测到飞书机器人信息，Ccclaw 会停止后台安装器；现在可以直接点击“完成配置”。'
             )
           } else if (setupState.pluginState.installedOnDisk) {
             setFeishuInstallerNotice(
@@ -1111,7 +1111,7 @@ export default function ChannelConnect({
       if (result.value.recoveryTarget === 'recover-create') {
         void stopBackgroundFeishuInstaller()
         setFeishuInstallerNotice(
-          '已自动检测到飞书机器人配置，Qclaw 会停止后台安装器；现在可以直接点击“完成配置”。'
+          '已自动检测到飞书机器人配置，Ccclaw 会停止后台安装器；现在可以直接点击“完成配置”。'
         )
       }
     }
@@ -1210,8 +1210,8 @@ export default function ChannelConnect({
     feishuInstallerPromptAutoReplyKeyRef.current = promptKey
     setFeishuInstallerNotice(
       feishuBotSetupMode === 'link'
-        ? '检测到官方安装器询问是否复用已存在的飞书机器人，Qclaw 已自动回复 “Y”。'
-        : '检测到官方安装器询问是否复用已存在的飞书机器人，Qclaw 已自动回复 “n”，继续走新建机器人流程。'
+        ? '检测到官方安装器询问是否复用已存在的飞书机器人，Ccclaw 已自动回复 “Y”。'
+        : '检测到官方安装器询问是否复用已存在的飞书机器人，Ccclaw 已自动回复 “n”，继续走新建机器人流程。'
     )
 
     void sendFeishuInstallerInput(`${autoReply}\n`).then((ok) => {
@@ -1351,8 +1351,8 @@ export default function ChannelConnect({
       }
       setWeixinInstallerOutput((current) =>
         current.trimEnd()
-          ? `${current.replace(/\s*$/, '')}\n\n[Qclaw] 已请求终止个人微信安装器，正在停止...\n`
-          : '[Qclaw] 已请求终止个人微信安装器，正在停止...\n'
+          ? `${current.replace(/\s*$/, '')}\n\n[Ccclaw] 已请求终止个人微信安装器，正在停止...\n`
+          : '[Ccclaw] 已请求终止个人微信安装器，正在停止...\n'
       )
     } finally {
       setWeixinInstallerBusy(false)
@@ -2150,7 +2150,7 @@ export default function ChannelConnect({
                             </Text>
                           )}
                           <Text size="xs" c="dimmed">
-                            Qclaw 会自动轮询插件状态；如果插件其实已经装好、但页面还没切换，也可以点击上方“刷新状态”立即重试。
+                            Ccclaw 会自动轮询插件状态；如果插件其实已经装好、但页面还没切换，也可以点击上方“刷新状态”立即重试。
                           </Text>
                         </div>
                       </div>
@@ -2215,7 +2215,7 @@ export default function ChannelConnect({
                         </a>
                         <p className="text-[11px] leading-5 app-text-muted">
                           如果你已经在飞书开放平台创建好了机器人，请点击上方“关联已有机器人”，
-                          Qclaw 会先确认飞书官方插件真实可用；缺失时会先自动补装，再开放手动绑定。
+                          Ccclaw 会先确认飞书官方插件真实可用；缺失时会先自动补装，再开放手动绑定。
                         </p>
                       </div>
                     </div>
@@ -2372,7 +2372,7 @@ export default function ChannelConnect({
               ) : selectedChannel.id === 'openclaw-weixin' ? (
                 <div className="space-y-3">
                   <Text size="sm" c="dimmed">
-                    点击“开始连接”后，Qclaw 会安装个人微信插件，并在下方命令输出里直接展示二维码。请使用微信扫码并在手机上确认授权。
+                    点击“开始连接”后，Ccclaw 会安装个人微信插件，并在下方命令输出里直接展示二维码。请使用微信扫码并在手机上确认授权。
                   </Text>
                   <Text size="xs" c="dimmed">
                     如果二维码过期，安装器会自动刷新；连接成功后，账号会自动同步到控制面板中。当前版本暂不支持给其他微信用户做配对授权，仅扫码登录的这个微信账号可直接使用。

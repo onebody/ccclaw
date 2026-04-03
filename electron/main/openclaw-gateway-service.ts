@@ -115,7 +115,7 @@ const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const os = process.getBuiltinModule('node:os') as typeof import('node:os')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 const CLAWHUB_RESOLUTION_FAILED_PATTERN = /resolving clawhub:[\s\S]*fetch failed/i
-const QCLAW_PLUGIN_NPM_CACHE_ROOT_DIR = path.join(os.tmpdir(), 'qclaw-lite', 'npm-cache')
+const CCCLAW_PLUGIN_NPM_CACHE_ROOT_DIR = path.join(os.tmpdir(), 'ccclaw-lite', 'npm-cache')
 
 function extractFirstNonEmptyLine(text: string): string {
   for (const line of String(text || '').split(/\r?\n/g)) {
@@ -134,10 +134,10 @@ async function installPluginFromPackedNpmArchive(
   packageName: string,
   expectedPluginId: string
 ): Promise<CliResult> {
-  const packRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'qclaw-plugin-pack-'))
+  const packRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'ccclaw-plugin-pack-'))
   let npmCacheDir: string | null = null
   try {
-    const npmEnv = await createIsolatedNpmCacheEnv(QCLAW_PLUGIN_NPM_CACHE_ROOT_DIR)
+    const npmEnv = await createIsolatedNpmCacheEnv(CCCLAW_PLUGIN_NPM_CACHE_ROOT_DIR)
     npmCacheDir = npmEnv.cacheDir
     const packResult = await runShell(
       'npm',

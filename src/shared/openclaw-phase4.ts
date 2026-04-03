@@ -47,7 +47,7 @@ export interface OpenClawUpgradeRunResult {
     | 'upgrade_failed'
 }
 
-export type QClawUpdateStatusState =
+export type CCClawUpdateStatusState =
   | 'disabled'
   | 'idle'
   | 'checking'
@@ -58,7 +58,7 @@ export type QClawUpdateStatusState =
   | 'installing'
   | 'error'
 
-export type QClawUpdateErrorCode =
+export type CCClawUpdateErrorCode =
   | 'network'
   | 'metadata_missing'
   | 'signature_invalid'
@@ -68,7 +68,7 @@ export type QClawUpdateErrorCode =
   | 'invalid_download_url'
   | 'unknown'
 
-export interface QClawUpdateStatus {
+export interface CCClawUpdateStatus {
   ok: boolean
   supported: boolean
   configured: boolean
@@ -78,31 +78,31 @@ export interface QClawUpdateStatus {
   releaseDate?: string
   releaseNotes?: string
   feedUrl?: string
-  status: QClawUpdateStatusState
+  status: CCClawUpdateStatusState
   progressPercent: number | null
   downloaded: boolean
   message?: string
   error?: string
-  errorCode?: QClawUpdateErrorCode
+  errorCode?: CCClawUpdateErrorCode
 }
 
-export interface QClawUpdateActionResult {
+export interface CCClawUpdateActionResult {
   ok: boolean
-  status: QClawUpdateStatus
+  status: CCClawUpdateStatus
   message?: string
   error?: string
-  errorCode?: QClawUpdateErrorCode
+  errorCode?: CCClawUpdateErrorCode
   willQuitAndInstall?: boolean
 }
 
-export interface QClawUpdateOpenDownloadResult extends QClawUpdateActionResult {
+export interface CCClawUpdateOpenDownloadResult extends CCClawUpdateActionResult {
   openedUrl?: string
 }
 
 export interface CombinedUpdateCheckResult {
   ok: boolean
   openclaw: OpenClawUpgradeCheckResult
-  qclaw: QClawUpdateStatus
+  ccclaw: CCClawUpdateStatus
   canRun: boolean
   warnings: string[]
 }
@@ -111,8 +111,8 @@ export interface CombinedUpdateRunResult {
   ok: boolean
   blocked: boolean
   openclawResult: OpenClawUpgradeRunResult | null
-  qclawStatus: QClawUpdateStatus
+  ccclawStatus: CCClawUpdateStatus
   warnings: string[]
   message?: string
-  errorCode?: 'openclaw_blocked' | 'qclaw_unavailable' | 'qclaw_download_failed' | 'openclaw_upgrade_failed'
+  errorCode?: 'openclaw_blocked' | 'ccclaw_unavailable' | 'ccclaw_download_failed' | 'openclaw_upgrade_failed'
 }

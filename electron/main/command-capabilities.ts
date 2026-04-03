@@ -109,7 +109,7 @@ const COMMAND_CAPABILITY_SPECS: Record<PlatformCommandId, CommandCapabilitySpec>
     supportedPlatforms: ['darwin', 'linux'],
     source: 'named-command',
     missingMessage:
-      'Gemini CLI OAuth prompt automation requires the `expect` command. Qclaw will fall back to raw OpenClaw execution and may stop at the Gemini risk confirmation prompt.',
+      'Gemini CLI OAuth prompt automation requires the `expect` command. Ccclaw will fall back to raw OpenClaw execution and may stop at the Gemini risk confirmation prompt.',
     unsupportedMessage: 'The `expect` command is only supported on macOS and Linux.',
   },
   script: {
@@ -117,7 +117,7 @@ const COMMAND_CAPABILITY_SPECS: Record<PlatformCommandId, CommandCapabilitySpec>
     supportedPlatforms: ['darwin', 'linux'],
     source: 'named-command',
     missingMessage:
-      'Interactive OAuth on this platform requires the `script` command. Qclaw will fall back to direct OpenClaw execution without PTY/browser auto-open.',
+      'Interactive OAuth on this platform requires the `script` command. Ccclaw will fall back to direct OpenClaw execution without PTY/browser auto-open.',
     unsupportedMessage: 'The `script` PTY wrapper is only supported on macOS and Linux.',
   },
   powershell: {
@@ -157,7 +157,7 @@ const COMMAND_CAPABILITY_SPECS: Record<PlatformCommandId, CommandCapabilitySpec>
     supportedPlatforms: ['darwin'],
     source: 'named-command',
     missingMessage:
-      'launchd service cleanup requires the `launchctl` command. Qclaw will skip launchd fallback cleanup if it is unavailable.',
+      'launchd service cleanup requires the `launchctl` command. Ccclaw will skip launchd fallback cleanup if it is unavailable.',
     unsupportedMessage: 'The `launchctl` command is only supported on macOS.',
   },
   pkgutil: {

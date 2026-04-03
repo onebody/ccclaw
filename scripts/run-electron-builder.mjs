@@ -6,7 +6,7 @@ const forwardedArgs = process.argv.slice(2)
 const packageVersion = claimPackageVersion()
 const { version, displayVersion, timeZone, fromOverride } = packageVersion
 const localPublishUrl = await readLocalPublishUrl()
-const updatePublishUrl = localPublishUrl || String(process.env.QCLAW_UPDATE_PUBLISH_URL || '').trim()
+const updatePublishUrl = localPublishUrl || String(process.env.CCCLAW_UPDATE_PUBLISH_URL || '').trim()
 
 const builderArgs = [
   ...forwardedArgs,
@@ -21,7 +21,7 @@ if (updatePublishUrl) {
   console.log(
     localPublishUrl
       ? '[run-electron-builder] 已通过 electron-builder.local.json 注入自动更新源。'
-      : '[run-electron-builder] 已通过 QCLAW_UPDATE_PUBLISH_URL 注入自动更新源。'
+      : '[run-electron-builder] 已通过 CCCLAW_UPDATE_PUBLISH_URL 注入自动更新源。'
   )
 }
 
@@ -30,8 +30,8 @@ const child = spawn('electron-builder', builderArgs, {
   shell: true,
   env: {
     ...process.env,
-    QCLAW_EFFECTIVE_VERSION: version,
-    QCLAW_DISPLAY_VERSION: displayVersion,
+    CCCLAW_EFFECTIVE_VERSION: version,
+    CCCLAW_DISPLAY_VERSION: displayVersion,
   },
 })
 

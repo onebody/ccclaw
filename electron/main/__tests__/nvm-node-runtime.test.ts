@@ -8,8 +8,8 @@ import {
 } from '../nvm-node-runtime'
 
 const TEST_ENV_BASE = {
-  APP_ROOT: '/tmp/qclaw-test-app-root',
-  VITE_PUBLIC: '/tmp/qclaw-test-public',
+  APP_ROOT: '/tmp/ccclaw-test-app-root',
+  VITE_PUBLIC: '/tmp/ccclaw-test-public',
 } as NodeJS.ProcessEnv
 
 describe('listInstalledNvmNodeBinDirs', () => {

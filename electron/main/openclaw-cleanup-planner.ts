@@ -35,14 +35,14 @@ function resolveSelectedCandidates(
   return candidates.filter((candidate) => selectedSet.has(candidate.candidateId))
 }
 
-function resolveManualQClawUninstallStep(): string {
+function resolveManualCCClawUninstallStep(): string {
   if (process.platform === 'darwin') {
-    return '环境清理完成后，请将 Qclaw 应用拖入废纸篓。'
+    return '环境清理完成后，请将 Ccclaw 应用拖入废纸篓。'
   }
   if (process.platform === 'win32') {
-    return '环境清理完成后，请通过“应用和功能”或安装器卸载 Qclaw。'
+    return '环境清理完成后，请通过“应用和功能”或安装器卸载 Ccclaw。'
   }
-  return '环境清理完成后，请手动删除或卸载 Qclaw 应用本体。'
+  return '环境清理完成后，请手动删除或卸载 Ccclaw 应用本体。'
 }
 
 function buildProgramRemovalLines(candidate: OpenClawInstallCandidate): string[] {
@@ -65,15 +65,15 @@ export async function buildOpenClawCleanupPreview(
   const activeCandidate =
     selectedCandidates[0] || resolveCurrentCandidate(availableCandidates)
   const backupDirectory = resolveBackupRootDirectory()
-  const qclawDataGuardDir = path.join(
-    String(process.env.QCLAW_USER_DATA_DIR || path.join(homedir(), '.qclaw-lite')).trim(),
+  const ccclawDataGuardDir = path.join(
+    String(process.env.CCCLAW_USER_DATA_DIR || path.join(homedir(), '.ccclaw-lite')).trim(),
     'data-guard'
   )
 
   const deleteItems: string[] = []
   const keepItems: string[] = [
     `所有已存在备份会继续保留在 ${backupDirectory}`,
-    `Qclaw 的私有索引会继续保留在 ${qclawDataGuardDir}`,
+    `Ccclaw 的私有索引会继续保留在 ${ccclawDataGuardDir}`,
   ]
   const backupItems: string[] = request.backupBeforeDelete
     ? [`执行前会在 ${backupDirectory} 中额外创建一次当前完整状态备份。`]
@@ -87,7 +87,7 @@ export async function buildOpenClawCleanupPreview(
     warnings.push(`有 ${missingSelectedCandidateIds.length} 个已选择实例当前未检测到，将忽略这些实例。`)
   }
 
-  if (request.actionType === 'qclaw-uninstall-keep-openclaw') {
+  if (request.actionType === 'ccclaw-uninstall-keep-openclaw') {
     keepItems.unshift('当前 OpenClaw 程序本体、配置和全部记忆数据都会原样保留。')
     return {
       ok: true,
@@ -102,7 +102,7 @@ export async function buildOpenClawCleanupPreview(
       backupDirectory,
       availableCandidates,
       selectedCandidateIds: normalizedSelectedCandidateIds,
-      manualNextStep: resolveManualQClawUninstallStep(),
+      manualNextStep: resolveManualCCClawUninstallStep(),
     }
   }
 
@@ -124,11 +124,11 @@ export async function buildOpenClawCleanupPreview(
         )
       }
     }
-    deleteItems.push('将停止 Gateway 服务并清理 Qclaw 管理的 shell block。')
+    deleteItems.push('将停止 Gateway 服务并清理 Ccclaw 管理的 shell block。')
   }
 
-  if (request.actionType === 'qclaw-uninstall-remove-openclaw') {
-    warnings.push('Qclaw 应用本体不会自删除，完成环境清理后仍需你手动卸载应用。')
+  if (request.actionType === 'ccclaw-uninstall-remove-openclaw') {
+    warnings.push('Ccclaw 应用本体不会自删除，完成环境清理后仍需你手动卸载应用。')
   }
 
   return {
@@ -145,6 +145,6 @@ export async function buildOpenClawCleanupPreview(
     availableCandidates,
     selectedCandidateIds: normalizedSelectedCandidateIds,
     manualNextStep:
-      request.actionType === 'qclaw-uninstall-remove-openclaw' ? resolveManualQClawUninstallStep() : undefined,
+      request.actionType === 'ccclaw-uninstall-remove-openclaw' ? resolveManualCCClawUninstallStep() : undefined,
   }
 }

@@ -381,14 +381,14 @@ async function resolveGatewayConnectionSettings(
           url,
           token,
           password: toOptionalString(auth?.password),
-          clientId: 'qclaw-ui',
+          clientId: 'ccclaw-ui',
           clientMode: 'ui',
-          clientVersion: 'qclaw-lite',
+          clientVersion: 'ccclaw-lite',
         }
       }
     }
   } catch {
-    // Fall back to Qclaw's lightweight resolver when OpenClaw internals are unavailable.
+    // Fall back to Ccclaw's lightweight resolver when OpenClaw internals are unavailable.
   }
 
   const url = resolveGatewayUrl(config, mergedEnv)
@@ -398,9 +398,9 @@ async function resolveGatewayConnectionSettings(
   return {
     url,
     token,
-    clientId: 'qclaw-ui',
+    clientId: 'ccclaw-ui',
     clientMode: 'ui',
-    clientVersion: 'qclaw-lite',
+    clientVersion: 'ccclaw-lite',
   }
 }
 
@@ -410,10 +410,10 @@ function overrideGatewayConnectionSettings(
 ): GatewayConnectionSettings {
   return {
     ...settings,
-    clientId: String(options.clientId || settings.clientId || 'qclaw-lite').trim() || 'qclaw-lite',
+    clientId: String(options.clientId || settings.clientId || 'ccclaw-lite').trim() || 'ccclaw-lite',
     clientMode: options.clientMode || settings.clientMode,
     clientVersion:
-      String(options.clientVersion || settings.clientVersion || 'qclaw-lite').trim() || 'qclaw-lite',
+      String(options.clientVersion || settings.clientVersion || 'ccclaw-lite').trim() || 'ccclaw-lite',
   }
 }
 
@@ -641,7 +641,7 @@ class MinimalGatewaySocketClient {
         maxProtocol: 3,
         client: {
           id: this.settings.clientId,
-          displayName: 'Qclaw',
+          displayName: 'Ccclaw',
           version: this.settings.clientVersion,
           platform: process.platform,
           mode: this.settings.clientMode,
@@ -904,9 +904,9 @@ export async function callGatewayRpcViaSocket(
 
   const client = new MinimalGatewaySocketClient(
     overrideGatewayConnectionSettings(settings, {
-      clientId: options.clientId || 'qclaw-ui',
+      clientId: options.clientId || 'ccclaw-ui',
       clientMode: options.clientMode || 'ui',
-      clientVersion: options.clientVersion || 'qclaw-lite',
+      clientVersion: options.clientVersion || 'ccclaw-lite',
     }),
     createSocket,
     () => {}

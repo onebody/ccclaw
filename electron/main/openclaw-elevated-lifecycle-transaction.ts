@@ -11,8 +11,8 @@ const { access, lstat, realpath, stat } = fs.promises
 const { homedir, userInfo } = os
 const { join, relative, isAbsolute } = path
 
-const LIFECYCLE_STATUS_MARKER = '__QCLAW_TXN_LIFECYCLE_STATUS__='
-const REPAIR_STATUS_MARKER = '__QCLAW_TXN_REPAIR_STATUS__='
+const LIFECYCLE_STATUS_MARKER = '__CCCLAW_TXN_LIFECYCLE_STATUS__='
+const REPAIR_STATUS_MARKER = '__CCCLAW_TXN_REPAIR_STATUS__='
 
 export type OpenClawElevatedLifecycleOperation = 'install' | 'upgrade' | 'uninstall'
 
@@ -95,14 +95,14 @@ function isTrustedRepairPath(
   options: {
     homeDir: string
     userDataDir: string
-    qclawSafeWorkDir: string
+    ccclawSafeWorkDir: string
   }
 ): boolean {
   const normalizedCandidate = normalizePathValue(candidatePath)
   if (!normalizedCandidate) return false
   if (isPathWithinDirectory(options.homeDir, normalizedCandidate)) return true
   if (options.userDataDir && isPathWithinDirectory(options.userDataDir, normalizedCandidate)) return true
-  if (options.qclawSafeWorkDir && isPathWithinDirectory(options.qclawSafeWorkDir, normalizedCandidate)) return true
+  if (options.ccclawSafeWorkDir && isPathWithinDirectory(options.ccclawSafeWorkDir, normalizedCandidate)) return true
   return false
 }
 
@@ -111,12 +111,12 @@ async function isTrustedRepairRealPath(
   options: {
     homeDir: string
     userDataDir: string
-    qclawSafeWorkDir: string
+    ccclawSafeWorkDir: string
   }
 ): Promise<boolean> {
   if (isTrustedRepairPath(candidatePath, options)) return true
 
-  for (const trustedRoot of [options.homeDir, options.userDataDir, options.qclawSafeWorkDir]) {
+  for (const trustedRoot of [options.homeDir, options.userDataDir, options.ccclawSafeWorkDir]) {
     const normalizedTrustedRoot = normalizePathValue(trustedRoot)
     if (!normalizedTrustedRoot) continue
     const resolvedTrustedRoot = normalizePathValue(await realpath(normalizedTrustedRoot).catch(() => ''))
@@ -152,7 +152,7 @@ async function resolveRepairTargetMetadata(
   options: {
     homeDir: string
     userDataDir: string
-    qclawSafeWorkDir: string
+    ccclawSafeWorkDir: string
   }
 ): Promise<OpenClawRepairTarget> {
   const normalizedPath = normalizePathValue(target.path)
@@ -293,19 +293,19 @@ function buildRepairCommands(
     const quotedRecursiveRepairPath = quotePosixShellArg(recursiveRepairPath)
     const commands: string[] = []
     if (target.createIfMissing && !target.isSymlink) {
-      commands.push(`mkdir -p ${quotedPath} >/dev/null 2>&1 || qclaw_repair_status="$?"`)
+      commands.push(`mkdir -p ${quotedPath} >/dev/null 2>&1 || ccclaw_repair_status="$?"`)
     }
     if (target.isSymlink) {
       commands.push(`if [ -L ${quotedPath} ]; then`)
-      commands.push(`  chown -h ${ownership} ${quotedPath} >/dev/null 2>&1 || qclaw_repair_status="$?"`)
+      commands.push(`  chown -h ${ownership} ${quotedPath} >/dev/null 2>&1 || ccclaw_repair_status="$?"`)
       commands.push('fi')
     }
     commands.push(`if [ -e ${quotedRecursiveRepairPath} ]; then`)
     commands.push(
-      `  chown -R ${ownership} ${quotedRecursiveRepairPath} >/dev/null 2>&1 || qclaw_repair_status="$?"`
+      `  chown -R ${ownership} ${quotedRecursiveRepairPath} >/dev/null 2>&1 || ccclaw_repair_status="$?"`
     )
     commands.push(
-      `  chmod -R u+rwX ${quotedRecursiveRepairPath} >/dev/null 2>&1 || qclaw_repair_status="$?"`
+      `  chmod -R u+rwX ${quotedRecursiveRepairPath} >/dev/null 2>&1 || ccclaw_repair_status="$?"`
     )
     commands.push('fi')
     return commands
@@ -318,7 +318,7 @@ export async function buildOpenClawRepairSnapshot(options: {
   preferredStateRootPath?: string | null
   homeDir?: string | null
   userDataDir?: string | null
-  qclawSafeWorkDir?: string | null
+  ccclawSafeWorkDir?: string | null
   includeManagedInstallerRoot?: boolean
   includeUserDataNpmCache?: boolean
   runtimePathsResolver?: (input: {
@@ -327,9 +327,9 @@ export async function buildOpenClawRepairSnapshot(options: {
   }) => Promise<{ homeDir?: string | null }>
 }): Promise<OpenClawRepairSnapshot> {
   const homeDir = normalizePathValue(options.homeDir || homedir())
-  const userDataDir = normalizePathValue(options.userDataDir || process.env.QCLAW_USER_DATA_DIR || '')
-  const qclawSafeWorkDir = normalizePathValue(
-    options.qclawSafeWorkDir || process.env.QCLAW_SAFE_WORK_DIR || resolveSafeWorkingDirectory()
+  const userDataDir = normalizePathValue(options.userDataDir || process.env.CCCLAW_USER_DATA_DIR || '')
+  const ccclawSafeWorkDir = normalizePathValue(
+    options.ccclawSafeWorkDir || process.env.CCCLAW_SAFE_WORK_DIR || resolveSafeWorkingDirectory()
   )
   const fallbackStateRoot = homeDir ? join(homeDir, '.openclaw') : '.openclaw'
   const preferredStateRootPath = normalizePathValue(options.preferredStateRootPath)
@@ -352,14 +352,14 @@ export async function buildOpenClawRepairSnapshot(options: {
   }
 
   if (runtimeStateRoot) {
-    if (!isTrustedRepairPath(runtimeStateRoot, { homeDir, userDataDir, qclawSafeWorkDir })) {
+    if (!isTrustedRepairPath(runtimeStateRoot, { homeDir, userDataDir, ccclawSafeWorkDir })) {
       throw new Error(`Runtime state root is outside trusted repair scopes: ${runtimeStateRoot}`)
     }
     stateRootPath = runtimeStateRoot
   }
 
   if (!stateRootPath && preferredStateRootPath) {
-    if (!isTrustedRepairPath(preferredStateRootPath, { homeDir, userDataDir, qclawSafeWorkDir })) {
+    if (!isTrustedRepairPath(preferredStateRootPath, { homeDir, userDataDir, ccclawSafeWorkDir })) {
       throw new Error(`Preferred state root is outside trusted repair scopes: ${preferredStateRootPath}`)
     }
     stateRootPath = preferredStateRootPath
@@ -387,7 +387,7 @@ export async function buildOpenClawRepairSnapshot(options: {
           ? [
               {
                 role: 'managedInstallerRoot' as const,
-                path: join(qclawSafeWorkDir, 'openclaw-installer'),
+                path: join(ccclawSafeWorkDir, 'openclaw-installer'),
                 createIfMissing,
               },
             ]
@@ -403,13 +403,13 @@ export async function buildOpenClawRepairSnapshot(options: {
           : []),
       ]
         .filter((target) =>
-          isTrustedRepairPath(target.path, { homeDir, userDataDir, qclawSafeWorkDir })
+          isTrustedRepairPath(target.path, { homeDir, userDataDir, ccclawSafeWorkDir })
         )
         .map((target) =>
           resolveRepairTargetMetadata(target, {
             homeDir,
             userDataDir,
-            qclawSafeWorkDir,
+            ccclawSafeWorkDir,
           })
         )
     )
@@ -430,14 +430,14 @@ export function buildMacOpenClawElevatedLifecycleTransactionCommand(options: {
   groupId: number
 }): string {
   const commands = [
-    'qclaw_lifecycle_status=0',
+    'ccclaw_lifecycle_status=0',
     `(${options.lifecycleCommand})`,
-    'qclaw_lifecycle_status="$?"',
-    'qclaw_repair_status=0',
+    'ccclaw_lifecycle_status="$?"',
+    'ccclaw_repair_status=0',
     ...buildRepairCommands(options.snapshot, options.userId, options.groupId),
-    `printf '%s\\n' "${LIFECYCLE_STATUS_MARKER}$qclaw_lifecycle_status"`,
-    `printf '%s\\n' "${REPAIR_STATUS_MARKER}$qclaw_repair_status"`,
-    'if [ "$qclaw_lifecycle_status" -ne 0 ] || [ "$qclaw_repair_status" -ne 0 ]; then',
+    `printf '%s\\n' "${LIFECYCLE_STATUS_MARKER}$ccclaw_lifecycle_status"`,
+    `printf '%s\\n' "${REPAIR_STATUS_MARKER}$ccclaw_repair_status"`,
+    'if [ "$ccclaw_lifecycle_status" -ne 0 ] || [ "$ccclaw_repair_status" -ne 0 ]; then',
     '  exit 1',
     'fi',
     'exit 0',
@@ -456,7 +456,7 @@ export async function runMacOpenClawElevatedLifecycleTransaction(options: {
   preferredStateRootPath?: string | null
   homeDir?: string | null
   userDataDir?: string | null
-  qclawSafeWorkDir?: string | null
+  ccclawSafeWorkDir?: string | null
   includeManagedInstallerRoot?: boolean
   includeUserDataNpmCache?: boolean
   snapshotResolver?: () => Promise<OpenClawRepairSnapshot>
@@ -486,7 +486,7 @@ export async function runMacOpenClawElevatedLifecycleTransaction(options: {
           preferredStateRootPath: options.preferredStateRootPath,
           homeDir: options.homeDir,
           userDataDir: options.userDataDir,
-          qclawSafeWorkDir: options.qclawSafeWorkDir,
+          ccclawSafeWorkDir: options.ccclawSafeWorkDir,
           includeManagedInstallerRoot: options.includeManagedInstallerRoot,
           includeUserDataNpmCache: options.includeUserDataNpmCache,
         }))

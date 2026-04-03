@@ -9,7 +9,7 @@ const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 const { homedir } = os
 const { join, relative } = path
 
-export const QCLAW_PERMISSION_REPAIR_MARKER = 'QCLAW_PERMISSION_REPAIR'
+export const CCCLAW_PERMISSION_REPAIR_MARKER = 'CCCLAW_PERMISSION_REPAIR'
 
 const POSIX_QUOTED_PATH_REGEX = /['"]((?:~|\/)[^'"]+)['"]/g
 const WINDOWS_QUOTED_PATH_REGEX = /['"]([A-Za-z]:[\\/][^'"]+)['"]/g
@@ -104,9 +104,9 @@ function normalizeDependencies(
     ...dependencies,
     platform: dependencies.platform || process.platform,
     homeDir: resolvedHomeDir,
-    userDataDir: normalizePathValue(dependencies.userDataDir || process.env.QCLAW_USER_DATA_DIR || ''),
-    safeWorkDir: normalizePathValue(dependencies.safeWorkDir || process.env.QCLAW_SAFE_WORK_DIR || ''),
-    pluginNpmCacheDir: normalizePathValue(dependencies.pluginNpmCacheDir || join('/tmp', 'qclaw-lite', 'npm-cache')),
+    userDataDir: normalizePathValue(dependencies.userDataDir || process.env.CCCLAW_USER_DATA_DIR || ''),
+    safeWorkDir: normalizePathValue(dependencies.safeWorkDir || process.env.CCCLAW_SAFE_WORK_DIR || ''),
+    pluginNpmCacheDir: normalizePathValue(dependencies.pluginNpmCacheDir || join('/tmp', 'ccclaw-lite', 'npm-cache')),
     currentUser:
       dependencies.currentUser || {
         uid: typeof process.getuid === 'function' ? process.getuid() : 0,
@@ -262,24 +262,24 @@ function buildDarwinRepairCommand(
     const quotedRoot = quotePosixShellArg(repairRoot)
     return [
       `if [ -e ${quotedRoot} ] || [ -L ${quotedRoot} ]; then`,
-      `  chown -R ${ownership} ${quotedRoot} >/dev/null 2>&1 || qclaw_repair_status="$?"`,
-      `  chmod -R u+rwX ${quotedRoot} >/dev/null 2>&1 || qclaw_repair_status="$?"`,
+      `  chown -R ${ownership} ${quotedRoot} >/dev/null 2>&1 || ccclaw_repair_status="$?"`,
+      `  chmod -R u+rwX ${quotedRoot} >/dev/null 2>&1 || ccclaw_repair_status="$?"`,
       'fi',
     ].join('\n')
   })
 
   return [
-    'qclaw_repair_status=0',
+    'ccclaw_repair_status=0',
     ...commands,
-    'exit "$qclaw_repair_status"',
+    'exit "$ccclaw_repair_status"',
   ].join('\n')
 }
 
 function buildRepairPrompt(): string {
   return [
-    'Qclaw 检测到 OpenClaw 配置或运行目录权限异常。',
+    'Ccclaw 检测到 OpenClaw 配置或运行目录权限异常。',
     '',
-    'Qclaw 需要先修复这些目录的 ownership 和可写权限，才能继续当前操作。',
+    'Ccclaw 需要先修复这些目录的 ownership 和可写权限，才能继续当前操作。',
     '',
     '请输入你的 Mac 登录密码以继续。',
   ].join('\n')
@@ -311,7 +311,7 @@ function decoratePermissionFailureMessage(
   const detail = [message, result.stderr].filter(Boolean).join('\n\n')
   return {
     ...result,
-    stderr: `${QCLAW_PERMISSION_REPAIR_MARKER}\n${detail}`.trim(),
+    stderr: `${CCCLAW_PERMISSION_REPAIR_MARKER}\n${detail}`.trim(),
   }
 }
 
@@ -355,7 +355,7 @@ async function maybeAttemptPermissionRepair(
       message: buildRepairFailureMessage({
         blockedProbes: blockedEntries.map((entry) => entry.probe),
         repairRoots,
-        reason: '当前故障路径不在 Qclaw 的安全自动修复范围内，请手动修复后重试。',
+        reason: '当前故障路径不在 Ccclaw 的安全自动修复范围内，请手动修复后重试。',
       }),
     }
   }
@@ -385,7 +385,7 @@ async function maybeAttemptPermissionRepair(
       message: buildRepairFailureMessage({
         blockedProbes: blockedEntries.map((entry) => entry.probe),
         repairRoots,
-        reason: repairResult.stderr || 'Qclaw 自动修复权限失败，请手动修复后重试。',
+        reason: repairResult.stderr || 'Ccclaw 自动修复权限失败，请手动修复后重试。',
       }),
     }
   }
@@ -406,7 +406,7 @@ async function maybeAttemptPermissionRepair(
       message: buildRepairFailureMessage({
         blockedProbes: remainingBlocked.map((entry) => entry.probe),
         repairRoots,
-        reason: 'Qclaw 已尝试自动修复，但仍有目录权限异常。',
+        reason: 'Ccclaw 已尝试自动修复，但仍有目录权限异常。',
       }),
     }
   }
@@ -473,7 +473,7 @@ export async function runFsWithPermissionAutoRepair<T>(
       return execute()
     }
     if (repairAttempt.message) {
-      throw new Error(`${QCLAW_PERMISSION_REPAIR_MARKER}\n${repairAttempt.message}`)
+      throw new Error(`${CCCLAW_PERMISSION_REPAIR_MARKER}\n${repairAttempt.message}`)
     }
     throw error
   }

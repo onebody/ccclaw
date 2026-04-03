@@ -274,7 +274,7 @@ export async function getOpenClawPaths(): Promise<OpenClawPaths> {
 }
 
 const isWin = process.platform === 'win32'
-const LATEST_OAUTH_URL_KEY = '__QCLAW_LATEST_OAUTH_URL__'
+const LATEST_OAUTH_URL_KEY = '__CCCLAW_LATEST_OAUTH_URL__'
 type OAuthUrlGlobal = typeof globalThis & { [LATEST_OAUTH_URL_KEY]?: string | null }
 
 type SpawnFn = typeof import('node:child_process')['spawn']
@@ -319,8 +319,8 @@ function resolveManagedSpawnCwd(): string {
   return resolveSafeWorkingDirectory()
 }
 
-const QCLAW_PLUGIN_NPM_CACHE_ROOT_DIR = join(tmpdir(), 'qclaw-lite', 'npm-cache')
-const QCLAW_PLUGIN_INSTALL_PERMISSION_MARKER = 'QCLAW_PLUGIN_INSTALL_PERMISSION_DENIED'
+const CCCLAW_PLUGIN_NPM_CACHE_ROOT_DIR = join(tmpdir(), 'ccclaw-lite', 'npm-cache')
+const CCCLAW_PLUGIN_INSTALL_PERMISSION_MARKER = 'CCCLAW_PLUGIN_INSTALL_PERMISSION_DENIED'
 const RUNTIME_INSTALL_LOCK_KEY = 'runtime-install'
 
 function createPermissionAutoRepairDependencies() {
@@ -328,9 +328,9 @@ function createPermissionAutoRepairDependencies() {
   return {
     platform: process.platform,
     homeDir: homedir(),
-    userDataDir: process.env.QCLAW_USER_DATA_DIR || '',
-    safeWorkDir: process.env.QCLAW_SAFE_WORK_DIR || resolveManagedSpawnCwd(),
-    pluginNpmCacheDir: QCLAW_PLUGIN_NPM_CACHE_ROOT_DIR,
+    userDataDir: process.env.CCCLAW_USER_DATA_DIR || '',
+    safeWorkDir: process.env.CCCLAW_SAFE_WORK_DIR || resolveManagedSpawnCwd(),
+    pluginNpmCacheDir: CCCLAW_PLUGIN_NPM_CACHE_ROOT_DIR,
     currentUser: {
       uid: typeof currentUser.uid === 'number' ? currentUser.uid : 0,
       gid: typeof currentUser.gid === 'number' ? currentUser.gid : 0,
@@ -369,7 +369,7 @@ async function createPluginInstallNpmEnv(): Promise<{
   cacheDir: string
   env: Partial<NodeJS.ProcessEnv>
 }> {
-  return createIsolatedNpmCacheEnv(QCLAW_PLUGIN_NPM_CACHE_ROOT_DIR)
+  return createIsolatedNpmCacheEnv(CCCLAW_PLUGIN_NPM_CACHE_ROOT_DIR)
 }
 
 async function resolveManagedOpenClawInstallNpmCommandOptions(
@@ -428,7 +428,7 @@ async function annotatePluginPermissionFailure(result: CliResult): Promise<CliRe
       openClawHomeDir,
       join(openClawHomeDir, 'extensions'),
       join(homedir(), '.npm'),
-      QCLAW_PLUGIN_NPM_CACHE_ROOT_DIR,
+      CCCLAW_PLUGIN_NPM_CACHE_ROOT_DIR,
     ]).map((pathname) => probeOpenClawInstallPath(pathname))
   )
 
@@ -451,7 +451,7 @@ async function annotatePluginPermissionFailure(result: CliResult): Promise<CliRe
       : ['- 未定位到具体目录，但错误输出命中了权限拒绝特征。']
 
   const guidance = [
-    QCLAW_PLUGIN_INSTALL_PERMISSION_MARKER,
+    CCCLAW_PLUGIN_INSTALL_PERMISSION_MARKER,
     '检测到插件安装权限不足，通常是曾使用 sudo 运行 openclaw/npm 导致目录所有权漂移。',
     ...hintLines,
     ...buildPluginPermissionRecoveryGuidance(),
@@ -795,7 +795,7 @@ async function runCliStreamingOnce(args: string[], options: RunCliStreamOptions 
       : null
     let stdout = ''
     let stderr = resolvedCommand.capabilityWarning
-      ? `[Qclaw] ${resolvedCommand.capabilityWarning}\n`
+      ? `[Ccclaw] ${resolvedCommand.capabilityWarning}\n`
       : ''
     proc.stdout?.on('data', (d) => {
       const chunk = d.toString()
@@ -1628,10 +1628,10 @@ async function runMacPrivilegedOpenClawInstall(
     operation: 'install',
     lifecycleCommand,
     prompt:
-      'Qclaw 需要安装 OpenClaw CLI 命令行工具。\n\n这是连接 AI 服务和 IM 渠道的核心组件。\n\n请输入您的 Mac 登录密码以继续。',
+      'Ccclaw 需要安装 OpenClaw CLI 命令行工具。\n\n这是连接 AI 服务和 IM 渠道的核心组件。\n\n请输入您的 Mac 登录密码以继续。',
     timeoutMs: buildMirrorAwareTimeoutMs(MAIN_RUNTIME_POLICY.node.installOpenClawTimeoutMs),
     controlDomain: 'env-setup',
-    qclawSafeWorkDir: workingDirectory,
+    ccclawSafeWorkDir: workingDirectory,
     includeManagedInstallerRoot: true,
     runDirect,
   })
@@ -1781,7 +1781,7 @@ async function installNodeWithAdmin(installerPath: string): Promise<CliResult> {
     return runDirect('osascript', [
       '-e',
       buildAppleScriptDoShellScript(installCommand, {
-        prompt: 'Qclaw 需要安装 Node.js 运行环境。\n\n请输入您的 Mac 登录密码以继续安装。',
+        prompt: 'Ccclaw 需要安装 Node.js 运行环境。\n\n请输入您的 Mac 登录密码以继续安装。',
       })
     ], MAIN_RUNTIME_POLICY.node.installNodeTimeoutMs, 'env-setup')
   } else if (process.platform === 'win32') {
@@ -2112,7 +2112,7 @@ export async function installEnv(opts: InstallEnvOptions): Promise<CliResult> {
     }
 
     const cmd = prefixPosixCommandWithWorkingDirectory(commands.join(' && '), safeWorkingDirectory)
-    const prompt = `Qclaw 需要安装以下组件：\n\n${components.map(c => '• ' + c).join('\n')}\n\n请输入您的 Mac 登录密码以继续。`
+    const prompt = `Ccclaw 需要安装以下组件：\n\n${components.map(c => '• ' + c).join('\n')}\n\n请输入您的 Mac 登录密码以继续。`
 
     const result = await runDirect('osascript', [
       '-e',
@@ -3570,12 +3570,12 @@ export async function uninstallOpenClawNpmGlobalPackage(): Promise<CliResult> {
         const uninstallResult = await runMacOpenClawElevatedLifecycleTransaction({
           operation: 'uninstall',
           lifecycleCommand: cmd,
-          prompt: 'Qclaw 需要卸载 OpenClaw CLI。\n\n请输入您的 Mac 登录密码以继续。',
+          prompt: 'Ccclaw 需要卸载 OpenClaw CLI。\n\n请输入您的 Mac 登录密码以继续。',
           timeoutMs: MAIN_RUNTIME_POLICY.cli.npmUninstallTimeoutMs,
           controlDomain: 'upgrade',
           binaryPath: uninstallBinaryPath || undefined,
           preferredStateRootPath: String(uninstallPaths?.homeDir || '').trim() || undefined,
-          qclawSafeWorkDir: uninstallWorkingDirectory,
+          ccclawSafeWorkDir: uninstallWorkingDirectory,
           includeManagedInstallerRoot: true,
           runDirect,
         })

@@ -87,8 +87,8 @@ describe('openclaw config guard', () => {
       reason: 'manual-backup-required' as const,
       sourcePath: candidate.stateRoot,
       displaySourcePath: candidate.displayStateRoot,
-      suggestedArchivePath: '/Users/test/Documents/Qclaw Lite Backups/manual-baseline',
-      displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/manual-baseline',
+      suggestedArchivePath: '/Users/test/Documents/Ccclaw Lite Backups/manual-baseline',
+      displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/manual-baseline',
     }
 
     discoverOpenClawInstallationsMock.mockResolvedValue({
@@ -122,8 +122,8 @@ describe('openclaw config guard', () => {
       reason: 'manual-backup-required' as const,
       sourcePath: candidate.stateRoot,
       displaySourcePath: candidate.displayStateRoot,
-      suggestedArchivePath: '/Users/test/Documents/Qclaw Lite Backups/manual-baseline',
-      displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/manual-baseline',
+      suggestedArchivePath: '/Users/test/Documents/Ccclaw Lite Backups/manual-baseline',
+      displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/manual-baseline',
     }
 
     discoverOpenClawInstallationsMock.mockResolvedValue({
@@ -151,6 +151,6 @@ describe('openclaw config guard', () => {
       installFingerprint: candidate.installFingerprint,
     })
     expect(result.warnings[0]).toContain('自动备份失败，请手动备份')
-    expect(result.warnings[0]).toContain('~/Documents/Qclaw Lite Backups/manual-baseline')
+    expect(result.warnings[0]).toContain('~/Documents/Ccclaw Lite Backups/manual-baseline')
   })
 })

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Alert, Button, Group, Loader, Modal, Paper, SimpleGrid, Stack, Text, Title } from '@mantine/core'
-import type { QClawUpdateActionResult, QClawUpdateStatus } from '../shared/openclaw-phase4'
+import type { CCClawUpdateActionResult, CCClawUpdateStatus } from '../shared/openclaw-phase4'
 
-function statusLabel(status: QClawUpdateStatus['status']): string {
+function statusLabel(status: CCClawUpdateStatus['status']): string {
   if (status === 'disabled') return '未启用'
   if (status === 'idle') return '待检查'
   if (status === 'checking') return '检查中'
@@ -14,7 +14,7 @@ function statusLabel(status: QClawUpdateStatus['status']): string {
   return '错误'
 }
 
-export default function QClawUpdateDialog({
+export default function CCClawUpdateDialog({
   open,
   onClose,
 }: {
@@ -22,22 +22,22 @@ export default function QClawUpdateDialog({
   onClose: () => void
 }) {
   const isMac = window.api.platform === 'darwin'
-  const [status, setStatus] = useState<QClawUpdateStatus | null>(null)
+  const [status, setStatus] = useState<CCClawUpdateStatus | null>(null)
   const [loading, setLoading] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const [installing, setInstalling] = useState(false)
   const [openingDownloadUrl, setOpeningDownloadUrl] = useState(false)
-  const [actionResult, setActionResult] = useState<QClawUpdateActionResult | null>(null)
+  const [actionResult, setActionResult] = useState<CCClawUpdateActionResult | null>(null)
   const [error, setError] = useState('')
 
   const refreshStatus = async (activeCheck = false) => {
     setLoading(true)
     setError('')
     try {
-      const nextStatus = activeCheck ? await window.api.checkQClawUpdate() : await window.api.getQClawUpdateStatus()
+      const nextStatus = activeCheck ? await window.api.checkCCClawUpdate() : await window.api.getCCClawUpdateStatus()
       setStatus(nextStatus)
     } catch (e: any) {
-      setError(e?.message || '读取 Qclaw 更新状态失败')
+      setError(e?.message || '读取 Ccclaw 更新状态失败')
     } finally {
       setLoading(false)
     }
@@ -72,9 +72,9 @@ export default function QClawUpdateDialog({
       title={
         <div>
           <Text size="xs" c="dimmed" tt="uppercase" fw={600} style={{ letterSpacing: '0.24em' }}>
-            Qclaw Update
+            Ccclaw Update
           </Text>
-          <Title order={3} mt="xs">只更新 Qclaw</Title>
+          <Title order={3} mt="xs">只更新 Ccclaw</Title>
         </div>
       }
     >
@@ -82,7 +82,7 @@ export default function QClawUpdateDialog({
         <Alert color="green" variant="light" mt="md">
           <Group gap="sm">
             <Loader size="sm" />
-            <Text size="sm">正在检查 Qclaw 更新状态...</Text>
+            <Text size="sm">正在检查 Ccclaw 更新状态...</Text>
           </Group>
         </Alert>
       ) : (
@@ -186,7 +186,7 @@ export default function QClawUpdateDialog({
 
     setOpeningDownloadUrl(true)
     try {
-      const result = await window.api.openQClawUpdateDownloadUrl()
+      const result = await window.api.openCCClawUpdateDownloadUrl()
       if (!result.ok) return false
       setActionResult({ ...result, message: fallbackMessage })
       setStatus(result.status)
@@ -204,7 +204,7 @@ export default function QClawUpdateDialog({
     setActionResult(null)
     setError('')
     try {
-      const result = await window.api.downloadQClawUpdate()
+      const result = await window.api.downloadCCClawUpdate()
       setActionResult(result)
       setStatus(result.status)
       if (!result.ok) {
@@ -213,7 +213,7 @@ export default function QClawUpdateDialog({
     } catch (e: any) {
       const fallbackOpened = await tryOpenManualFallback('自动更新失败，已为你打开 dmg 安装包下载链接，请改为手动安装。')
       if (!fallbackOpened) {
-        setError(e?.message || '下载 Qclaw 更新失败')
+        setError(e?.message || '下载 Ccclaw 更新失败')
       }
     } finally {
       setDownloading(false)
@@ -226,7 +226,7 @@ export default function QClawUpdateDialog({
     setActionResult(null)
     setError('')
     try {
-      const result = await window.api.installQClawUpdate()
+      const result = await window.api.installCCClawUpdate()
       setActionResult(result)
       setStatus(result.status)
       if (!result.ok) {
@@ -236,7 +236,7 @@ export default function QClawUpdateDialog({
     } catch (e: any) {
       const fallbackOpened = await tryOpenManualFallback('自动安装失败，已为你打开 dmg 安装包下载链接，请改为手动安装。')
       if (!fallbackOpened) {
-        setError(e?.message || '安装 Qclaw 更新失败')
+        setError(e?.message || '安装 Ccclaw 更新失败')
       }
       setInstalling(false)
     }
@@ -247,11 +247,11 @@ export default function QClawUpdateDialog({
     setActionResult(null)
     setError('')
     try {
-      const result = await window.api.openQClawUpdateDownloadUrl()
+      const result = await window.api.openCCClawUpdateDownloadUrl()
       setActionResult(result)
       setStatus(result.status)
     } catch (e: any) {
-      setError(e?.message || '打开 Qclaw 下载链接失败')
+      setError(e?.message || '打开 Ccclaw 下载链接失败')
     } finally {
       setOpeningDownloadUrl(false)
       await refreshStatus(false)

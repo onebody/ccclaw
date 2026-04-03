@@ -13,12 +13,12 @@ describe('resolveOpenClawPaths', () => {
       configFile: '/Users/alice/.openclaw/openclaw.json',
       envFile: '/Users/alice/.openclaw/.env',
       credentialsDir: '/Users/alice/.openclaw/credentials',
-      modelCatalogCacheFile: '/Users/alice/.openclaw/qclaw-model-catalog-cache.json',
+      modelCatalogCacheFile: '/Users/alice/.openclaw/ccclaw-model-catalog-cache.json',
       displayHomeDir: '~/.openclaw',
       displayConfigFile: '~/.openclaw/openclaw.json',
       displayEnvFile: '~/.openclaw/.env',
       displayCredentialsDir: '~/.openclaw/credentials',
-      displayModelCatalogCacheFile: '~/.openclaw/qclaw-model-catalog-cache.json',
+      displayModelCatalogCacheFile: '~/.openclaw/ccclaw-model-catalog-cache.json',
     })
   })
 

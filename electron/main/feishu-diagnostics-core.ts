@@ -100,7 +100,7 @@ function safeGetManagedFeishuAgentId(accountId: string): string {
 
 export function buildFeishuDiagnosticMessageText(input: FeishuDiagnosticMessageTextInput): string {
   return [
-    'Qclaw 故障排查定位消息',
+    'Ccclaw 故障排查定位消息',
     `Bot: ${input.botLabel}`,
     `accountId: ${input.accountId}`,
     `agentId: ${input.agentId}`,

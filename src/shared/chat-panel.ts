@@ -192,7 +192,7 @@ export interface ChatSendRequest {
   sessionId: string
   text: string
   // Deliberately no `model` field here. Session model changes must go through
-  // `patchChatSessionModel()` so Qclaw mirrors OpenClaw Control UI semantics.
+  // `patchChatSessionModel()` so Ccclaw mirrors OpenClaw Control UI semantics.
   thinking?: ChatThinkingLevel
 }
 

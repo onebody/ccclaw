@@ -47,7 +47,7 @@ function createDiscovery(
     historyDataCandidates: [],
     errors: [],
     warnings: [],
-    defaultBackupDirectory: '~/Documents/Qclaw Lite Backups',
+    defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups',
   }
 }
 
@@ -159,7 +159,7 @@ describe('resolveOpenClawInstallDecision', () => {
           historyDataCandidates: [],
           errors: [],
           warnings: [],
-          defaultBackupDirectory: '~/Documents/Qclaw Lite Backups',
+          defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups',
         },
         cliInstalled: false,
       })
@@ -188,7 +188,7 @@ describe('resolveOpenClawInstallDecision', () => {
           ],
           errors: [],
           warnings: [],
-          defaultBackupDirectory: '~/Documents/Qclaw Lite Backups',
+          defaultBackupDirectory: '~/Documents/Ccclaw Lite Backups',
         },
         cliInstalled: false,
       })
@@ -221,7 +221,7 @@ describe('shouldEnsureBaselineBackup', () => {
   })
 
   it('skips backup for managed installs and already-backed-up installs', () => {
-    expect(shouldEnsureBaselineBackup(createCandidate({ ownershipState: 'qclaw-installed' }))).toBe(false)
+    expect(shouldEnsureBaselineBackup(createCandidate({ ownershipState: 'ccclaw-installed' }))).toBe(false)
     expect(
       shouldEnsureBaselineBackup(
         createCandidate({
@@ -246,8 +246,8 @@ describe('shouldEnsureBaselineBackup', () => {
             reason: 'manual-backup-required',
             sourcePath: '/Users/alice/.openclaw',
             displaySourcePath: '~/.openclaw',
-            suggestedArchivePath: '/Users/alice/Documents/Qclaw Lite Backups/manual-baseline',
-            displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/manual-baseline',
+            suggestedArchivePath: '/Users/alice/Documents/Ccclaw Lite Backups/manual-baseline',
+            displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/manual-baseline',
           },
         })
       )
@@ -266,8 +266,8 @@ describe('baseline backup bypass helpers', () => {
         manualBackupAction: {
           sourcePath: '/Users/alice/.openclaw',
           displaySourcePath: '~/.openclaw',
-          suggestedArchivePath: '/Users/alice/Documents/Qclaw Lite Backups/manual-baseline',
-          displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/manual-baseline',
+          suggestedArchivePath: '/Users/alice/Documents/Ccclaw Lite Backups/manual-baseline',
+          displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/manual-baseline',
         },
       })
     ).toBe(true)
@@ -287,10 +287,10 @@ describe('baseline backup bypass helpers', () => {
       buildManualBackupWarning({
         sourcePath: '/Users/alice/.openclaw',
         displaySourcePath: '~/.openclaw',
-        suggestedArchivePath: '/Users/alice/Documents/Qclaw Lite Backups/manual-baseline',
-        displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/manual-baseline',
+        suggestedArchivePath: '/Users/alice/Documents/Ccclaw Lite Backups/manual-baseline',
+        displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/manual-baseline',
       })
-    ).toContain('请将 ~/.openclaw 复制到 ~/Documents/Qclaw Lite Backups/manual-baseline')
+    ).toContain('请将 ~/.openclaw 复制到 ~/Documents/Ccclaw Lite Backups/manual-baseline')
   })
 
   it('applies a real backup record to the active discovery candidate', () => {
@@ -316,8 +316,8 @@ describe('baseline backup bypass helpers', () => {
       reason: 'manual-backup-required',
       sourcePath: '/Users/alice/.openclaw',
       displaySourcePath: '~/.openclaw',
-      suggestedArchivePath: '/Users/alice/Documents/Qclaw Lite Backups/manual-baseline',
-      displaySuggestedArchivePath: '~/Documents/Qclaw Lite Backups/manual-baseline',
+      suggestedArchivePath: '/Users/alice/Documents/Ccclaw Lite Backups/manual-baseline',
+      displaySuggestedArchivePath: '~/Documents/Ccclaw Lite Backups/manual-baseline',
     })
 
     expect(discovery?.candidates[0]).toMatchObject({
@@ -327,6 +327,6 @@ describe('baseline backup bypass helpers', () => {
       },
     })
     expect(discovery?.warnings[0]).toContain('自动备份失败，请手动备份')
-    expect(discovery?.warnings[0]).toContain('~/Documents/Qclaw Lite Backups/manual-baseline')
+    expect(discovery?.warnings[0]).toContain('~/Documents/Ccclaw Lite Backups/manual-baseline')
   })
 })

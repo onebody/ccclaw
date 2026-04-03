@@ -31,8 +31,8 @@ function createCandidate(overrides: Partial<OpenClawInstallCandidate> = {}): Ope
 }
 
 describe('openclaw baseline backup gate', () => {
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
-  const originalBackupDir = process.env.QCLAW_BACKUP_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
+  const originalBackupDir = process.env.CCCLAW_BACKUP_DIR
 
   let tempRoot = ''
   let userDataDir = ''
@@ -40,13 +40,13 @@ describe('openclaw baseline backup gate', () => {
   let stateRoot = ''
 
   beforeEach(async () => {
-    tempRoot = path.join('/tmp', `qclaw-baseline-gate-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    tempRoot = path.join('/tmp', `ccclaw-baseline-gate-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     userDataDir = path.join(tempRoot, 'user-data')
     backupDir = path.join(tempRoot, 'backups')
     stateRoot = path.join(tempRoot, 'openclaw-home')
 
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
-    process.env.QCLAW_BACKUP_DIR = backupDir
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
+    process.env.CCCLAW_BACKUP_DIR = backupDir
 
     await fs.rm(tempRoot, { recursive: true, force: true })
     await fs.mkdir(path.join(stateRoot, 'identity'), { recursive: true })
@@ -56,21 +56,21 @@ describe('openclaw baseline backup gate', () => {
   afterEach(async () => {
     await fs.rm(tempRoot, { recursive: true, force: true })
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
     } else {
-      process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+      process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
     }
     if (originalBackupDir === undefined) {
-      delete process.env.QCLAW_BACKUP_DIR
+      delete process.env.CCCLAW_BACKUP_DIR
     } else {
-      process.env.QCLAW_BACKUP_DIR = originalBackupDir
+      process.env.CCCLAW_BACKUP_DIR = originalBackupDir
     }
   })
 
   it('falls back to an app-owned backup root when the preferred root is blocked', async () => {
     const brokenBackupRoot = path.join(tempRoot, 'backup-root-file')
     await fs.writeFile(brokenBackupRoot, 'not-a-directory', 'utf8')
-    process.env.QCLAW_BACKUP_DIR = brokenBackupRoot
+    process.env.CCCLAW_BACKUP_DIR = brokenBackupRoot
 
     const result = await ensureBaselineBackup(
       createCandidate({
@@ -91,8 +91,8 @@ describe('openclaw baseline backup gate', () => {
     const brokenUserDataFile = path.join(tempRoot, 'user-data-file')
     await fs.writeFile(brokenBackupRoot, 'not-a-directory', 'utf8')
     await fs.writeFile(brokenUserDataFile, 'not-a-directory', 'utf8')
-    process.env.QCLAW_BACKUP_DIR = brokenBackupRoot
-    process.env.QCLAW_USER_DATA_DIR = brokenUserDataFile
+    process.env.CCCLAW_BACKUP_DIR = brokenBackupRoot
+    process.env.CCCLAW_USER_DATA_DIR = brokenUserDataFile
 
     const result = await ensureBaselineBackup(
       createCandidate({

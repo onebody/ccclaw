@@ -107,7 +107,7 @@ describe('openclaw manual backup service', () => {
       candidates: [candidate],
     })
 
-    const archivePath = path.join('/tmp', `qclaw-empty-manual-backup-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const archivePath = path.join('/tmp', `ccclaw-empty-manual-backup-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     tempDirs.push(archivePath)
     await fs.mkdir(archivePath, { recursive: true })
     await fs.writeFile(path.join(archivePath, 'manifest.json'), '{}', 'utf8')

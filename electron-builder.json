@@ -1,12 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "com.qclawai.qclaw",
+  "appId": "com.ccclawai.ccclaw",
+  "productName": "Ccclaw",
   "asar": true,
-  "forceCodeSigning": true,
-  "afterSign": "scripts/after-sign-notarize.cjs",
+  "forceCodeSigning": false,
   "afterAllArtifactBuild": "scripts/after-all-artifact-build.cjs",
   "directories": {
-    "output": "release/${env.QCLAW_DISPLAY_VERSION}"
+    "output": "release/${env.CCCLAW_DISPLAY_VERSION}"
   },
   "files": [
     "dist-electron",
@@ -29,7 +29,7 @@
   "mac": {
     "icon": "build/icon.icns",
     "category": "public.app-category.developer-tools",
-    "artifactName": "Qclaw-Lite_${env.QCLAW_DISPLAY_VERSION}.${ext}",
+    "artifactName": "Ccclaw-Lite_${env.CCCLAW_DISPLAY_VERSION}.${ext}",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
     "strictVerify": false,
@@ -47,25 +47,59 @@
     "format": "UDZO"
   },
   "win": {
+    "icon": "build/icon.ico",
     "target": [
       {
         "target": "nsis",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
+      },
+      {
+        "target": "portable",
         "arch": [
           "x64"
         ]
       }
     ],
-    "artifactName": "Qclaw-Lite_${env.QCLAW_DISPLAY_VERSION}.${ext}"
+    "artifactName": "Ccclaw-Lite-Setup_${env.CCCLAW_DISPLAY_VERSION}_${arch}.${ext}",
+    "legalTrademarks": "Copyright © 2024 秋芝2046. All rights reserved.",
+    "requestedExecutionLevel": "asInvoker",
+    "verifyUpdateCodeSignature": false
   },
   "nsis": {
     "oneClick": false,
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
+    "allowElevation": true,
+    "installerIcon": "build/icon.ico",
+    "uninstallerIcon": "build/icon.ico",
+    "installerHeaderIcon": "build/icon.ico",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Ccclaw",
+    "include": "build/installer.nsh",
+    "deleteAppDataOnUninstall": false,
+    "runAfterFinish": true,
+    "menuCategory": true,
+    "installerLanguages": [
+      "zh_CN",
+      "en_US",
+      "zh_TW"
+    ],
+    "language": "2052",
+    "multiLanguageInstaller": true,
+    "packElevateHelper": true,
+    "guid": "ccclaw-lite-install-guid",
+    "warningsAsErrors": false
+  },
+  "portable": {
+    "artifactName": "Ccclaw-Lite-Portable_${env.CCCLAW_DISPLAY_VERSION}.${ext}"
   },
   "publish": {
     "provider": "generic",
     "channel": "latest",
-    "url": "https://example.invalid/qclaw-lite/updates/latest"
+    "url": "https://example.invalid/ccclaw-lite/updates/latest"
   }
 }

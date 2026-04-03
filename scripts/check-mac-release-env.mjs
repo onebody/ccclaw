@@ -85,12 +85,12 @@ async function main() {
   const localPublishUrl = await readLocalPublishUrl()
   const publishUrl =
     localPublishUrl ||
-    readTrimmedEnv('QCLAW_UPDATE_PUBLISH_URL') ||
+    readTrimmedEnv('CCCLAW_UPDATE_PUBLISH_URL') ||
     (typeof config.publish === 'string'
       ? config.publish
       : String(config.publish?.url || '').trim())
   if (isPlaceholderPublishUrl(publishUrl)) {
-    const message = `当前自动更新源仍是占位值。继续打本地签名包可以，但正式发布前必须在 ${LOCAL_CONFIG_PATH} 或 QCLAW_UPDATE_PUBLISH_URL 中提供真实更新源。`
+    const message = `当前自动更新源仍是占位值。继续打本地签名包可以，但正式发布前必须在 ${LOCAL_CONFIG_PATH} 或 CCCLAW_UPDATE_PUBLISH_URL 中提供真实更新源。`
     if (allowPlaceholderPublish) {
       warn(message)
     } else {

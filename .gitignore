@@ -40,14 +40,14 @@ dev-notes/
 /.npm/
 /.npm-cache/
 /Library/
-/.tmp-qclaw-user-data/
+/.tmp-CCClaw-user-data/
 /.codex-skill-build/
 /AGENTS.md
 .agents/
 skills-lock.json
 /.claude/
 /.clawhub/
-/.qclaw-package-version.json
+/.CCClaw-package-version.json
 /20
 /index.js
 /electron-builder.local.json

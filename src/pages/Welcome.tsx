@@ -14,8 +14,8 @@ export default function Welcome({ onAccept }: WelcomeProps) {
     <div className="w-full max-w-md flex flex-col items-center gap-2">
       {/* Header: Logo + Title + Safety Badge */}
       <div className="flex items-center gap-2.5">
-        <img src={logoSrc} alt="Qclaw" className="w-12 h-12" />
-        <Title order={4} className="app-text-primary">Qclaw</Title>
+        <img src={logoSrc} alt="Ccclaw" className="w-12 h-12" />
+        <Title order={4} className="app-text-primary">Ccclaw</Title>
         <div className="flex items-center gap-1 ml-1 px-2 py-0.5 rounded-full bg-yellow-500/10">
           <IconAlertTriangle size={13} className="text-yellow-500" />
           <Text fw={600} size="xs" className="text-yellow-500">安全提醒</Text>
@@ -39,14 +39,14 @@ export default function Welcome({ onAccept }: WelcomeProps) {
         </ul>
       </div>
 
-      {/* Card 2: About Qclaw */}
+      {/* Card 2: About Ccclaw */}
       <div className="w-full rounded-lg app-bg-secondary px-3.5 py-2.5 flex flex-col">
         <div className="flex items-center gap-1.5">
           <IconPinFilled size={12} className="text-red-400 flex-shrink-0" />
-          <Text fw={600} size="sm" className="app-text-primary">关于 Qclaw</Text>
+          <Text fw={600} size="sm" className="app-text-primary">关于 Ccclaw</Text>
         </div>
         <Text size="xs" className="app-text-secondary mt-0.5">
-          Qclaw 是轻量化的 OpenClaw 管家，Qclaw 会：
+          Ccclaw 是轻量化的 OpenClaw 管家，Ccclaw 会：
         </Text>
         <ul className="list-disc list-inside app-text-secondary mt-0.5 flex flex-col" style={{ fontSize: '12.5px', lineHeight: 1.7 }}>
           <li>自动安装必要组件（Node.js、OpenClaw CLI、IM 插件）</li>
@@ -63,7 +63,7 @@ export default function Welcome({ onAccept }: WelcomeProps) {
         <Text size="xs" className="app-text-warning mt-0.5 font-medium">
           <ul className="list-disc list-inside app-text-secondary mt-0.5 flex flex-col" style={{ fontSize: '12.5px', lineHeight: 1.7 }}>
           <li><span className="app-text-warning font-medium">Openclaw权限较大，不建议使用含有重要文件的工作电脑。</span></li>  
-          <li>对于开发者：当前Openclaw 要求 Node.js 版本高于22.16，如果您本地的 Node.js 低于22.16，Qclaw 会自动安装最新版node，可能造成node版本覆盖。</li>  
+          <li>对于开发者：当前Openclaw 要求 Node.js 版本高于22.16，如果您本地的 Node.js 低于22.16，Ccclaw 会自动安装最新版node，可能造成node版本覆盖。</li>  
         </ul>
         </Text>
       </div>

@@ -53,13 +53,13 @@ describe('resolveRuntimeOpenClawPaths', () => {
       envFile: '/Users/alice/Library/Application Support/OpenClaw/profiles/main/.env',
       credentialsDir: '/Users/alice/Library/Application Support/OpenClaw/profiles/main/credentials',
       modelCatalogCacheFile:
-        '/Users/alice/Library/Application Support/OpenClaw/profiles/main/qclaw-model-catalog-cache.json',
+        '/Users/alice/Library/Application Support/OpenClaw/profiles/main/ccclaw-model-catalog-cache.json',
       displayHomeDir: '~/Library/Application Support/OpenClaw/profiles/main',
       displayConfigFile: '~/Library/Application Support/OpenClaw/profiles/main/openclaw.json',
       displayEnvFile: '~/Library/Application Support/OpenClaw/profiles/main/.env',
       displayCredentialsDir: '~/Library/Application Support/OpenClaw/profiles/main/credentials',
       displayModelCatalogCacheFile:
-        '~/Library/Application Support/OpenClaw/profiles/main/qclaw-model-catalog-cache.json',
+        '~/Library/Application Support/OpenClaw/profiles/main/ccclaw-model-catalog-cache.json',
     })
   })
 

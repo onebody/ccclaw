@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const OVERRIDE_KEYS = [
-  'QCLAW_RUNTIME_AUTH_LOGIN_TIMEOUT_MS',
-  'QCLAW_RUNTIME_COMMAND_AVAILABILITY_TIMEOUT_MS',
-  'QCLAW_RUNTIME_COMMAND_AVAILABILITY_BACKOFF_FACTOR',
+  'CCCLAW_RUNTIME_AUTH_LOGIN_TIMEOUT_MS',
+  'CCCLAW_RUNTIME_COMMAND_AVAILABILITY_TIMEOUT_MS',
+  'CCCLAW_RUNTIME_COMMAND_AVAILABILITY_BACKOFF_FACTOR',
 ] as const
 
 describe('MAIN_RUNTIME_POLICY', () => {
@@ -15,7 +15,7 @@ describe('MAIN_RUNTIME_POLICY', () => {
   })
 
   it('reads env overrides for runtime-sensitive auth timeouts', async () => {
-    process.env.QCLAW_RUNTIME_AUTH_LOGIN_TIMEOUT_MS = '420000'
+    process.env.CCCLAW_RUNTIME_AUTH_LOGIN_TIMEOUT_MS = '420000'
 
     const { MAIN_RUNTIME_POLICY } = await import('../runtime-policy')
 
@@ -23,8 +23,8 @@ describe('MAIN_RUNTIME_POLICY', () => {
   })
 
   it('falls back to defaults for invalid override values', async () => {
-    process.env.QCLAW_RUNTIME_COMMAND_AVAILABILITY_TIMEOUT_MS = 'not-a-number'
-    process.env.QCLAW_RUNTIME_COMMAND_AVAILABILITY_BACKOFF_FACTOR = 'bad-value'
+    process.env.CCCLAW_RUNTIME_COMMAND_AVAILABILITY_TIMEOUT_MS = 'not-a-number'
+    process.env.CCCLAW_RUNTIME_COMMAND_AVAILABILITY_BACKOFF_FACTOR = 'bad-value'
 
     const { MAIN_RUNTIME_POLICY } = await import('../runtime-policy')
 

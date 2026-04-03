@@ -151,7 +151,7 @@ describe('openclaw upgrade service', () => {
     })
     createPrivilegedOpenClawNpmCommandOptionsMock.mockImplementation((options: Record<string, unknown>) => ({
       ...options,
-      cachePath: '/private/tmp/qclaw-openclaw-admin-npm-upgrade-fallback/cache',
+      cachePath: '/private/tmp/ccclaw-openclaw-admin-npm-upgrade-fallback/cache',
     }))
     createManagedBackupArchiveMock.mockResolvedValue({
       backupId: 'backup-1',
@@ -166,9 +166,9 @@ describe('openclaw upgrade service', () => {
       },
     })
     ensureWritableOpenClawBackupRootDirectoryMock.mockResolvedValue({
-      preferredRootDirectory: '/Users/test/Documents/Qclaw Lite Backups',
-      fallbackRootDirectory: '/Users/test/.qclaw-lite/backups',
-      effectiveRootDirectory: '/Users/test/Documents/Qclaw Lite Backups',
+      preferredRootDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
+      fallbackRootDirectory: '/Users/test/.ccclaw-lite/backups',
+      effectiveRootDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
       usedFallbackRoot: false,
       warnings: [],
     })
@@ -450,11 +450,11 @@ describe('openclaw upgrade service', () => {
       source: 'npm-registry',
     })
     ensureWritableOpenClawBackupRootDirectoryMock.mockResolvedValue({
-      preferredRootDirectory: '/Users/test/Documents/Qclaw Lite Backups',
-      fallbackRootDirectory: '/Users/test/.qclaw-lite/backups',
-      effectiveRootDirectory: '/Users/test/.qclaw-lite/backups',
+      preferredRootDirectory: '/Users/test/Documents/Ccclaw Lite Backups',
+      fallbackRootDirectory: '/Users/test/.ccclaw-lite/backups',
+      effectiveRootDirectory: '/Users/test/.ccclaw-lite/backups',
       usedFallbackRoot: true,
-      warnings: ['首选备份目录不可写，已自动改用 /Users/test/.qclaw-lite/backups。'],
+      warnings: ['首选备份目录不可写，已自动改用 /Users/test/.ccclaw-lite/backups。'],
     })
     runShellMock.mockResolvedValue({
       ok: true,
@@ -470,11 +470,11 @@ describe('openclaw upgrade service', () => {
     const result = await runOpenClawUpgrade()
 
     expect(result.ok).toBe(true)
-    expect(result.warnings).toContain('首选备份目录不可写，已自动改用 /Users/test/.qclaw-lite/backups。')
+    expect(result.warnings).toContain('首选备份目录不可写，已自动改用 /Users/test/.ccclaw-lite/backups。')
     expect(createManagedBackupArchiveMock).toHaveBeenCalledWith(
       expect.objectContaining({
         rootResolution: expect.objectContaining({
-          effectiveRootDirectory: '/Users/test/.qclaw-lite/backups',
+          effectiveRootDirectory: '/Users/test/.ccclaw-lite/backups',
           usedFallbackRoot: true,
         }),
       })
@@ -621,7 +621,7 @@ describe('openclaw upgrade service', () => {
       source: 'npm-registry',
     })
     ensureWritableOpenClawBackupRootDirectoryMock.mockRejectedValue(
-      new Error('OpenClaw 备份目录不可写。首选目录失败：/Users/test/Documents/Qclaw Lite Backups；备用目录失败：/Users/test/.qclaw-lite/backups')
+      new Error('OpenClaw 备份目录不可写。首选目录失败：/Users/test/Documents/Ccclaw Lite Backups；备用目录失败：/Users/test/.ccclaw-lite/backups')
     )
 
     const result = await runOpenClawUpgrade()
@@ -989,7 +989,7 @@ describe('openclaw upgrade service', () => {
             stateRoot,
             displayConfigPath: '~/.openclaw/openclaw.json',
             displayStateRoot: '~/.openclaw',
-            ownershipState: 'qclaw-installed',
+            ownershipState: 'ccclaw-installed',
             installFingerprint: 'fingerprint-rollback',
             baselineBackup: null,
             baselineBackupBypass: null,
@@ -1184,7 +1184,7 @@ describe('openclaw upgrade service', () => {
             stateRoot,
             displayConfigPath: '~/.config/openclaw.json',
             displayStateRoot: '~/.openclaw',
-            ownershipState: 'qclaw-installed',
+            ownershipState: 'ccclaw-installed',
             installFingerprint: 'fingerprint-external-config-rollback',
             baselineBackup: null,
             baselineBackupBypass: null,
@@ -1275,7 +1275,7 @@ describe('openclaw upgrade service', () => {
     expect(adminInstallArgs).toEqual(expect.arrayContaining(['install', '-g', 'openclaw@2026.3.24']))
     expect(adminInstallArgs).not.toContain('--cache=/tmp/openclaw-installer/npm/cache')
     expect(adminInstallArgs.find((arg: string) => arg.startsWith('--cache='))).toBe(
-      '--cache=/private/tmp/qclaw-openclaw-admin-npm-upgrade-fallback/cache'
+      '--cache=/private/tmp/ccclaw-openclaw-admin-npm-upgrade-fallback/cache'
     )
   })
 
@@ -1319,7 +1319,7 @@ describe('openclaw upgrade service', () => {
         operation: 'upgrade',
         preferredStateRootPath: `${TEST_HOME}/.openclaw`,
         includeManagedInstallerRoot: true,
-        qclawSafeWorkDir: '/tmp',
+        ccclawSafeWorkDir: '/tmp',
       })
     )
     expect(String(runMacOpenClawElevatedLifecycleTransactionMock.mock.calls[0]?.[0]?.lifecycleCommand || '')).toContain('npm install -g openclaw')

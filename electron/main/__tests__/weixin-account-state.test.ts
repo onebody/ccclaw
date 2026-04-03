@@ -29,7 +29,7 @@ describe('weixin-account-state', () => {
   let homeDir = ''
 
   beforeEach(async () => {
-    homeDir = await mkdtemp('/tmp/qclaw-weixin-state-')
+    homeDir = await mkdtemp('/tmp/ccclaw-weixin-state-')
     getOpenClawPathsMock.mockReset()
     readConfigMock.mockReset()
     resetOpenClawLegacyEnvWarningsForTests()
@@ -101,7 +101,7 @@ describe('weixin-account-state', () => {
 
   it('ignores removed CLAWDBOT_STATE_DIR during steady-state reads and warns once', async () => {
     const previousStateDir = process.env.CLAWDBOT_STATE_DIR
-    const legacyHomeDir = await mkdtemp('/tmp/qclaw-weixin-legacy-state-')
+    const legacyHomeDir = await mkdtemp('/tmp/ccclaw-weixin-legacy-state-')
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     process.env.CLAWDBOT_STATE_DIR = legacyHomeDir
 

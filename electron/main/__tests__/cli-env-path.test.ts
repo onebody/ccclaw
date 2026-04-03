@@ -80,7 +80,7 @@ describe('buildMacNpmCommand', () => {
     expect(command).toContain("export GIT_CONFIG_VALUE_0='ssh://git@github.com/'")
     expect(command).toContain("export GIT_CONFIG_VALUE_1='git@github.com:'")
     expect(command).toContain('unset NODE_OPTIONS')
-    expect(command).toContain('qclaw_npm_log="$(mktemp -t qclaw-npm-log.XXXXXX)"')
+    expect(command).toContain('ccclaw_npm_log="$(mktemp -t ccclaw-npm-log.XXXXXX)"')
     expect(command).toContain('grep -Eiq')
     expect(command).toContain('unset npm_config_cafile NPM_CONFIG_CAFILE npm_config_ca NPM_CONFIG_CA')
     expect(command).toContain("if [ -f '/etc/ssl/cert.pem' ]; then export SSL_CERT_FILE='/etc/ssl/cert.pem'; fi")
@@ -93,11 +93,11 @@ describe('buildMacNpmCommand', () => {
   it('can pin macOS npm commands to a safe working directory', () => {
     const command = buildMacNpmCommand(['install', '-g', 'openclaw@latest'], {
       detectedBinDir: '/opt/homebrew/bin',
-      workingDirectory: '/Users/alice/Library/Application Support/Qclaw Lite/runtime',
+      workingDirectory: '/Users/alice/Library/Application Support/Ccclaw Lite/runtime',
     })
 
     expect(command).toContain(
-      "cd '/Users/alice/Library/Application Support/Qclaw Lite/runtime' &&"
+      "cd '/Users/alice/Library/Application Support/Ccclaw Lite/runtime' &&"
     )
     expect(command).toContain("npm 'install' '-g' 'openclaw@latest'")
   })

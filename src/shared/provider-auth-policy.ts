@@ -1,4 +1,4 @@
-export interface QclawProviderAuthRouteLike {
+export interface CcclawProviderAuthRouteLike {
   kind?: string | null
   providerId?: string | null
   pluginId?: string | null
@@ -6,27 +6,27 @@ export interface QclawProviderAuthRouteLike {
   requiresSecret?: boolean
 }
 
-export interface QclawProviderAuthMethodLike {
+export interface CcclawProviderAuthMethodLike {
   id?: string | null
   kind?: string | null
-  route?: QclawProviderAuthRouteLike | null
+  route?: CcclawProviderAuthRouteLike | null
 }
 
-export type QclawProviderAuthPersistenceStrategy =
+export type CcclawProviderAuthPersistenceStrategy =
   | {
       kind: 'openclaw-auth-route'
     }
 
-export function resolveQclawProviderAuthPersistenceStrategy(
+export function resolveCcclawProviderAuthPersistenceStrategy(
   _providerId: string,
-  _method?: QclawProviderAuthMethodLike | null
-): QclawProviderAuthPersistenceStrategy {
+  _method?: CcclawProviderAuthMethodLike | null
+): CcclawProviderAuthPersistenceStrategy {
   return { kind: 'openclaw-auth-route' }
 }
 
 export function usesEnvBackedApiKeyPersistence(
   _providerId: string,
-  _method?: QclawProviderAuthMethodLike | null
+  _method?: CcclawProviderAuthMethodLike | null
 ): boolean {
   return false
 }

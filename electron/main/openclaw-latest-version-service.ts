@@ -12,7 +12,7 @@ import { ensureManagedOpenClawNpmRuntime } from './openclaw-npm-runtime'
 import { resolveSafeWorkingDirectory } from './runtime-working-directory'
 
 const DEFAULT_OPENCLAW_METADATA_URL = 'https://registry.npmmirror.com/openclaw/latest'
-const OPENCLAW_METADATA_URL_ENV = 'QCLAW_OPENCLAW_METADATA_URL'
+const OPENCLAW_METADATA_URL_ENV = 'CCCLAW_OPENCLAW_METADATA_URL'
 interface LatestVersionCheckDependencies {
   requestMetadataText?: (url: string, timeoutMs: number) => Promise<string>
   requestLatestVersionFromNpm?: (timeoutMs: number) => Promise<string>
@@ -69,7 +69,7 @@ async function requestMetadataTextViaElectronNet(url: string, timeoutMs: number)
     const response = await net.fetch(url, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'Qclaw Phase1',
+        'User-Agent': 'Ccclaw Phase1',
       },
       signal: controller.signal,
     })

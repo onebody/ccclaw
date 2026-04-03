@@ -35,22 +35,22 @@ describe('desktop-url-policy', () => {
     expect(resolveOpenAICodexCallbackUrl({}).toString()).toBe('http://127.0.0.1:1455/auth/callback')
     expect(
       resolveOpenAICodexCallbackUrl({
-        QCLAW_OPENAI_CALLBACK_URL: 'http://localhost:2455/custom/callback',
+        CCCLAW_OPENAI_CALLBACK_URL: 'http://localhost:2455/custom/callback',
       }).toString()
     ).toBe('http://localhost:2455/custom/callback')
     expect(
       resolveOpenAICodexCallbackUrl({
-        QCLAW_OPENAI_CALLBACK_PORT: '3456',
+        CCCLAW_OPENAI_CALLBACK_PORT: '3456',
       }).toString()
     ).toBe('http://127.0.0.1:3456/auth/callback')
 
     expect(
       buildOpenAICodexCallbackProbeUrls({
-        QCLAW_OPENAI_CALLBACK_PORT: '2455',
+        CCCLAW_OPENAI_CALLBACK_PORT: '2455',
       })
     ).toEqual([
-      'http://127.0.0.1:2455/auth/callback?code=qclaw_probe&state=qclaw_probe',
-      'http://localhost:2455/auth/callback?code=qclaw_probe&state=qclaw_probe',
+      'http://127.0.0.1:2455/auth/callback?code=ccclaw_probe&state=ccclaw_probe',
+      'http://localhost:2455/auth/callback?code=ccclaw_probe&state=ccclaw_probe',
     ])
   })
 })

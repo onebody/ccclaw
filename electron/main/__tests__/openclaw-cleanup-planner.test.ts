@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { discoverOpenClawInstallationsMock, resolveBackupRootDirectoryMock } = vi.hoisted(() => ({
   discoverOpenClawInstallationsMock: vi.fn(),
-  resolveBackupRootDirectoryMock: vi.fn(() => '/Users/test/Documents/Qclaw Lite Backups'),
+  resolveBackupRootDirectoryMock: vi.fn(() => '/Users/test/Documents/Ccclaw Lite Backups'),
 }))
 
 vi.mock('../openclaw-install-discovery', () => ({
@@ -55,13 +55,13 @@ describe('openclaw cleanup planner', () => {
     expect(preview.backupItems[0]).toContain('完整状态备份')
   })
 
-  it('keeps openclaw intact when preparing qclaw uninstall only', async () => {
+  it('keeps openclaw intact when preparing ccclaw uninstall only', async () => {
     discoverOpenClawInstallationsMock.mockResolvedValue({
       candidates: [],
     })
 
     const preview = await buildOpenClawCleanupPreview({
-      actionType: 'qclaw-uninstall-keep-openclaw',
+      actionType: 'ccclaw-uninstall-keep-openclaw',
       backupBeforeDelete: false,
     })
 

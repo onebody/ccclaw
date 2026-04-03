@@ -98,7 +98,7 @@ export function resolveOpenClawPaths(
   const configFile = joinForPlatform(platform, openClawHomeDir, 'openclaw.json')
   const envFile = joinForPlatform(platform, openClawHomeDir, '.env')
   const credentialsDir = joinForPlatform(platform, openClawHomeDir, 'credentials')
-  const modelCatalogCacheFile = joinForPlatform(platform, openClawHomeDir, 'qclaw-model-catalog-cache.json')
+  const modelCatalogCacheFile = joinForPlatform(platform, openClawHomeDir, 'ccclaw-model-catalog-cache.json')
 
   return {
     homeDir: openClawHomeDir,
@@ -133,7 +133,7 @@ export function resolveOpenClawPathsFromStateRoot(
   )
   const envFile = joinForPlatform(platform, openClawHomeDir, '.env')
   const credentialsDir = joinForPlatform(platform, openClawHomeDir, 'credentials')
-  const modelCatalogCacheFile = joinForPlatform(platform, openClawHomeDir, 'qclaw-model-catalog-cache.json')
+  const modelCatalogCacheFile = joinForPlatform(platform, openClawHomeDir, 'ccclaw-model-catalog-cache.json')
 
   return {
     homeDir: openClawHomeDir,

@@ -146,20 +146,20 @@ describe('preload api model channels', () => {
     await api.runOpenClawUpgrade()
     expect(invokeMock).toHaveBeenLastCalledWith('openclaw:upgrade:run')
 
-    await api.getQClawUpdateStatus()
-    expect(invokeMock).toHaveBeenLastCalledWith('qclaw:update:status')
+    await api.getCCClawUpdateStatus()
+    expect(invokeMock).toHaveBeenLastCalledWith('ccclaw:update:status')
 
-    await api.checkQClawUpdate()
-    expect(invokeMock).toHaveBeenLastCalledWith('qclaw:update:check')
+    await api.checkCCClawUpdate()
+    expect(invokeMock).toHaveBeenLastCalledWith('ccclaw:update:check')
 
-    await api.downloadQClawUpdate()
-    expect(invokeMock).toHaveBeenLastCalledWith('qclaw:update:download')
+    await api.downloadCCClawUpdate()
+    expect(invokeMock).toHaveBeenLastCalledWith('ccclaw:update:download')
 
-    await api.installQClawUpdate()
-    expect(invokeMock).toHaveBeenLastCalledWith('qclaw:update:install')
+    await api.installCCClawUpdate()
+    expect(invokeMock).toHaveBeenLastCalledWith('ccclaw:update:install')
 
-    await api.openQClawUpdateDownloadUrl()
-    expect(invokeMock).toHaveBeenLastCalledWith('qclaw:update:open-download-url')
+    await api.openCCClawUpdateDownloadUrl()
+    expect(invokeMock).toHaveBeenLastCalledWith('ccclaw:update:open-download-url')
 
     await api.checkCombinedUpdate()
     expect(invokeMock).toHaveBeenLastCalledWith('combined:update:check')

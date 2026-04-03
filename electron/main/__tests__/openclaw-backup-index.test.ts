@@ -13,16 +13,16 @@ const fs = (process.getBuiltinModule('node:fs') as typeof import('node:fs')).pro
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 
 describe('openclaw backup index', () => {
-  const originalBackupDir = process.env.QCLAW_BACKUP_DIR
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
+  const originalBackupDir = process.env.CCCLAW_BACKUP_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
   let backupDir = ''
   let userDataDir = ''
 
   beforeEach(async () => {
-    backupDir = path.join('/tmp', `qclaw-backup-index-${Date.now()}-${Math.random().toString(16).slice(2)}`)
-    userDataDir = path.join('/tmp', `qclaw-backup-index-user-data-${Date.now()}-${Math.random().toString(16).slice(2)}`)
-    process.env.QCLAW_BACKUP_DIR = backupDir
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    backupDir = path.join('/tmp', `ccclaw-backup-index-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    userDataDir = path.join('/tmp', `ccclaw-backup-index-user-data-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    process.env.CCCLAW_BACKUP_DIR = backupDir
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
     await fs.rm(backupDir, { recursive: true, force: true })
     await fs.rm(userDataDir, { recursive: true, force: true })
     await fs.mkdir(path.join(backupDir, 'baseline-a'), { recursive: true })
@@ -96,15 +96,15 @@ describe('openclaw backup index', () => {
     await fs.rm(backupDir, { recursive: true, force: true })
     await fs.rm(userDataDir, { recursive: true, force: true })
     if (originalBackupDir === undefined) {
-      delete process.env.QCLAW_BACKUP_DIR
+      delete process.env.CCCLAW_BACKUP_DIR
     } else {
-      process.env.QCLAW_BACKUP_DIR = originalBackupDir
+      process.env.CCCLAW_BACKUP_DIR = originalBackupDir
     }
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
       return
     }
-    process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+    process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
   })
 
   it('lists known backups in reverse chronological order and infers available scopes', async () => {
@@ -165,7 +165,7 @@ describe('openclaw backup index', () => {
   })
 
   it('deletes only the scanned backup directory even when manifest archivePath points elsewhere', async () => {
-    const outsideDir = path.join('/tmp', `qclaw-backup-index-outside-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const outsideDir = path.join('/tmp', `ccclaw-backup-index-outside-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     await fs.mkdir(outsideDir, { recursive: true })
     await fs.writeFile(path.join(outsideDir, 'keep.txt'), 'safe', 'utf8')
 
@@ -200,7 +200,7 @@ describe('openclaw backup index', () => {
   })
 
   it('creates history-only backups under a single safe directory name so they remain listable', async () => {
-    const historyRoot = path.join('/tmp', `qclaw-history-root-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const historyRoot = path.join('/tmp', `ccclaw-history-root-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     await fs.mkdir(historyRoot, { recursive: true })
     await fs.writeFile(path.join(historyRoot, 'openclaw.json'), '{}', 'utf8')
 
@@ -222,8 +222,8 @@ describe('openclaw backup index', () => {
   })
 
   it('includes external config files when creating full-state managed backups', async () => {
-    const stateRoot = path.join('/tmp', `qclaw-managed-backup-state-${Date.now()}-${Math.random().toString(16).slice(2)}`)
-    const externalConfigDir = path.join('/tmp', `qclaw-managed-backup-config-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const stateRoot = path.join('/tmp', `ccclaw-managed-backup-state-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const externalConfigDir = path.join('/tmp', `ccclaw-managed-backup-config-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     const externalConfigPath = path.join(externalConfigDir, 'custom-openclaw.json')
     await fs.mkdir(path.join(stateRoot, 'memory'), { recursive: true })
     await fs.mkdir(externalConfigDir, { recursive: true })
@@ -268,13 +268,13 @@ describe('openclaw backup index', () => {
   })
 
   it('falls back to a writable app-owned backup root when the preferred root is blocked', async () => {
-    const blockedRoot = path.join('/tmp', `qclaw-backup-index-blocked-${Date.now()}-${Math.random().toString(16).slice(2)}`)
-    const stateRoot = path.join('/tmp', `qclaw-managed-backup-fallback-state-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const blockedRoot = path.join('/tmp', `ccclaw-backup-index-blocked-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const stateRoot = path.join('/tmp', `ccclaw-managed-backup-fallback-state-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     const configPath = path.join(stateRoot, 'openclaw.json')
     await fs.writeFile(blockedRoot, 'not-a-directory', 'utf8')
     await fs.mkdir(stateRoot, { recursive: true })
     await fs.writeFile(configPath, '{"provider":"openai"}', 'utf8')
-    process.env.QCLAW_BACKUP_DIR = blockedRoot
+    process.env.CCCLAW_BACKUP_DIR = blockedRoot
 
     try {
       const backup = await createManagedBackupArchive({

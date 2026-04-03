@@ -23,7 +23,7 @@ interface StoredChatSessionRecord {
   messages: ChatMessage[]
 }
 
-interface QClawChatStore {
+interface CCClawChatStore {
   version: 3
   sessions: StoredChatSessionRecord[]
 }
@@ -162,7 +162,7 @@ function sanitizeUsage(value: unknown): ChatUsage | undefined {
 }
 
 function resolveUserDataDirectory(): string {
-  return String(process.env.QCLAW_USER_DATA_DIR || path.join(homedir(), '.qclaw-lite')).trim()
+  return String(process.env.CCCLAW_USER_DATA_DIR || path.join(homedir(), '.ccclaw-lite')).trim()
 }
 
 function resolveStorePath(): string {
@@ -223,10 +223,10 @@ function sanitizeSession(value: unknown): StoredChatSessionRecord | null {
   }
 }
 
-async function loadStore(): Promise<QClawChatStore> {
+async function loadStore(): Promise<CCClawChatStore> {
   try {
     const raw = await readFile(resolveStorePath(), 'utf8')
-    const parsed = JSON.parse(raw) as Partial<QClawChatStore> & { version?: number }
+    const parsed = JSON.parse(raw) as Partial<CCClawChatStore> & { version?: number }
     const sanitizedSessions = Array.isArray(parsed.sessions)
       ? parsed.sessions
           .map(sanitizeSession)
@@ -238,7 +238,7 @@ async function loadStore(): Promise<QClawChatStore> {
       changed = changed || migrated.changed
       return migrated.record
     })
-    const migratedStore: QClawChatStore = {
+    const migratedStore: CCClawChatStore = {
       version: STORE_VERSION,
       sessions: migratedSessions,
     }
@@ -254,7 +254,7 @@ async function loadStore(): Promise<QClawChatStore> {
   }
 }
 
-async function saveStore(store: QClawChatStore): Promise<void> {
+async function saveStore(store: CCClawChatStore): Promise<void> {
   const storePath = resolveStorePath()
   await atomicWriteJson(storePath, store, {
     description: '聊天 transcript 缓存',

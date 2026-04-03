@@ -1,6 +1,6 @@
 export type ChatComposerEnterSendMode = 'enter' | 'shiftEnter' | 'altEnter'
 
-const CHAT_COMPOSER_ENTER_SEND_MODE_STORAGE_KEY = 'qclaw-chat-composer-enter-send-mode'
+const CHAT_COMPOSER_ENTER_SEND_MODE_STORAGE_KEY = 'ccclaw-chat-composer-enter-send-mode'
 const DEFAULT_ENTER_SEND_MODE: ChatComposerEnterSendMode = 'enter'
 
 function getLocalStorage(): Storage | null {

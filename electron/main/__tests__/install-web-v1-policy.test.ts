@@ -51,8 +51,8 @@ describe('install-web-v1 policy manifest', () => {
     )
     expect(manifest.desktop.oauth.openaiCodex).toMatchObject({
       defaultCallbackUrl: 'http://127.0.0.1:1455/auth/callback',
-      callbackUrlEnv: 'QCLAW_OPENAI_CALLBACK_URL',
-      callbackPortEnv: 'QCLAW_OPENAI_CALLBACK_PORT',
+      callbackUrlEnv: 'CCCLAW_OPENAI_CALLBACK_URL',
+      callbackPortEnv: 'CCCLAW_OPENAI_CALLBACK_PORT',
     })
     expect(manifest.channel).toMatchObject({
       id: 'feishu',
@@ -76,9 +76,9 @@ describe('install-web-v1 policy manifest', () => {
     const manifest = readManifest()
 
     expect(manifest.discovery).toMatchObject({
-      sharedExtraBinDirsEnv: 'QCLAW_CLI_EXTRA_BIN_DIRS',
-      nodeExtraBinDirsEnv: 'QCLAW_NODE_EXTRA_BIN_DIRS',
-      openclawExtraBinDirsEnv: 'QCLAW_OPENCLAW_EXTRA_BIN_DIRS',
+      sharedExtraBinDirsEnv: 'CCCLAW_CLI_EXTRA_BIN_DIRS',
+      nodeExtraBinDirsEnv: 'CCCLAW_NODE_EXTRA_BIN_DIRS',
+      openclawExtraBinDirsEnv: 'CCCLAW_OPENCLAW_EXTRA_BIN_DIRS',
     })
     expect(manifest.discovery.npmPrefixEnvNames).toEqual(
       expect.arrayContaining(['npm_config_prefix', 'NPM_CONFIG_PREFIX'])

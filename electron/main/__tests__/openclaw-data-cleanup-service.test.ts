@@ -20,20 +20,20 @@ import { runOpenClawDataCleanup } from '../openclaw-data-cleanup-service'
 
 describe('openclaw data cleanup service', () => {
   const tempDirs: string[] = []
-  const originalBackupDir = process.env.QCLAW_BACKUP_DIR
+  const originalBackupDir = process.env.CCCLAW_BACKUP_DIR
 
   beforeEach(() => {
     runCliMock.mockReset()
     discoverOpenClawInstallationsMock.mockReset()
     runCliMock.mockResolvedValue({ ok: true, stdout: '', stderr: '', code: 0 })
-    process.env.QCLAW_BACKUP_DIR = makeTempDir('backups')
+    process.env.CCCLAW_BACKUP_DIR = makeTempDir('backups')
   })
 
   afterEach(() => {
     if (originalBackupDir === undefined) {
-      delete process.env.QCLAW_BACKUP_DIR
+      delete process.env.CCCLAW_BACKUP_DIR
     } else {
-      process.env.QCLAW_BACKUP_DIR = originalBackupDir
+      process.env.CCCLAW_BACKUP_DIR = originalBackupDir
     }
     while (tempDirs.length > 0) {
       const dir = tempDirs.pop()
@@ -42,7 +42,7 @@ describe('openclaw data cleanup service', () => {
   })
 
   function makeTempDir(name: string): string {
-    const dir = path.join('/tmp', `qclaw-data-cleanup-${name}-${Date.now()}-${Math.random().toString(16).slice(2)}`)
+    const dir = path.join('/tmp', `ccclaw-data-cleanup-${name}-${Date.now()}-${Math.random().toString(16).slice(2)}`)
     fs.mkdirSync(dir, { recursive: true })
     tempDirs.push(dir)
     return dir

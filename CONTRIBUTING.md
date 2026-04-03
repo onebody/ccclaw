@@ -1,6 +1,6 @@
 # 参与贡献
 
-非常感谢你有意愿为 Qclaw 做出贡献！🎉
+非常感谢你有意愿为 Ccclaw 做出贡献！🎉
 
 ## 目录
 
@@ -38,11 +38,11 @@
 
 ## 简介
 
-> Qclaw——你的"龙虾管家"，不用命令行，小白也能轻松玩转 OpenClaw。
+> Ccclaw——你的"龙虾管家"，不用命令行，小白也能轻松玩转 OpenClaw。
 
-目前 Qclaw 已实现安装配置、网关管理、模型切换、IM 渠道对接、skills 管理等核心功能。但我们都知道，OpenClaw 的强大远远没有被大多数人用好，原因往往是它操作太复杂。
+目前 Ccclaw 已实现安装配置、网关管理、模型切换、IM 渠道对接、skills 管理等核心功能。但我们都知道，OpenClaw 的强大远远没有被大多数人用好，原因往往是它操作太复杂。
 
-在大家的共同开发下，Qclaw 有机会拓展并成长为最易用、最好用的 OpenClaw 开源管理工具，包括但不限于：**更直观的子 Agent 管理**、**可视化的记忆管理**、**与其他前沿 Agent 框架的打通**。
+在大家的共同开发下，Ccclaw 有机会拓展并成长为最易用、最好用的 OpenClaw 开源管理工具，包括但不限于：**更直观的子 Agent 管理**、**可视化的记忆管理**、**与其他前沿 Agent 框架的打通**。
 
 ### 加入贡献者交流群
 
@@ -59,7 +59,7 @@
   <tr>
     <td width="33%" valign="top">
       <h4>🪟 Windows 兼容优化</h4>
-      <p>QClaw 在 Windows 上还有不少问题（路径、权限、环境检测），如果你是 Windows 用户 + 开发者，你的贡献价值巨大。</p>
+      <p>CCClaw 在 Windows 上还有不少问题（路径、权限、环境检测），如果你是 Windows 用户 + 开发者，你的贡献价值巨大。</p>
     </td>
     <td width="33%" valign="top">
       <h4>🎨 UI/UX 改进</h4>
@@ -67,7 +67,7 @@
     </td>
     <td width="33%" valign="top">
       <h4>🌍 多语言 & 文档</h4>
-      <p>多语言界面、国际化文档、使用教程——帮更多人用上 Qclaw。</p>
+      <p>多语言界面、国际化文档、使用教程——帮更多人用上 Ccclaw。</p>
     </td>
   </tr>
 </table>
@@ -119,8 +119,8 @@
 
 1. **克隆项目并进入目录**
    ```bash
-   git clone https://github.com/qiuzhi2046/Qclaw.git
-   cd Qclaw
+   git clone https://github.com/onebody/Ccclaw.git
+   cd Ccclaw
    ```
 
 2. **安装依赖**
@@ -168,7 +168,7 @@
 
 ```text
 
-Qclaw/
+Ccclaw/
 ├── electron/          # Electron 主进程
 │   └── main/          # IPC handlers、CLI 交互、安装逻辑
 ├── src/               # React 渲染层
@@ -214,9 +214,9 @@ Qclaw/
 
 <img src="/docs/images/feishu_contributor.png" alt="飞书贡献者交流群二维码" width="200" />
 
-- GitHub Issues：[提 Bug](https://github.com/qiuzhi2046/Qclaw/issues/new?template=bug_report.yml) · [提需求](https://github.com/qiuzhi2046/Qclaw/issues/new?template=feature_request.yml) · [提问题](https://github.com/qiuzhi2046/Qclaw/issues/new?template=question.yml)
+- GitHub Issues：[提 Bug](https://github.com/onebody/Ccclaw/issues/new?template=bug_report.yml) · [提需求](https://github.com/onebody/Ccclaw/issues/new?template=feature_request.yml) · [提问题](https://github.com/onebody/Ccclaw/issues/new?template=question.yml)
 
 - 贡献者群：扫码加入（见上方二维码）
 - 许可：提交代码即表示同意以 Apache License 2.0 开源
 
-你的每一个 PR 都在让 Qclaw 变得更好，帮助更多人轻松驾驭 Agent。期待在 README 看到你的头像！ 🐾
+你的每一个 PR 都在让 Ccclaw 变得更好，帮助更多人轻松驾驭 Agent。期待在 README 看到你的头像！ 🐾

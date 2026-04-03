@@ -14,7 +14,7 @@ describe('resolveManagedChannelIdentity', () => {
       platform: 'dingtalk',
       pluginId: 'dingtalk-connector',
       managementKind: 'official-managed',
-      sourceOfTruth: 'qclaw-shared-registry',
+      sourceOfTruth: 'ccclaw-shared-registry',
       officialAdapterId: 'dingtalk',
     })
   })
@@ -31,7 +31,7 @@ describe('resolveManagedChannelIdentity', () => {
       platform: 'qqbot',
       pluginId: 'openclaw-qqbot',
       managementKind: 'official-managed',
-      sourceOfTruth: 'qclaw-shared-registry',
+      sourceOfTruth: 'ccclaw-shared-registry',
     })
   })
 

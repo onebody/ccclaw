@@ -68,16 +68,16 @@ function resolveActiveCandidate(candidates: OpenClawInstallCandidate[]): OpenCla
 function buildManualUpgradeHint(candidate: OpenClawInstallCandidate | null): string | undefined {
   if (!candidate) return undefined
   if (!isStrictOpenClawPolicyVersion(candidate.version)) {
-    return '当前 OpenClaw 版本号无法可靠解析。为避免误改现有安装，请先确认 `openclaw --version` 输出正常，并手动切换到 2026.3.24 后再回到 Qclaw。'
+    return '当前 OpenClaw 版本号无法可靠解析。为避免误改现有安装，请先确认 `openclaw --version` 输出正常，并手动切换到 2026.3.24 后再回到 Ccclaw。'
   }
   if (candidate.installSource === 'homebrew' && !supportsPinnedOpenClawCorrection(candidate.installSource, candidate)) {
-    return '当前 OpenClaw 由 Homebrew 管理，程序内无法安全回退到 2026.3.24。请先在 Homebrew 环境中手动切换到 2026.3.24；若当前 Homebrew 源无法提供该版本，请先移除 brew 安装后，再让 Qclaw 重新安装 2026.3.24。'
+    return '当前 OpenClaw 由 Homebrew 管理，程序内无法安全回退到 2026.3.24。请先在 Homebrew 环境中手动切换到 2026.3.24；若当前 Homebrew 源无法提供该版本，请先移除 brew 安装后，再让 Ccclaw 重新安装 2026.3.24。'
   }
   if (candidate.installSource === 'custom') {
-    return '当前 OpenClaw 来自自定义路径，程序内无法安全改写。请在原安装位置或原包管理器中手动安装 2026.3.24，并确认 PATH 指向该版本后再回到 Qclaw。'
+    return '当前 OpenClaw 来自自定义路径，程序内无法安全改写。请在原安装位置或原包管理器中手动安装 2026.3.24，并确认 PATH 指向该版本后再回到 Ccclaw。'
   }
   if (candidate.installSource === 'unknown') {
-    return '当前 OpenClaw 安装来源无法识别。为避免误改系统环境，请先确认 which openclaw 对应的实际路径，并将 PATH 切换到 2026.3.24，或移除该版本后让 Qclaw 重新安装。'
+    return '当前 OpenClaw 安装来源无法识别。为避免误改系统环境，请先确认 which openclaw 对应的实际路径，并将 PATH 切换到 2026.3.24，或移除该版本后让 Ccclaw 重新安装。'
   }
   return undefined
 }
@@ -480,7 +480,7 @@ function attachOwnershipRepairHint(result: Awaited<ReturnType<typeof runShell>>)
   if (result.ok) return result
   if (!isOpenClawInstallPermissionFailureResult(result)) return result
   const message =
-    '检测到当前 OpenClaw 安装目录存在权限/所有权问题，Qclaw 已尝试通过管理员权限修复后重试升级。'
+    '检测到当前 OpenClaw 安装目录存在权限/所有权问题，Ccclaw 已尝试通过管理员权限修复后重试升级。'
   return {
     ...result,
     stderr: `${message}\n\n${String(result.stderr || '').trim()}`.trim(),
@@ -552,7 +552,7 @@ async function runUserManagedOwnershipRepairUpgrade(
       stdout: '',
       stderr: [
         '检测到当前 OpenClaw 安装目录存在权限/所有权问题。',
-        '当前平台暂不支持在 Qclaw 内自动提权修复，请先在终端执行：',
+        '当前平台暂不支持在 Ccclaw 内自动提权修复，请先在终端执行：',
         ...recoveryCommands.map((command) => `- ${command}`),
       ].join('\n'),
       code: 1,
@@ -572,12 +572,12 @@ async function runUserManagedOwnershipRepairUpgrade(
     operation: 'upgrade',
     lifecycleCommand: command,
     prompt:
-      'Qclaw 检测到当前 OpenClaw 安装目录存在权限/所有权问题，无法直接升级。\n\nQclaw 将先修正该目录 ownership，再继续升级到目标版本。\n\n请输入你的 Mac 登录密码以继续。',
+      'Ccclaw 检测到当前 OpenClaw 安装目录存在权限/所有权问题，无法直接升级。\n\nCcclaw 将先修正该目录 ownership，再继续升级到目标版本。\n\n请输入你的 Mac 登录密码以继续。',
     timeoutMs: buildMirrorAwareTimeoutMs(MAIN_RUNTIME_POLICY.node.installOpenClawTimeoutMs),
     controlDomain: 'upgrade',
     binaryPath: candidate.resolvedBinaryPath || candidate.binaryPath,
     preferredStateRootPath: candidate.stateRoot,
-    qclawSafeWorkDir: safeWorkingDirectory,
+    ccclawSafeWorkDir: safeWorkingDirectory,
     includeManagedInstallerRoot: true,
     runDirect,
   })
@@ -661,12 +661,12 @@ async function runSourceAwareUpgrade(
       operation: 'upgrade',
       lifecycleCommand: command,
       prompt:
-        'Qclaw 需要将当前 OpenClaw 升级到最新版本。\n\n升级不会迁移配置位置或数据位置。\n\n请输入你的 Mac 登录密码以继续。',
+        'Ccclaw 需要将当前 OpenClaw 升级到最新版本。\n\n升级不会迁移配置位置或数据位置。\n\n请输入你的 Mac 登录密码以继续。',
       timeoutMs: buildMirrorAwareTimeoutMs(MAIN_RUNTIME_POLICY.node.installOpenClawTimeoutMs),
       controlDomain: 'upgrade',
       binaryPath: candidate.resolvedBinaryPath || candidate.binaryPath,
       preferredStateRootPath: candidate.stateRoot,
-      qclawSafeWorkDir: safeWorkingDirectory,
+      ccclawSafeWorkDir: safeWorkingDirectory,
       includeManagedInstallerRoot: true,
       runDirect,
     })

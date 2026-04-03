@@ -175,15 +175,15 @@ const RAW_STALE_PLUGIN_WARNING =
   'Config warnings:\n- plugins.entries.MiniMax-M2.5: plugin not found: MiniMax-M2.5 (stale config entry ignored; remove it from plugins config)'
 
 describe('startModelOAuthFlow', () => {
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
   let userDataDir = ''
 
   beforeEach(async () => {
     if (userDataDir) {
       await fs.rm(userDataDir, { recursive: true, force: true })
     }
-    userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'qclaw-model-oauth-'))
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'ccclaw-model-oauth-'))
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
   })
 
   afterEach(async () => {
@@ -192,10 +192,10 @@ describe('startModelOAuthFlow', () => {
       userDataDir = ''
     }
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
       return
     }
-    process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+    process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
   })
 
   it('uses the registry descriptor for qwen plugin enable and device login', async () => {

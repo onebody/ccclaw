@@ -11,7 +11,7 @@ const fixturePackageRoot = path.resolve(
 )
 
 function createFixtureCopy(): string {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-auth-registry-fixture-'))
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-auth-registry-fixture-'))
   fs.cpSync(fixturePackageRoot, tempRoot, { recursive: true })
   return tempRoot
 }
@@ -134,7 +134,7 @@ function removePreferredProviderMetadata(root: string) {
 }
 
 function createModernManifestPackageRoot(): string {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-auth-registry-modern-'))
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-auth-registry-modern-'))
   const distDir = path.join(tempRoot, 'dist')
   const extensionsDir = path.join(distDir, 'extensions')
   fs.mkdirSync(extensionsDir, { recursive: true })
@@ -781,7 +781,7 @@ describe('createOpenClawAuthRegistry', () => {
   })
 
   it('fails closed when required official metadata files are unavailable', async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-auth-registry-missing-'))
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-auth-registry-missing-'))
     fs.writeFileSync(
       path.join(tempRoot, 'package.json'),
       JSON.stringify({ name: 'openclaw', version: '2026.3.8' }, null, 2)

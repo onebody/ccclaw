@@ -7,7 +7,7 @@ interface ActiveSkillMutation {
   target: string
 }
 
-export const SKILL_MUTATION_BUSY_MARKER = 'QCLAW_SKILL_MUTATION_BUSY'
+export const SKILL_MUTATION_BUSY_MARKER = 'CCCLAW_SKILL_MUTATION_BUSY'
 
 let activeSkillMutation: ActiveSkillMutation | null = null
 

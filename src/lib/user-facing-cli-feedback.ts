@@ -13,9 +13,9 @@ const CLAWHUB_RATE_LIMIT_REGEX =
 const CLAWHUB_RESOLUTION_FAILED_REGEX = /resolving clawhub:[\s\S]*fetch failed/i
 const NETWORK_BLOCKED_REGEX =
   /\b(timeout|timed out|network|dns|proxy|certificate|tls|ssl|socket hang up|econnreset|enotfound|fetch failed)\b/i
-const PLUGIN_INSTALL_PERMISSION_MARKER = 'QCLAW_PLUGIN_INSTALL_PERMISSION_DENIED'
-const PERMISSION_REPAIR_MARKER = 'QCLAW_PERMISSION_REPAIR'
-const SKILL_MUTATION_BUSY_MARKER = 'QCLAW_SKILL_MUTATION_BUSY'
+const PLUGIN_INSTALL_PERMISSION_MARKER = 'CCCLAW_PLUGIN_INSTALL_PERMISSION_DENIED'
+const PERMISSION_REPAIR_MARKER = 'CCCLAW_PERMISSION_REPAIR'
+const SKILL_MUTATION_BUSY_MARKER = 'CCCLAW_SKILL_MUTATION_BUSY'
 
 function stripCliControlSequences(text: string): string {
   return String(text || '')

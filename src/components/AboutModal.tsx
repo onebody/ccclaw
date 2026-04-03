@@ -8,7 +8,7 @@ import douyinSvg from '../assets/brand-tiktok.svg'
 import xiaohongshuSvg from '../assets/brand-xiaohongshu.svg'
 import youtubeSvg from '../assets/brand-youtube.svg'
 
-const ABOUT_QCLAW_LITE_URL = 'https://my.feishu.cn/wiki/N4PGwaSTOiSuavknd5ncRsyqnth'
+const ABOUT_CCCLAW_LITE_URL = 'https://my.feishu.cn/wiki/N4PGwaSTOiSuavknd5ncRsyqnth'
 const APP_VERSION = packageJson.version
 
 export function resolveAboutModalVersion(
@@ -20,11 +20,11 @@ export function resolveAboutModalVersion(
 }
 
 const SOCIAL_LINKS = [
-  { label: '官网', icon: logoImg, url: 'https://qclawai.com' },
+  { label: '官网', icon: logoImg, url: 'https://ccclawai.com' },
   { label: 'Bilibili', icon: bilibiliSvg, url: 'https://space.bilibili.com/385670211' },
   { label: '抖音', icon: douyinSvg, url: 'https://www.douyin.com/user/MS4wLjABAAAAwbbVuf1W2DdgRe0xCa0oxg1ZIHbzuiTzyjq3NcOVgBuu6qIidYlMYqbL3ZFY2swu?from_tab_name=main' },
   { label: '小红书', icon: xiaohongshuSvg, url: 'https://www.xiaohongshu.com/user/profile/63b622ab00000000260066bd?xsec_token=ABvEULb4Lxn_B-E2qKLygX0nhjP_jX00fcAyAjQmSqLE0%3D&xsec_source=pc_search' },
-  { label: 'YouTube', icon: youtubeSvg, url: 'https://www.youtube.com/@qiuzhi2046' },
+  { label: 'YouTube', icon: youtubeSvg, url: 'https://www.youtube.com/@onebody' },
 ]
 
 function SocialCard({ label, icon, url }: { label: string; icon: string; url: string }) {
@@ -61,7 +61,7 @@ export default function AboutModal({ opened, onClose }: { opened: boolean; onClo
     if (!opened) return
 
     let cancelled = false
-    void window.api.getQClawUpdateStatus()
+    void window.api.getCCClawUpdateStatus()
       .then((status) => {
         const nextVersion = resolveAboutModalVersion(status)
         if (!cancelled && nextVersion) {
@@ -81,13 +81,13 @@ export default function AboutModal({ opened, onClose }: { opened: boolean; onClo
       onClose={onClose}
       title={(
         <a
-          href={ABOUT_QCLAW_LITE_URL}
+          href={ABOUT_CCCLAW_LITE_URL}
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: 'inherit', textDecoration: 'none' }}
           className="hover:underline"
         >
-          关于 Qclaw
+          关于 Ccclaw
         </a>
       )}
       centered

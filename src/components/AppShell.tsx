@@ -25,7 +25,7 @@ export default function AppShell({ children, scroll }: { children: ReactNode; sc
           WebkitAppRegion: 'drag',
         } as any}
       >
-        <img src={logoSrc} alt="Qclaw" style={{ height: 28, userSelect: 'none', pointerEvents: 'none' }} />
+        <img src={logoSrc} alt="Ccclaw" style={{ height: 28, userSelect: 'none', pointerEvents: 'none' }} />
       </Box>
 
       {/* Content */}

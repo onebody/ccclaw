@@ -22,7 +22,7 @@ const NODE_MANUAL_DOWNLOAD_ISSUE_KINDS = new Set([
 export const ENV_CHECK_UI_POLICY = Object.freeze({
   loadingTips: Object.freeze([
     '正在检查系统环境...',
-    'Qclaw 支持飞书、企微、钉钉、QQ渠道接入',
+    'Ccclaw 支持飞书、企微、钉钉、QQ渠道接入',
     '所有配置和数据仅保存在您的电脑上',
     '安装、配置速度取决于网络和硬件配置',
     '安装、配置过程可能会输入电脑密码',

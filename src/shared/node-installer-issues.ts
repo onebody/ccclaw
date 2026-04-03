@@ -58,7 +58,7 @@ export function createNodeInstallerIssue(
     return {
       kind,
       title: '系统缺少安装预检命令',
-      message: '当前系统缺少 Node.js 自动安装所需的系统命令，Qclaw 无法继续自动预检。请联系管理员修复系统工具，或改为手动安装 Node.js。',
+      message: '当前系统缺少 Node.js 自动安装所需的系统命令，Ccclaw 无法继续自动预检。请联系管理员修复系统工具，或改为手动安装 Node.js。',
       details: normalizedDetails,
     }
   }
@@ -77,7 +77,7 @@ export function createNodeInstallerIssue(
     return {
       kind,
       title: 'Git 命令不可用',
-      message: '当前系统无法使用 Git，Qclaw 无法继续环境准备。请先修复 Git 或安装 Xcode Command Line Tools 后重试。',
+      message: '当前系统无法使用 Git，Ccclaw 无法继续环境准备。请先修复 Git 或安装 Xcode Command Line Tools 后重试。',
       details: normalizedDetails,
     }
   }
@@ -86,7 +86,7 @@ export function createNodeInstallerIssue(
     return {
       kind,
       title: 'macOS 开发者工具预检失败',
-      message: 'Qclaw 在准备 Git / Xcode Command Line Tools 时遇到问题。请稍后重试；如果仍失败，请手动检查系统开发者工具状态。',
+      message: 'Ccclaw 在准备 Git / Xcode Command Line Tools 时遇到问题。请稍后重试；如果仍失败，请手动检查系统开发者工具状态。',
       details: normalizedDetails,
     }
   }
@@ -113,7 +113,7 @@ export function createNodeInstallerIssue(
     return {
       kind,
       title: '当前 macOS 版本不支持该 Node 安装包',
-      message: '当前系统版本与目标 Node.js 安装包不兼容，Qclaw 无法继续自动安装。请先升级系统，或手动安装兼容的 Node.js 版本。',
+      message: '当前系统版本与目标 Node.js 安装包不兼容，Ccclaw 无法继续自动安装。请先升级系统，或手动安装兼容的 Node.js 版本。',
       details: normalizedDetails,
     }
   }

@@ -44,7 +44,7 @@ export default function LoadingScreen({
       {showLogo && (
         <img
           src={logoSrc}
-          alt="Qclaw"
+          alt="Ccclaw"
           className="ls-logo"
           style={{ width: 64, height: 64, userSelect: 'none', pointerEvents: 'none' }}
         />
@@ -52,7 +52,7 @@ export default function LoadingScreen({
 
       {/* Brand name */}
       <div className="ls-brand-name app-text-primary" style={{ fontSize: 14, letterSpacing: '0.15em', fontWeight: 300, marginTop: 16 }}>
-        Qclaw
+        Ccclaw
       </div>
 
       {/* Status text */}

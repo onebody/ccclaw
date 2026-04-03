@@ -1,11 +1,11 @@
 import type { CombinedUpdateCheckResult, CombinedUpdateRunResult } from '../../src/shared/openclaw-phase4'
 import { checkOpenClawUpgrade, runOpenClawUpgrade } from './openclaw-upgrade-service'
 import {
-  checkQClawUpdate,
-  downloadQClawUpdate,
-  getQClawUpdateStatus,
-  installQClawUpdate,
-} from './qclaw-update-service'
+  checkCCClawUpdate,
+  downloadCCClawUpdate,
+  getCCClawUpdateStatus,
+  installCCClawUpdate,
+} from './ccclaw-update-service'
 
 function canRunCombinedOpenClawUpgrade(check: CombinedUpdateCheckResult['openclaw']): boolean {
   return (
@@ -18,24 +18,24 @@ function canRunCombinedOpenClawUpgrade(check: CombinedUpdateCheckResult['opencla
 
 export async function checkCombinedUpdate(): Promise<CombinedUpdateCheckResult> {
   const openclaw = await checkOpenClawUpgrade()
-  const qclawBase = await getQClawUpdateStatus()
-  const qclaw =
-    qclawBase.supported && qclawBase.configured && !qclawBase.downloaded
-      ? await checkQClawUpdate()
-      : qclawBase
+  const ccclawBase = await getCCClawUpdateStatus()
+  const ccclaw =
+    ccclawBase.supported && ccclawBase.configured && !ccclawBase.downloaded
+      ? await checkCCClawUpdate()
+      : ccclawBase
 
   const warnings = [...openclaw.warnings]
-  if (qclaw.message && (!qclaw.configured || qclaw.status === 'error')) {
-    warnings.push(qclaw.message)
+  if (ccclaw.message && (!ccclaw.configured || ccclaw.status === 'error')) {
+    warnings.push(ccclaw.message)
   }
 
-  const qclawReady = qclaw.status === 'available' || qclaw.status === 'downloaded'
+  const ccclawReady = ccclaw.status === 'available' || ccclaw.status === 'downloaded'
 
   return {
-    ok: openclaw.ok && qclaw.ok,
+    ok: openclaw.ok && ccclaw.ok,
     openclaw,
-    qclaw,
-    canRun: canRunCombinedOpenClawUpgrade(openclaw) && qclaw.supported && qclaw.configured && qclawReady,
+    ccclaw,
+    canRun: canRunCombinedOpenClawUpgrade(openclaw) && ccclaw.supported && ccclaw.configured && ccclawReady,
     warnings,
   }
 }
@@ -47,38 +47,38 @@ export async function runCombinedUpdate(): Promise<CombinedUpdateRunResult> {
       ok: false,
       blocked: true,
       openclawResult: null,
-      qclawStatus: check.qclaw,
+      ccclawStatus: check.ccclaw,
       warnings: check.warnings,
       message: check.openclaw.manualHint || '当前 OpenClaw 不支持自动升级。',
       errorCode: 'openclaw_blocked',
     }
   }
 
-  if (!check.qclaw.supported || !check.qclaw.configured) {
+  if (!check.ccclaw.supported || !check.ccclaw.configured) {
     return {
       ok: false,
       blocked: true,
       openclawResult: null,
-      qclawStatus: check.qclaw,
+      ccclawStatus: check.ccclaw,
       warnings: check.warnings,
-      message: check.qclaw.message || 'Qclaw 自动更新当前不可用。',
-      errorCode: 'qclaw_unavailable',
+      message: check.ccclaw.message || 'Ccclaw 自动更新当前不可用。',
+      errorCode: 'ccclaw_unavailable',
     }
   }
 
-  let qclawStatus = check.qclaw
-  if (qclawStatus.status !== 'downloaded') {
-    const downloadResult = await downloadQClawUpdate()
-    qclawStatus = downloadResult.status
-    if (!downloadResult.ok || qclawStatus.status !== 'downloaded') {
+  let ccclawStatus = check.ccclaw
+  if (ccclawStatus.status !== 'downloaded') {
+    const downloadResult = await downloadCCClawUpdate()
+    ccclawStatus = downloadResult.status
+    if (!downloadResult.ok || ccclawStatus.status !== 'downloaded') {
       return {
         ok: false,
         blocked: false,
         openclawResult: null,
-        qclawStatus,
+        ccclawStatus,
         warnings: check.warnings,
-        message: downloadResult.message || 'Qclaw Lite 更新包下载失败。',
-        errorCode: 'qclaw_download_failed',
+        message: downloadResult.message || 'Ccclaw Lite 更新包下载失败。',
+        errorCode: 'ccclaw_download_failed',
       }
     }
   }
@@ -89,20 +89,20 @@ export async function runCombinedUpdate(): Promise<CombinedUpdateRunResult> {
       ok: false,
       blocked: openclawResult.blocked,
       openclawResult,
-      qclawStatus,
+      ccclawStatus,
       warnings: [...check.warnings, ...(openclawResult.warnings || [])],
-      message: openclawResult.message || 'OpenClaw 升级失败，Qclaw 更新不会继续安装。',
+      message: openclawResult.message || 'OpenClaw 升级失败，Ccclaw 更新不会继续安装。',
       errorCode: 'openclaw_upgrade_failed',
     }
   }
 
-  const installResult = await installQClawUpdate()
+  const installResult = await installCCClawUpdate()
   return {
     ok: installResult.ok,
     blocked: false,
     openclawResult,
-    qclawStatus: installResult.status,
+    ccclawStatus: installResult.status,
     warnings: [...check.warnings, ...(openclawResult.warnings || [])],
-    message: installResult.message || 'Qclaw 即将安装更新。',
+    message: installResult.message || 'Ccclaw 即将安装更新。',
   }
 }

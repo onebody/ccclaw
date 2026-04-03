@@ -1,13 +1,13 @@
 const os = process.getBuiltinModule('node:os') as typeof import('node:os')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 
-export const QCLAW_OPENCLAW_SHELL_BLOCK_START = '# >>> qclaw-lite openclaw managed block >>>'
-export const QCLAW_OPENCLAW_SHELL_BLOCK_END = '# <<< qclaw-lite openclaw managed block <<<'
+export const CCCLAW_OPENCLAW_SHELL_BLOCK_START = '# >>> ccclaw-lite openclaw managed block >>>'
+export const CCCLAW_OPENCLAW_SHELL_BLOCK_END = '# <<< ccclaw-lite openclaw managed block <<<'
 
 const DEFAULT_LAUNCHD_LABELS = ['com.openclaw.gateway']
-const SHELL_INIT_OVERRIDE_ENV = 'QCLAW_OPENCLAW_SHELL_INIT_FILES'
-const LAUNCHD_LABEL_OVERRIDE_ENV = 'QCLAW_OPENCLAW_LAUNCHD_LABELS'
-const LAUNCHD_PLIST_OVERRIDE_ENV = 'QCLAW_OPENCLAW_LAUNCHD_PLISTS'
+const SHELL_INIT_OVERRIDE_ENV = 'CCCLAW_OPENCLAW_SHELL_INIT_FILES'
+const LAUNCHD_LABEL_OVERRIDE_ENV = 'CCCLAW_OPENCLAW_LAUNCHD_LABELS'
+const LAUNCHD_PLIST_OVERRIDE_ENV = 'CCCLAW_OPENCLAW_LAUNCHD_PLISTS'
 
 interface ResolveCleanupOptions {
   homeDir?: string
@@ -76,7 +76,7 @@ function dedupe(values: string[]): string[] {
 
 export function stripManagedShellBlocks(content: string): ManagedShellBlockCleanupResult {
   const input = String(content || '')
-  if (!input.includes(QCLAW_OPENCLAW_SHELL_BLOCK_START)) {
+  if (!input.includes(CCCLAW_OPENCLAW_SHELL_BLOCK_START)) {
     return { changed: false, content: input }
   }
 
@@ -87,13 +87,13 @@ export function stripManagedShellBlocks(content: string): ManagedShellBlockClean
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index]
-    if (line.trim() !== QCLAW_OPENCLAW_SHELL_BLOCK_START) {
+    if (line.trim() !== CCCLAW_OPENCLAW_SHELL_BLOCK_START) {
       nextLines.push(line)
       continue
     }
 
     let endIndex = index + 1
-    while (endIndex < lines.length && lines[endIndex].trim() !== QCLAW_OPENCLAW_SHELL_BLOCK_END) {
+    while (endIndex < lines.length && lines[endIndex].trim() !== CCCLAW_OPENCLAW_SHELL_BLOCK_END) {
       endIndex += 1
     }
 

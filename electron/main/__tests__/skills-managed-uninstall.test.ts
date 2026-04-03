@@ -11,7 +11,7 @@ const { mkdtemp, mkdir, readFile, rm, symlink, writeFile } =
 const tempDirs: string[] = []
 
 async function createLocations(): Promise<OpenClawSkillLocations & { homeDir: string; stateRoot: string }> {
-  const root = await mkdtemp(join(tmpdir(), 'qclaw-skill-uninstall-'))
+  const root = await mkdtemp(join(tmpdir(), 'ccclaw-skill-uninstall-'))
   const homeDir = join(root, 'home')
   const stateRoot = join(homeDir, '.openclaw')
   tempDirs.push(root)

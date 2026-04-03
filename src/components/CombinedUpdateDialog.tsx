@@ -57,7 +57,7 @@ export default function CombinedUpdateDialog({
           <Text size="xs" c="dimmed" tt="uppercase" fw={600} style={{ letterSpacing: '0.24em' }}>
             Combined Update
           </Text>
-          <Title order={3} mt="xs">同时更新 Qclaw 与 OpenClaw</Title>
+          <Title order={3} mt="xs">同时更新 Ccclaw 与 OpenClaw</Title>
         </div>
       }
     >
@@ -75,11 +75,11 @@ export default function CombinedUpdateDialog({
               执行顺序
             </Text>
             <Stack gap={8} mt="md">
-              <Text size="sm">1. 检查 Qclaw 和 OpenClaw 的更新状态</Text>
-              <Text size="sm">2. 先下载 Qclaw Lite 安装包，但暂不安装</Text>
+              <Text size="sm">1. 检查 Ccclaw 和 OpenClaw 的更新状态</Text>
+              <Text size="sm">2. 先下载 Ccclaw Lite 安装包，但暂不安装</Text>
               <Text size="sm">3. 创建 OpenClaw 升级前快照</Text>
               <Text size="sm">4. 升级当前已接管的 OpenClaw</Text>
-              <Text size="sm">5. OpenClaw 成功后再安装 Qclaw Lite 安装包</Text>
+              <Text size="sm">5. OpenClaw 成功后再安装 Ccclaw Lite 安装包</Text>
             </Stack>
           </Paper>
 
@@ -97,12 +97,12 @@ export default function CombinedUpdateDialog({
 
             <Paper withBorder radius="xl" p="md">
               <Text size="xs" c="dimmed" tt="uppercase" fw={600} style={{ letterSpacing: '0.2em' }}>
-                Qclaw
+                Ccclaw
               </Text>
               <Stack gap={8} mt="md">
-                <Text size="sm">当前版本：{check.qclaw.currentVersion}</Text>
-                <Text size="sm">可用版本：{check.qclaw.availableVersion || '暂无'}</Text>
-                <Text size="sm">自动更新：{check.qclaw.configured ? '支持' : '当前不可自动执行'}</Text>
+                <Text size="sm">当前版本：{check.ccclaw.currentVersion}</Text>
+                <Text size="sm">可用版本：{check.ccclaw.availableVersion || '暂无'}</Text>
+                <Text size="sm">自动更新：{check.ccclaw.configured ? '支持' : '当前不可自动执行'}</Text>
               </Stack>
             </Paper>
           </SimpleGrid>

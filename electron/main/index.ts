@@ -44,7 +44,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 if (shouldDisableHardwareAccelerationForPlatform(process.platform, os.release())) {
   app.disableHardwareAcceleration()
 }
-if (process.platform === 'win32') app.setAppUserModelId('com.qclawai.qclaw')
+if (process.platform === 'win32') app.setAppUserModelId('com.ccclawai.ccclaw')
 if (!app.requestSingleInstanceLock()) { app.quit(); process.exit(0) }
 
 let win: BrowserWindow | null = null
@@ -72,8 +72,8 @@ function loadRuntimeAppIcon() {
 }
 
 function createWindow() {
-  process.env.QCLAW_USER_DATA_DIR = app.getPath('userData')
-  process.env.QCLAW_SAFE_WORK_DIR = path.join(process.env.QCLAW_USER_DATA_DIR, 'runtime')
+  process.env.CCCLAW_USER_DATA_DIR = app.getPath('userData')
+  process.env.CCCLAW_SAFE_WORK_DIR = path.join(process.env.CCCLAW_USER_DATA_DIR, 'runtime')
   tryNormalizeProcessCwd()
 
   const workAreaSize = screen.getPrimaryDisplay().workAreaSize
@@ -91,7 +91,7 @@ function createWindow() {
   }
 
   const browserWindow = new BrowserWindow({
-    title: 'Qclaw',
+    title: 'Ccclaw',
     icon: appIcon,
     width: mainWindowBounds.width,
     height: mainWindowBounds.height,
@@ -207,7 +207,7 @@ function showTrayNotification(options: { title: string; body: string }) {
 
 async function restartGatewayFromTray() {
   showTrayNotification({
-    title: 'Qclaw',
+    title: 'Ccclaw',
     body: '网关正在重启，请稍候...',
   })
 
@@ -221,12 +221,12 @@ async function restartGatewayFromTray() {
     }
 
     showTrayNotification({
-      title: 'Qclaw',
+      title: 'Ccclaw',
       body: '网关已重启完成',
     })
   } catch (error) {
     showTrayNotification({
-      title: 'Qclaw',
+      title: 'Ccclaw',
       body: error instanceof Error ? error.message : '网关重启失败，请稍后重试',
     })
   }
@@ -238,7 +238,7 @@ function createTray() {
   trayIcon.setTemplateImage(true)
   const resized = trayIcon.resize({ width: 32, height: 32 })
   tray = new Tray(resized)
-  tray.setToolTip('Qclaw')
+  tray.setToolTip('Ccclaw')
 
   const contextMenu = Menu.buildFromTemplate([
     {

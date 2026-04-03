@@ -80,7 +80,7 @@ import type { OpenClawCapabilities } from '../openclaw-capabilities'
 import { executeAuthRoute } from '../openclaw-auth-executor'
 import type { OpenClawAuthMethodDescriptor } from '../openclaw-auth-registry'
 import { createOpenClawAuthRegistry } from '../openclaw-auth-registry'
-import { appendLocalChatMessages } from '../qclaw-chat-store'
+import { appendLocalChatMessages } from '../ccclaw-chat-store'
 
 const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const os = process.getBuiltinModule('node:os') as typeof import('node:os')
@@ -245,8 +245,8 @@ describe('openclaw chat service', () => {
     if (userDataDir) {
       await rm(userDataDir, { recursive: true, force: true })
     }
-    userDataDir = await mkdtemp(path.join(os.tmpdir(), 'qclaw-chat-service-'))
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    userDataDir = await mkdtemp(path.join(os.tmpdir(), 'ccclaw-chat-service-'))
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
   })
 
   it('marks chat unavailable when no configured model is connected', () => {
@@ -477,7 +477,7 @@ describe('openclaw chat service', () => {
     expect(snapshot.cachePresence).toBe('local-transcript')
     expect(snapshot.canContinue).toBe(false)
     expect(snapshot.legacySemanticsActive).toBe(true)
-    expect(snapshot.notes.join(' ')).toContain('resolves from Qclaw local cache state without upstream authority')
+    expect(snapshot.notes.join(' ')).toContain('resolves from Ccclaw local cache state without upstream authority')
     expect(snapshot.notes.join(' ')).toContain('Legacy transport/session fallback semantics')
   })
 

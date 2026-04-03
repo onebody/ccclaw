@@ -57,9 +57,9 @@ function syncDevElectronBundleIcon() {
   copyFileSync(sourceIconPath, targetIconPath)
 
   const plistStringUpdates: Array<[string, string]> = [
-    ['CFBundleDisplayName', 'Qclaw'],
-    ['CFBundleName', 'Qclaw'],
-    ['CFBundleIdentifier', 'com.qclawai.qclaw.dev'],
+    ['CFBundleDisplayName', 'Ccclaw'],
+    ['CFBundleName', 'Ccclaw'],
+    ['CFBundleIdentifier', 'com.ccclawai.ccclaw.dev'],
   ]
 
   for (const [key, value] of plistStringUpdates) {

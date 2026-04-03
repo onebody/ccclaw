@@ -100,11 +100,11 @@ describe('inferOpenClawInstallSource', () => {
 
 describe('discoverOpenClawInstallations', () => {
   const tempDirs: string[] = []
-  const originalUserDataDir = process.env.QCLAW_USER_DATA_DIR
+  const originalUserDataDir = process.env.CCCLAW_USER_DATA_DIR
   const originalHome = process.env.HOME
 
   function makeTempDir(): string {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'qclaw-openclaw-discovery-'))
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ccclaw-openclaw-discovery-'))
     tempDirs.push(dir)
     return dir
   }
@@ -117,9 +117,9 @@ describe('discoverOpenClawInstallations', () => {
     getBaselineBackupBypassStatusMock.mockReset()
     resolveRuntimeOpenClawPathsMock.mockReset()
     if (originalUserDataDir === undefined) {
-      delete process.env.QCLAW_USER_DATA_DIR
+      delete process.env.CCCLAW_USER_DATA_DIR
     } else {
-      process.env.QCLAW_USER_DATA_DIR = originalUserDataDir
+      process.env.CCCLAW_USER_DATA_DIR = originalUserDataDir
     }
     if (originalHome === undefined) {
       delete process.env.HOME
@@ -158,12 +158,12 @@ describe('discoverOpenClawInstallations', () => {
       configFile: path.join(stateRoot, 'custom-openclaw.json'),
       envFile: path.join(stateRoot, '.env'),
       credentialsDir: path.join(stateRoot, 'credentials'),
-      modelCatalogCacheFile: path.join(stateRoot, 'qclaw-model-catalog-cache.json'),
+      modelCatalogCacheFile: path.join(stateRoot, 'ccclaw-model-catalog-cache.json'),
       displayHomeDir: stateRoot,
       displayConfigFile: path.join(stateRoot, 'custom-openclaw.json'),
       displayEnvFile: path.join(stateRoot, '.env'),
       displayCredentialsDir: path.join(stateRoot, 'credentials'),
-      displayModelCatalogCacheFile: path.join(stateRoot, 'qclaw-model-catalog-cache.json'),
+      displayModelCatalogCacheFile: path.join(stateRoot, 'ccclaw-model-catalog-cache.json'),
     })
     getBaselineBackupStatusMock.mockResolvedValue(null)
     getBaselineBackupBypassStatusMock.mockResolvedValue(null)
@@ -214,12 +214,12 @@ describe('discoverOpenClawInstallations', () => {
       configFile: path.join(stateRoot, 'custom-openclaw.json'),
       envFile: path.join(stateRoot, '.env'),
       credentialsDir: path.join(stateRoot, 'credentials'),
-      modelCatalogCacheFile: path.join(stateRoot, 'qclaw-model-catalog-cache.json'),
+      modelCatalogCacheFile: path.join(stateRoot, 'ccclaw-model-catalog-cache.json'),
       displayHomeDir: stateRoot,
       displayConfigFile: path.join(stateRoot, 'custom-openclaw.json'),
       displayEnvFile: path.join(stateRoot, '.env'),
       displayCredentialsDir: path.join(stateRoot, 'credentials'),
-      displayModelCatalogCacheFile: path.join(stateRoot, 'qclaw-model-catalog-cache.json'),
+      displayModelCatalogCacheFile: path.join(stateRoot, 'ccclaw-model-catalog-cache.json'),
     })
     getBaselineBackupStatusMock.mockResolvedValue(null)
     getBaselineBackupBypassStatusMock.mockResolvedValue({
@@ -244,7 +244,7 @@ describe('discoverOpenClawInstallations', () => {
   it('treats legacy managed fingerprint lists as unverified and keeps preexisting installs external', async () => {
     const installDir = makeTempDir()
     const userDataDir = makeTempDir()
-    process.env.QCLAW_USER_DATA_DIR = userDataDir
+    process.env.CCCLAW_USER_DATA_DIR = userDataDir
 
     const stateRoot = path.join(installDir, 'profiles', 'team-c')
     fs.mkdirSync(stateRoot, { recursive: true })
@@ -269,12 +269,12 @@ describe('discoverOpenClawInstallations', () => {
       configFile: path.join(stateRoot, 'openclaw.json'),
       envFile: path.join(stateRoot, '.env'),
       credentialsDir: path.join(stateRoot, 'credentials'),
-      modelCatalogCacheFile: path.join(stateRoot, 'qclaw-model-catalog-cache.json'),
+      modelCatalogCacheFile: path.join(stateRoot, 'ccclaw-model-catalog-cache.json'),
       displayHomeDir: stateRoot,
       displayConfigFile: path.join(stateRoot, 'openclaw.json'),
       displayEnvFile: path.join(stateRoot, '.env'),
       displayCredentialsDir: path.join(stateRoot, 'credentials'),
-      displayModelCatalogCacheFile: path.join(stateRoot, 'qclaw-model-catalog-cache.json'),
+      displayModelCatalogCacheFile: path.join(stateRoot, 'ccclaw-model-catalog-cache.json'),
     })
     getBaselineBackupStatusMock.mockResolvedValue(null)
     getBaselineBackupBypassStatusMock.mockResolvedValue(null)

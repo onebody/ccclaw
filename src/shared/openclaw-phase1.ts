@@ -11,7 +11,7 @@ export type OpenClawInstallSource =
 
 export type OpenClawOwnershipState =
   | 'external-preexisting'
-  | 'qclaw-installed'
+  | 'ccclaw-installed'
   | 'mixed-managed'
   | 'unknown-external'
 

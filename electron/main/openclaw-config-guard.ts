@@ -181,7 +181,7 @@ async function ensureManagedWritePreparation(
   }
 
   const ownershipEntry = await ensureOwnershipCandidate(normalizedCandidate)
-  if (normalizedCandidate.ownershipState === 'qclaw-installed' || ownershipEntry?.firstManagedWriteSnapshot) {
+  if (normalizedCandidate.ownershipState === 'ccclaw-installed' || ownershipEntry?.firstManagedWriteSnapshot) {
     return {
       ok: true,
       blocked: false,
@@ -426,8 +426,8 @@ export async function getDataGuardSummary(
     firstManagedWriteSnapshot: ownershipEntry?.firstManagedWriteSnapshot || null,
     ownershipSummary: summarizeOwnershipEntry(ownershipEntry),
     managedScopes: [
-      `Qclaw 只会通过受控入口修改 ${candidate.displayConfigPath} 中自己改动过的配置 path。`,
-      `Qclaw 会记录 ${
+      `Ccclaw 只会通过受控入口修改 ${candidate.displayConfigPath} 中自己改动过的配置 path。`,
+      `Ccclaw 会记录 ${
         resolveOpenClawPathsFromStateRoot({
           stateRoot: candidate.stateRoot,
           configFile: candidate.configPath,
@@ -437,7 +437,7 @@ export async function getDataGuardSummary(
     ],
     untouchedScopes: [
       '不会额外安装第二份 OpenClaw，也不会擅自迁移当前安装位置。',
-      '不会自动覆盖未被 Qclaw 记录 ownership 的配置字段。',
+      '不会自动覆盖未被 Ccclaw 记录 ownership 的配置字段。',
       '不会删除用户自行维护的 shell 内容，只会识别带标记的 managed block。',
     ],
     warnings: baselineBackupBypass ? [buildManualBackupWarning(baselineBackupBypass)] : [],

@@ -9,7 +9,7 @@ describe('atomicWriteJson', () => {
   let tempDir = ''
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'qclaw-atomic-write-'))
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'ccclaw-atomic-write-'))
   })
 
   afterEach(async () => {

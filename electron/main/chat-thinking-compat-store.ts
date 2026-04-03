@@ -19,7 +19,7 @@ type ChatThinkingCompatStore = Record<string, ChatThinkingCompatEntry>
 const STORE_RELATIVE_PATH = path.join('chat', 'model-thinking-compat.json')
 
 function resolveUserDataDirectory(): string {
-  return String(process.env.QCLAW_USER_DATA_DIR || path.join(homedir(), '.qclaw-lite')).trim()
+  return String(process.env.CCCLAW_USER_DATA_DIR || path.join(homedir(), '.ccclaw-lite')).trim()
 }
 
 function resolveStorePath(): string {

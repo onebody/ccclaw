@@ -219,7 +219,7 @@ export default function FeishuDiagnosticsModal({
             <div>
               <Text fw={600}>监听下一条消息</Text>
               <Text size="sm" c="dimmed">
-                点击开始后，请立刻在飞书里给这个 Bot 发送一条消息。Qclaw 会在当前机器监听该 Bot 的本地活动，
+                点击开始后，请立刻在飞书里给这个 Bot 发送一条消息。Ccclaw 会在当前机器监听该 Bot 的本地活动，
                 用来判断消息是否真的落到了这台机器上。
               </Text>
             </div>

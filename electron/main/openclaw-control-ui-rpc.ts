@@ -168,7 +168,7 @@ async function resolveGatewayConnectionSettings(
       }
     }
   } catch {
-    // Fall back to Qclaw's lightweight resolver when OpenClaw internals are unavailable.
+    // Fall back to Ccclaw's lightweight resolver when OpenClaw internals are unavailable.
   }
 
   const url = resolveGatewayUrl(config, mergedEnv)
@@ -568,7 +568,7 @@ async function withControlUiBrowser<T>(
       backgroundThrottling: false,
       contextIsolation: true,
       nodeIntegration: false,
-      partition: `qclaw-control-ui-rpc:${randomUUID()}`,
+      partition: `ccclaw-control-ui-rpc:${randomUUID()}`,
       sandbox: true,
     },
   })

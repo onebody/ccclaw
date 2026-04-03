@@ -11,9 +11,9 @@ describe('buildCliPathWithCandidates', () => {
       npmPrefix: '/Users/alice/.npm-global',
       env: buildTestEnv({
         HOME: '/Users/alice',
-        QCLAW_CLI_EXTRA_BIN_DIRS: '/custom/shared/bin',
-        QCLAW_NODE_EXTRA_BIN_DIRS: '/custom/node/bin',
-        QCLAW_OPENCLAW_EXTRA_BIN_DIRS: '/custom/openclaw/bin',
+        CCCLAW_CLI_EXTRA_BIN_DIRS: '/custom/shared/bin',
+        CCCLAW_NODE_EXTRA_BIN_DIRS: '/custom/node/bin',
+        CCCLAW_OPENCLAW_EXTRA_BIN_DIRS: '/custom/openclaw/bin',
         NVM_BIN: '/Users/alice/.nvm/versions/node/v22.14.0/bin',
         VOLTA_HOME: '/Users/alice/.volta',
         FNM_MULTISHELL_PATH: '/Users/alice/.local/state/fnm_multishells/1234',
@@ -52,7 +52,7 @@ describe('listExecutablePathCandidates', () => {
       detectedNodeBinDir: '/opt/custom/node/bin',
       env: buildTestEnv({
         HOME: '/Users/alice',
-        QCLAW_NODE_EXTRA_BIN_DIRS: '/custom/node/bin',
+        CCCLAW_NODE_EXTRA_BIN_DIRS: '/custom/node/bin',
         NVM_BIN: '/Users/alice/.nvm/versions/node/v22.14.0/bin',
         VOLTA_HOME: '/Users/alice/.volta',
       }),
@@ -76,7 +76,7 @@ describe('listExecutablePathCandidates', () => {
       currentPath: 'C:\\Windows\\System32',
       npmPrefix: 'D:\\Tools\\npm-global',
       env: buildTestEnv({
-        QCLAW_OPENCLAW_EXTRA_BIN_DIRS: 'E:\\OpenClaw\\bin',
+        CCCLAW_OPENCLAW_EXTRA_BIN_DIRS: 'E:\\OpenClaw\\bin',
         VOLTA_HOME: 'C:\\Users\\alice\\.volta',
         APPDATA: 'C:\\Users\\alice\\AppData\\Roaming',
         USERPROFILE: 'C:\\Users\\alice',

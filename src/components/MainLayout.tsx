@@ -72,7 +72,7 @@ export default function MainLayout() {
         style={{ WebkitAppRegion: 'drag' } as any}
       >
         <img src={logoSrc} alt="" className="w-8 h-8 select-none pointer-events-none" />
-        <span className="text-sm app-text-secondary select-none font-medium">Qclaw</span>
+        <span className="text-sm app-text-secondary select-none font-medium">Ccclaw</span>
       </div>
 
       <div className="flex flex-1 min-h-0">

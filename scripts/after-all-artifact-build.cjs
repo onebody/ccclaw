@@ -57,10 +57,16 @@ async function afterAllArtifactBuild(buildResult) {
   if (appBundles.length === 0) return []
 
   const teamIdentifiers = new Set()
+  const skipSignatureCheck = process.env.CCCLAW_SKIP_SIGNATURE_CHECK === '1' || process.env.CCCLAW_SKIP_NOTARIZE === '1'
 
   for (const appBundle of appBundles) {
     const detailsOutput = run('codesign', ['-dv', '--verbose=4', appBundle])
     const details = parseCodesignDetails(detailsOutput)
+
+    if (skipSignatureCheck) {
+      console.log(`[after-all-artifact-build] 跳过签名检查: ${appBundle}`)
+      continue
+    }
 
     if (details.signature.toLowerCase().includes('adhoc')) {
       throw new Error(`检测到 adhoc 签名：${appBundle}`)
