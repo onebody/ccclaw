@@ -107,16 +107,30 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
 // ----------------------------------------------------------------
 // Session tab
 // ----------------------------------------------------------------
-function SessionTab({ taskId, sessions }: { taskId: string; sessions: ChatSession[] }) {
-  const [activeSessionId, setActiveSessionId] = useState<string | null>(
-    sessions[0]?.id ?? null
-  )
+function SessionTab({
+  taskId,
+  sessions,
+  activeSessionId,
+  setActiveSessionId,
+}: {
+  taskId: string
+  sessions: ChatSession[]
+  activeSessionId: string | null
+  setActiveSessionId: (id: string | null) => void
+}) {
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [addingSession, setAddingSession] = useState(false)
-  const { create: createSession } = useSessions(taskId)
-  const { messages, send } = useMessages(activeSessionId)
+
+  const activeSession = sessions.find(s => s.id === activeSessionId)
+  const chatSessionId = activeSession?.chatSessionId ?? null
+
+  const { messages, send, streamingContent, isStreaming } = useMessages(
+    activeSessionId,
+    chatSessionId
+  )
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { create: createSession } = useSessions(taskId)
 
   // Auto-select first session
   useEffect(() => {
@@ -136,7 +150,7 @@ function SessionTab({ taskId, sessions }: { taskId: string; sessions: ChatSessio
     if (!input.trim() || sending) return
     setSending(true)
     try {
-      await send(input.trim(), 'user')
+      await send(input.trim())
       setInput('')
     } catch (err) {
       console.error('Send failed:', err)
@@ -205,16 +219,55 @@ function SessionTab({ taskId, sessions }: { taskId: string; sessions: ChatSessio
           <>
             <ScrollArea className="flex-1" ref={scrollRef}>
               <div className="py-2">
-                {messages.length === 0 ? (
+                {messages.length === 0 && !streamingContent ? (
                   <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
                     <MessageSquare className="h-8 w-8 mb-2 opacity-30" />
                     <p className="text-sm">还没有消息</p>
                     <p className="text-xs mt-1">发送消息开始对话</p>
                   </div>
                 ) : (
-                  messages.map(msg => (
-                    <MessageBubble key={msg.id} msg={msg} />
-                  ))
+                  <>
+                    {messages.map(msg => (
+                      <MessageBubble key={msg.id} msg={msg} />
+                    ))}
+                    {/* AI 流式回复预览 */}
+                    {streamingContent && (
+                      <div className="flex gap-3 px-4 py-2">
+                        <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-full bg-accent flex items-center justify-center">
+                          <Bot className="h-3.5 w-3.5 text-green-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-medium text-foreground">AI</span>
+                            <span className="text-xs text-muted-foreground">思考中</span>
+                            <span className="inline-block w-1.5 h-4 bg-foreground/60 animate-pulse rounded-sm" />
+                          </div>
+                          <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+                            {streamingContent}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {/* 等待 AI 首 token */}
+                    {isStreaming && !streamingContent && (
+                      <div className="flex gap-3 px-4 py-2">
+                        <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-full bg-accent flex items-center justify-center">
+                          <Bot className="h-3.5 w-3.5 text-green-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-medium text-foreground">AI</span>
+                            <span className="text-xs text-muted-foreground">思考中</span>
+                            <span className="flex gap-0.5">
+                              <span className="w-1 h-1 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
+                              <span className="w-1 h-1 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:150ms]" />
+                              <span className="w-1 h-1 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:300ms]" />
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </ScrollArea>
@@ -367,7 +420,15 @@ export function TaskDetailPage() {
   const { workspaces } = useWorkspaces()
   const { sessions } = useSessions(taskId ?? null)
   const [activeTab, setActiveTab] = useState<Tab>('sessions')
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+
+  // Auto-select first session
+  useEffect(() => {
+    if (!activeSessionId && sessions.length > 0) {
+      setActiveSessionId(sessions[0].id)
+    }
+  }, [sessions, activeSessionId])
 
   const task = tasks.find(t => t.id === taskId)
   const workspace = workspaces.find(w => w.id === task?.workspaceId)
@@ -519,7 +580,12 @@ export function TaskDetailPage() {
       {/* Tab content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === 'sessions' && (
-          <SessionTab taskId={task.id} sessions={sessions} />
+          <SessionTab
+            taskId={task.id}
+            sessions={sessions}
+            activeSessionId={activeSessionId}
+            setActiveSessionId={setActiveSessionId}
+          />
         )}
         {activeTab === 'artifacts' && (
           <ArtifactsTab taskId={task.id} />

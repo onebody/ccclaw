@@ -346,6 +346,19 @@ export class WorkspaceStorage {
     }
   }
 
+  updateSession(id: string, input: Partial<ChatSession>): ChatSession | null {
+    const sessionPath = this.getSessionPath(id)
+    const session = readJsonFile<ChatSession>(sessionPath)
+    if (!session) return null
+
+    if (input.title !== undefined) session.title = input.title
+    if (input.chatSessionId !== undefined) session.chatSessionId = input.chatSessionId
+    session.updatedAt = nowISO()
+
+    writeJsonFile(sessionPath, session)
+    return session
+  }
+
   // ---- ChatMessage ----
 
   listMessagesBySession(sessionId: string): ChatMessage[] {

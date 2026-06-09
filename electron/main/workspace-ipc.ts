@@ -14,6 +14,7 @@ import type {
   TaskCreateInput,
   TaskUpdateInput,
   TaskListFilter,
+  ChatSession,
 } from '../../src/types/workspace'
 
 let storage: WorkspaceStorage | null = null
@@ -135,6 +136,10 @@ export function initWorkspaceIPC(userDataPath: string): void {
   ipcMain.handle('session:delete', async (_, id: string) => {
     getStorage().deleteSession(id)
     return true
+  })
+
+  ipcMain.handle('session:update', async (_, id: string, input: Partial<ChatSession>) => {
+    return getStorage().updateSession(id, input)
   })
 
   ipcMain.handle('message:listBySession', async (_, sessionId: string) => {

@@ -373,6 +373,8 @@ export const api = {
   sessionListByTask: (taskId: string) => ipcRenderer.invoke('session:listByTask', taskId),
   sessionGet: (id: string) => ipcRenderer.invoke('session:get', id),
   sessionCreate: (taskId: string, title?: string) => ipcRenderer.invoke('session:create', taskId, title),
+  sessionUpdate: (id: string, input: Partial<import('../../src/types/workspace').ChatSession>) =>
+    ipcRenderer.invoke('session:update', id, input),
   sessionDelete: (id: string) => ipcRenderer.invoke('session:delete', id),
   messageListBySession: (sessionId: string) => ipcRenderer.invoke('message:listBySession', sessionId),
   messageSend: (sessionId: string, content: string) => ipcRenderer.invoke('message:send', sessionId, content),

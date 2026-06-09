@@ -282,6 +282,9 @@ export interface ChatSession {
 
   /** 消息总数 */
   messageCount: number
+
+  /** 关联的 OpenClaw 聊天会话 ID（用于接入 AI 消息流） */
+  chatSessionId?: string
 }
 
 // ============================================================================
