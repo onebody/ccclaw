@@ -73,6 +73,21 @@ export function useTasks(filter?: TaskListFilter) {
   return { tasks, loading, error, refetch: fetch, create, update, remove, start, complete, fail, cancel }
 }
 
+// ----------------------------------------------------------------
+// useActiveTask - 获取当前激活的任务
+// ----------------------------------------------------------------
+export function useActiveTask(filter?: TaskListFilter) {
+  const [task, setTask] = useState<Task | null>(null)
+  const { tasks, loading } = useTasks(filter)
+
+  useEffect(() => {
+    const active = tasks.find(t => t.status === 'running') || tasks[0] || null
+    setTask(active || null)
+  }, [tasks])
+
+  return { task, loading }
+}
+
 export function useWorkspaceTasks(workspaceId: string | null) {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(false)
