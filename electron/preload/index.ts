@@ -340,6 +340,48 @@ export const api = {
   rpaDesktopClick: (x: number, y: number, options?: { button?: 'left' | 'right' | 'middle'; double?: boolean }) => ipcRenderer.invoke('rpa:desktop:click', x, y, options),
   rpaDesktopType: (text: string, options?: { delay?: number }) => ipcRenderer.invoke('rpa:desktop:type', text, options),
   rpaDesktopGetWindows: (options?: WindowQueryOptions) => ipcRenderer.invoke('rpa:desktop:getWindows', options),
+
+  // Workspace
+  workspaceList: () => ipcRenderer.invoke('workspace:list'),
+  workspaceGet: (id: string) => ipcRenderer.invoke('workspace:get', id),
+  workspaceCreate: (input: import('../../src/types/workspace').WorkspaceCreateInput) =>
+    ipcRenderer.invoke('workspace:create', input),
+  workspaceUpdate: (id: string, input: import('../../src/types/workspace').WorkspaceUpdateInput) =>
+    ipcRenderer.invoke('workspace:update', id, input),
+  workspaceDelete: (id: string) => ipcRenderer.invoke('workspace:delete', id),
+  workspaceActivate: (id: string) => ipcRenderer.invoke('workspace:activate', id),
+  workspaceGetActive: () => ipcRenderer.invoke('workspace:getActive'),
+  workspaceValidate: (path: string) => ipcRenderer.invoke('workspace:validate', path),
+  workspaceOpenDialog: () => ipcRenderer.invoke('workspace:openDialog'),
+
+  // Task
+  taskList: (filter?: import('../../src/types/workspace').TaskListFilter) =>
+    ipcRenderer.invoke('task:list', filter),
+  taskGet: (id: string) => ipcRenderer.invoke('task:get', id),
+  taskCreate: (input: import('../../src/types/workspace').TaskCreateInput) =>
+    ipcRenderer.invoke('task:create', input),
+  taskUpdate: (id: string, input: import('../../src/types/workspace').TaskUpdateInput) =>
+    ipcRenderer.invoke('task:update', id, input),
+  taskDelete: (id: string) => ipcRenderer.invoke('task:delete', id),
+  taskStart: (id: string) => ipcRenderer.invoke('task:start', id),
+  taskComplete: (id: string) => ipcRenderer.invoke('task:complete', id),
+  taskFail: (id: string, notes: string) => ipcRenderer.invoke('task:fail', id, notes),
+  taskCancel: (id: string) => ipcRenderer.invoke('task:cancel', id),
+  taskListByWorkspace: (workspaceId: string) => ipcRenderer.invoke('task:listByWorkspace', workspaceId),
+
+  // Session
+  sessionListByTask: (taskId: string) => ipcRenderer.invoke('session:listByTask', taskId),
+  sessionGet: (id: string) => ipcRenderer.invoke('session:get', id),
+  sessionCreate: (taskId: string, title?: string) => ipcRenderer.invoke('session:create', taskId, title),
+  sessionDelete: (id: string) => ipcRenderer.invoke('session:delete', id),
+  messageListBySession: (sessionId: string) => ipcRenderer.invoke('message:listBySession', sessionId),
+  messageSend: (sessionId: string, content: string) => ipcRenderer.invoke('message:send', sessionId, content),
+
+  // Artifact
+  artifactListByTask: (taskId: string) => ipcRenderer.invoke('artifact:listByTask', taskId),
+  artifactAdd: (artifact: Omit<import('../../src/types/workspace').Artifact, 'id' | 'createdAt'>) =>
+    ipcRenderer.invoke('artifact:add', artifact),
+  artifactDelete: (id: string) => ipcRenderer.invoke('artifact:delete', id),
 }
 
 contextBridge.exposeInMainWorld('api', api)

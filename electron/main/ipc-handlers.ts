@@ -492,7 +492,7 @@ async function waitForInstalledSkillVisibility(params: {
     : null
 }
 
-export function registerIpcHandlers() {
+export async function registerIpcHandlers() {
   if (ipcHandlersRegistered) return
   ipcHandlersRegistered = true
 
@@ -500,6 +500,10 @@ export function registerIpcHandlers() {
   const storage = new AgentStorage(path.join(app.getPath('userData'), 'agents.json'))
   const manager = new AgentManager(storage)
   new AgentIPC(manager)
+
+  // Initialize Workspace IPC bridge
+  const { initWorkspaceIPC } = await import('./workspace-ipc')
+  initWorkspaceIPC(app.getPath('userData'))
 
   ipcMain.handle('app:quit', () => {
     setImmediate(() => app.quit())
