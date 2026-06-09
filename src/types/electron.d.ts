@@ -17,6 +17,20 @@ import type {
 } from '../shared/feishu-diagnostics'
 import type { OpenClawBackupRootInfo } from '../shared/openclaw-phase3'
 import type {
+  RpaTask,
+  RpaTaskCreateInput,
+  RpaTaskUpdateInput,
+  RpaTaskListFilter,
+  RpaExecutionResult,
+  ScreenCaptureOptions,
+  OcrOptions,
+  OcrResult,
+  ElementRecognitionOptions,
+  RecognizedElement,
+  WindowQueryOptions,
+  WindowInfo,
+} from './rpa'
+import type {
   OpenClawVersionEnforcement,
   OpenClawVersionPolicyState,
   OpenClawVersionTargetAction,
@@ -1970,6 +1984,39 @@ interface ElectronApi {
   onDepsInstallLog: (listener: (msg: string) => void) => () => void
   depsCheckBrew: () => Promise<{ installed: boolean }>
   depsInstallBrew: () => Promise<CliResult>
+
+  // Agents
+  agentsCreate: (input: Record<string, unknown>) => Promise<{ ok: boolean; data?: Record<string, unknown>; error?: string }>
+  agentsGet: (id: string) => Promise<{ ok: boolean; data?: Record<string, unknown> | null; error?: string }>
+  agentsGetAll: (filter?: Record<string, unknown>) => Promise<{ ok: boolean; data?: Record<string, unknown>[]; error?: string }>
+  agentsUpdate: (id: string, input: Record<string, unknown>) => Promise<{ ok: boolean; data?: Record<string, unknown>; error?: string }>
+  agentsDelete: (id: string) => Promise<{ ok: boolean; data?: boolean; error?: string }>
+  agentsSetStatus: (id: string, status: string) => Promise<{ ok: boolean; data?: boolean; error?: string }>
+  agentsExists: (id: string) => Promise<{ ok: boolean; data?: boolean; error?: string }>
+
+  // RPA - Web RPA
+  rpaWebCreateTask: (input: RpaTaskCreateInput) => Promise<RpaTask>
+  rpaWebGetTask: (taskId: string) => Promise<RpaTask | null>
+  rpaWebGetAllTasks: (filter?: RpaTaskListFilter) => Promise<RpaTask[]>
+  rpaWebUpdateTask: (taskId: string, input: RpaTaskUpdateInput) => Promise<RpaTask | null>
+  rpaWebDeleteTask: (taskId: string) => Promise<boolean>
+  rpaWebExecuteTask: (taskId: string) => Promise<RpaExecutionResult>
+  rpaWebStopTask: (taskId: string) => Promise<boolean>
+
+  // RPA - Desktop RPA
+  rpaDesktopCreateTask: (input: RpaTaskCreateInput) => Promise<RpaTask>
+  rpaDesktopGetTask: (taskId: string) => Promise<RpaTask | null>
+  rpaDesktopGetAllTasks: (filter?: RpaTaskListFilter) => Promise<RpaTask[]>
+  rpaDesktopUpdateTask: (taskId: string, input: RpaTaskUpdateInput) => Promise<RpaTask | null>
+  rpaDesktopDeleteTask: (taskId: string) => Promise<boolean>
+  rpaDesktopExecuteTask: (taskId: string) => Promise<RpaExecutionResult>
+  rpaDesktopStopTask: (taskId: string) => Promise<boolean>
+  rpaDesktopCaptureScreen: (options: ScreenCaptureOptions) => Promise<string>
+  rpaDesktopRecognizeText: (imagePath: string, options?: OcrOptions) => Promise<OcrResult[]>
+  rpaDesktopFindElement: (options: ElementRecognitionOptions) => Promise<RecognizedElement[]>
+  rpaDesktopClick: (x: number, y: number, options?: { button?: 'left' | 'right' | 'middle'; double?: boolean }) => Promise<void>
+  rpaDesktopType: (text: string, options?: { delay?: number }) => Promise<void>
+  rpaDesktopGetWindows: (options?: WindowQueryOptions) => Promise<WindowInfo[]>
 }
 
 declare global {

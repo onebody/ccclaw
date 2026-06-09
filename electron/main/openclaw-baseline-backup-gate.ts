@@ -8,6 +8,7 @@ import type {
 } from '../../src/shared/openclaw-phase1'
 import { shouldEnsureBaselineBackup } from '../../src/shared/openclaw-phase1'
 import { atomicWriteJson } from './atomic-write'
+import { safeCp } from './openclaw-safe-copy'
 import {
   ensureWritableOpenClawBackupRootDirectory,
   resolvePreferredOpenClawBackupDirectory,
@@ -19,7 +20,7 @@ const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const os = process.getBuiltinModule('node:os') as typeof import('node:os')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 const { createHash } = process.getBuiltinModule('node:crypto') as typeof import('node:crypto')
-const { access, cp, mkdir, readFile } = fs.promises
+const { access, mkdir, readFile } = fs.promises
 const { homedir } = os
 
 interface BaselineBackupStore {
@@ -192,7 +193,7 @@ export async function recordBaselineBackupDeletionBypass(params: {
 async function copyIntoBackup(candidate: OpenClawInstallCandidate, backupDir: string): Promise<void> {
   const copiedStateRoot = path.join(backupDir, 'openclaw-home')
   if (await pathExists(candidate.stateRoot)) {
-    await cp(candidate.stateRoot, copiedStateRoot, { recursive: true, force: true })
+    await safeCp(candidate.stateRoot, copiedStateRoot)
     return
   }
 

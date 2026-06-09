@@ -12,17 +12,17 @@ import {
 describe('openclaw version policy', () => {
   it('classifies versions against the fixed supported window', () => {
     expect(MIN_SUPPORTED_OPENCLAW_VERSION).toBe('2026.3.22')
-    expect(MAX_SUPPORTED_OPENCLAW_VERSION).toBe('2026.3.24')
-    expect(PINNED_OPENCLAW_VERSION).toBe('2026.3.24')
+    expect(MAX_SUPPORTED_OPENCLAW_VERSION).toBe('2026.12.31')
+    expect(PINNED_OPENCLAW_VERSION).toBe('2026.5.20')
     expect(classifyOpenClawVersionLockState('2026.3.21')).toBe('below_min')
     expect(classifyOpenClawVersionLockState('2026.3.22')).toBe('supported_not_target')
     expect(classifyOpenClawVersionLockState('2026.3.23')).toBe('supported_not_target')
-    expect(classifyOpenClawVersionLockState('2026.3.24')).toBe('supported_target')
-    expect(classifyOpenClawVersionLockState('2026.3.25')).toBe('above_max')
+    expect(classifyOpenClawVersionLockState('2026.3.24')).toBe('supported_not_target')
+    expect(classifyOpenClawVersionLockState('2026.3.25')).toBe('supported_not_target')
   })
 
   it('normalizes loose release tags before classifying', () => {
-    expect(classifyOpenClawVersionLockState('v2026.3.24-2')).toBe('supported_target')
+    expect(classifyOpenClawVersionLockState('v2026.3.24-2')).toBe('supported_not_target')
   })
 
   it('only auto-corrects sources that can be safely pinned in place', () => {

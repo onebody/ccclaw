@@ -7,6 +7,7 @@ import type {
   OpenClawBackupType,
 } from '../../src/shared/openclaw-phase3'
 import { atomicWriteJson } from './atomic-write'
+import { safeCp } from './openclaw-safe-copy'
 import {
   recordBaselineBackupDeletionBypass,
 } from './openclaw-baseline-backup-gate'
@@ -21,7 +22,7 @@ import { resolveOpenClawPathsFromStateRoot } from './openclaw-paths'
 const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
 const { createHash } = process.getBuiltinModule('node:crypto') as typeof import('node:crypto')
-const { access, cp, mkdir, readFile, readdir, rm } = fs.promises
+const { access, mkdir, readFile, readdir, rm } = fs.promises
 
 interface BackupManifestCandidate {
   backupId?: string
@@ -188,7 +189,7 @@ function buildStateRootBackupManifest(params: {
 
 async function copyIfExists(sourcePath: string, targetPath: string): Promise<void> {
   if (!(await pathExists(sourcePath))) return
-  await cp(sourcePath, targetPath, { recursive: true, force: true })
+  await safeCp(sourcePath, targetPath)
 }
 
 function normalizePathForCompare(targetPath: string): string {

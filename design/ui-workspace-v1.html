@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ccclaw UI 设计稿 - 工作空间 + 任务管理</title>
+<style>
+  :root {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --bg-hover: #1c2128;
+    --border-color: #30363d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --accent: #58a6ff;
+    --accent-hover: #79b8ff;
+    --success: #3fb950;
+    --warning: #d29922;
+    --danger: #f85149;
+    --sidebar-width: 280px;
+    --icon-sidebar-width: 56px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: hidden;
+    font-size: 13px;
+  }
+  .app-container { display: flex; height: 100vh; }
+
+  /* ===== 左侧图标栏（最窄） ===== */
+  .icon-sidebar {
+    width: var(--icon-sidebar-width);
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .icon-btn.active { background: var(--bg-tertiary); color: var(--accent); }
+  .icon-btn .badge {
+    position: absolute; top: 4px; right: 4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--danger);
+  }
+  .icon-btn svg { width: 20px; height: 20px; }
+  .icon-divider { width: 28px; height: 1px; background: var(--border-color); margin: 4px 0; }
+
+  /* ===== 工作空间面板 ===== */
+  .workspace-panel {
+    width: var(--sidebar-width);
+    background: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
+    display: flex; flex-direction: column;
+    flex-shrink: 0;
+  }
+  .panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .panel-actions { display: flex; gap: 4px; }
+  .panel-action-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-secondary);
+    background: transparent; border: none;
+  }
+  .panel-action-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+  /* 搜索框 */
+  .search-box {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .search-input {
+    width: 100%; height: 32px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0 28px 0 10px;
+    color: var(--text-primary);
+    font-size: 12px;
+    outline: none;
+  }
+  .search-input::placeholder { color: var(--text-muted); }
+  .search-input:focus { border-color: var(--accent); }
+
+  /* 新建任务按钮 */
+  .new-task-btn {
+    margin: 12px 12px 8px;
+    height: 36px;
+    background: var(--accent);
+    border: none; border-radius: 8px;
+    color: #fff; font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: background 0.15s;
+  }
+  .new-task-btn:hover { background: var(--accent-hover); }
+
+  /* 工作空间列表 */
+  .workspace-list {
+    flex: 1; overflow-y: auto;
+    padding: 4px 8px;
+  }
+  .workspace-item {
+    border-radius: 8px;
+    margin-bottom: 4px;
+    overflow: hidden;
+  }
+  .workspace-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .workspace-header:hover { background: var(--bg-hover); }
+  .workspace-header.active { background: var(--bg-tertiary); }
+  .workspace-chevron {
+    width: 14px; height: 14px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .workspace-chevron.expanded { transform: rotate(90deg); }
+  .workspace-icon {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .workspace-name {
+    flex: 1; font-size: 13px; color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .workspace-path {
+    font-size: 10px; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 120px;
+  }
+  .workspace-meta {
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+  }
+  .task-count {
+    font-size: 10px; color: var(--text-muted);
+    background: var(--bg-secondary);
+    padding: 1px 5px; border-radius: 8px;
+  }
+
+  /* 任务列表 */
+  .task-list {
+    padding: 0 4px 4px 36px;
+  }
+  .task-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    transition: background 0.15s;
+  }
+  .task-item:hover { background: var(--bg-hover); }
+  .task-item.active { background: var(--bg-tertiary); }
+  .task-status {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .task-status.running { background: var(--accent); animation: pulse 2s infinite; }
+  .task-status.completed { background: var(--success); }
+  .task-status.pending { background: var(--warning); }
+  .task-status.failed { background: var(--danger); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .task-name {
+    flex: 1; font-size: 12px; color: var(--text-secondary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .task-item.active .task-name { color: var(--text-primary); }
+  .task-time {
+    font-size: 10px; color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  /* 底部栏 */
+  .panel-footer {
+    padding: 8px 12px;
+    border-top: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #a371f7);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: #fff;
+    cursor: pointer;
+  }
+  .footer-actions { display: flex; gap: 4px; }
+
+  /* ===== 主内容区 ===== */
+  .main-content {
+    flex: 1; display: flex; flex-direction: column;
+    min-width: 0;
+  }
+  .content-header {
+    height: 48px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+  }
+  .breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 14px;
+  }
+  .breadcrumb-item { color: var(--text-secondary); cursor: pointer; }
+  .breadcrumb-item:hover { color: var(--text-primary); }
+  .breadcrumb-sep { color: var(--text-muted); }
+  .breadcrumb-item.active { color: var(--text-primary); font-weight: 500; }
+  .header-actions { margin-left: auto; display: flex; gap: 8px; }
+  .header-btn {
+    height: 32px; padding: 0 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .header-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .header-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .header-btn.primary:hover { background: var(--accent-hover); }
+
+  /* 任务详情区 */
+  .content-body {
+    flex: 1; overflow-y: auto;
+    padding: 20px;
+  }
+  .task-detail {
+    max-width: 900px; margin: 0 auto;
+  }
+  .task-detail-header {
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .task-detail-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--bg-tertiary);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .task-detail-title {
+    font-size: 20px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .task-detail-meta {
+    display: flex; gap: 16px;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .task-detail-meta span { display: flex; align-items: center; gap: 4px; }
+
+  /* 标签页 */
+  .tabs {
+    display: flex; gap: 4px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 8px 16px;
+    font-size: 13px; color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text-primary); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* 消息流 */
+  .message-list { display: flex; flex-direction: column; gap: 16px; }
+  .message {
+    display: flex; gap: 12px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+  }
+  .message-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .message-avatar.user { background: var(--bg-tertiary); }
+  .message-avatar.ai { background: linear-gradient(135deg, var(--accent), #a371f7); }
+  .message-content { flex: 1; }
+  .message-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .message-author { font-weight: 500; font-size: 13px; }
+  .message-time { font-size: 11px; color: var(--text-muted); }
+  .message-text {
+    font-size: 13px; line-height: 1.7;
+    color: var(--text-primary);
+  }
+  .message-text code {
+    background: var(--bg-tertiary);
+    padding: 2px 5px; border-radius: 4px;
+    font-family: "SF Mono", monospace;
+    font-size: 12px;
+  }
+  .message-text pre {
+    background: var(--bg-tertiary);
+    padding: 12px; border-radius: 8px;
+    overflow-x: auto;
+    margin-top: 8px;
+  }
+
+  /* 输入区 */
+  .input-area {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-color);
+  }
+  .input-box {
+    max-width: 900px; margin: 0 auto;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .input-textarea {
+    background: transparent; border: none;
+    color: var(--text-primary); font-size: 14px;
+    resize: none; outline: none;
+    min-height: 24px; max-height: 200px;
+    font-family: inherit;
+  }
+  .input-textarea::placeholder { color: var(--text-muted); }
+  .input-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .input-tools { display: flex; gap: 4px; }
+  .input-tool-btn {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-muted);
+    background: transparent; border: none;
+  }
+  .input-tool-btn:hover { background: var(--bg-hover); color: var(--text-secondary); }
+  .input-send-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .input-send-btn:hover { background: var(--accent-hover); }
+
+  /* 工作空间设置弹窗（示意） */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    width: 480px;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title { font-size: 15px; font-weight: 600; }
+  .modal-close { cursor: pointer; color: var(--text-muted); }
+  .modal-close:hover { color: var(--text-primary); }
+  .modal-body { padding: 20px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 500;
+    color: var(--text-secondary); margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%; height: 36px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0 12px;
+    color: var(--text-primary); font-size: 13px;
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input-group { display: flex; gap: 8px; }
+  .form-input-group .form-input { flex: 1; }
+  .form-btn {
+    height: 36px; padding: 0 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-secondary); font-size: 12px;
+    cursor: pointer; white-space: nowrap;
+  }
+  .form-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex; justify-content: flex-end; gap: 8px;
+  }
+  .modal-btn {
+    height: 36px; padding: 0 16px;
+    border-radius: 8px; font-size: 13px;
+    cursor: pointer; border: none;
+  }
+  .modal-btn.secondary { background: var(--bg-tertiary); color: var(--text-primary); }
+  .modal-btn.secondary:hover { background: var(--bg-hover); }
+  .modal-btn.primary { background: var(--accent); color: #fff; }
+  .modal-btn.primary:hover { background: var(--accent-hover); }
+
+  /* 右侧工具面板（可选） */
+  .right-panel {
+    width: 320px;
+    background: var(--bg-primary);
+    border-left: 1px solid var(--border-color);
+    display: none;
+    flex-direction: column;
+  }
+  .right-panel.show { display: flex; }
+
+  /* 滚动条 */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="app-container">
+
+  <!-- ===== 左侧图标栏 ===== -->
+  <div class="icon-sidebar">
+    <!-- Logo -->
+    <div class="icon-btn active" title="Ccclaw">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="icon-divider"></div>
+    <!-- 新建任务 -->
+    <div class="icon-btn" title="新建任务">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    </div>
+    <!-- 助手 -->
+    <div class="icon-btn" title="助手">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+    </div>
+    <!-- 专家 -->
+    <div class="icon-btn" title="专家">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <!-- 自动化 -->
+    <div class="icon-btn" title="自动化">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    </div>
+    <!-- 更多 -->
+    <div class="icon-btn" title="更多">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </div>
+    <div style="flex:1"></div>
+    <div class="icon-divider"></div>
+    <!-- 设置 -->
+    <div class="icon-btn" title="设置">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </div>
+    <!-- 用户 -->
+    <div class="icon-btn" title="用户">
+      <div class="user-avatar" style="width:28px;height:28px;font-size:11px;">F</div>
+    </div>
+  </div>
+
+  <!-- ===== 工作空间面板 ===== -->
+  <div class="workspace-panel">
+    <div class="panel-header">
+      <span class="panel-title">工作空间</span>
+      <div class="panel-actions">
+        <button class="panel-action-btn" title="新建工作空间">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button class="panel-action-btn" title="折叠全部">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <input class="search-input" type="text" placeholder="搜索工作空间或任务...">
+    </div>
+
+    <button class="new-task-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      新建任务
+    </button>
+
+    <div class="workspace-list">
+      <!-- 工作空间 1：ccclaw（当前激活） -->
+      <div class="workspace-item">
+        <div class="workspace-header active">
+          <svg class="workspace-chevron expanded" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="workspace-icon" style="background:#238636;color:#fff;">C</div>
+          <div style="flex:1;min-width:0;">
+            <div class="workspace-name">ccclaw</div>
+            <div class="workspace-path">~/workspace/Github_space/ccclaw</div>
+          </div>
+          <div class="workspace-meta">
+            <span class="task-count">3</span>
+          </div>
+        </div>
+        <div class="task-list">
+          <div class="task-item active">
+            <div class="task-status running"></div>
+            <span class="task-name">修复 OpenClaw 版本兼容性</span>
+            <span class="task-time">2h</span>
+          </div>
+          <div class="task-item">
+            <div class="task-status completed"></div>
+            <span class="task-name">修复 socket 文件复制崩溃</span>
+            <span class="task-time">1d</span>
+          </div>
+          <div class="task-item">
+            <div class="task-status pending"></div>
+            <span class="task-name">打包 macOS 发布版本</span>
+            <span class="task-time">16h</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工作空间 2：MyBuddyClaw -->
+      <div class="workspace-item">
+        <div class="workspace-header">
+          <svg class="workspace-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="workspace-icon" style="background:#1f6feb;color:#fff;">M</div>
+          <div style="flex:1;min-width:0;">
+            <div class="workspace-name">MyBuddyClaw</div>
+            <div class="workspace-path">~/workspace/Github_space/mybuddy</div>
+          </div>
+          <div class="workspace-meta">
+            <span class="task-count">5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工作空间 3：AI_Agent_WS -->
+      <div class="workspace-item">
+        <div class="workspace-header">
+          <svg class="workspace-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="workspace-icon" style="background:#8957e5;color:#fff;">A</div>
+          <div style="flex:1;min-width:0;">
+            <div class="workspace-name">AI_Agent_WS</div>
+            <div class="workspace-path">~/workspace/ai-agents</div>
+          </div>
+          <div class="workspace-meta">
+            <span class="task-count">2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工作空间 4：openWRT -->
+      <div class="workspace-item">
+        <div class="workspace-header">
+          <svg class="workspace-chevron expanded" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="workspace-icon" style="background:#da3633;color:#fff;">O</div>
+          <div style="flex:1;min-width:0;">
+            <div class="workspace-name">openWRT</div>
+            <div class="workspace-path">~/workspace/embedded/openwrt</div>
+          </div>
+          <div class="workspace-meta">
+            <span class="task-count">2</span>
+          </div>
+        </div>
+        <div class="task-list">
+          <div class="task-item">
+            <div class="task-status failed"></div>
+            <span class="task-name">软路由代理构建</span>
+            <span class="task-time">6d</span>
+          </div>
+          <div class="task-item">
+            <div class="task-status pending"></div>
+            <span class="task-name">小米AX6000刷OpenWrt</span>
+            <span class="task-time">2d</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 工作空间 5：open_bf -->
+      <div class="workspace-item">
+        <div class="workspace-header">
+          <svg class="workspace-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="workspace-icon" style="background:#d29922;color:#fff;">B</div>
+          <div style="flex:1;min-width:0;">
+            <div class="workspace-name">open_bf</div>
+            <div class="workspace-path">~/workspace/embedded/openbf</div>
+          </div>
+          <div class="workspace-meta">
+            <span class="task-count">1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="user-avatar" style="width:24px;height:24px;font-size:10px;">F</div>
+        <span style="font-size:12px;color:var(--text-secondary);">fcj</span>
+      </div>
+      <div class="footer-actions">
+        <button class="panel-action-btn" title="通知">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="main-content">
+    <div class="content-header">
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">ccclaw</span>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-item active">修复 OpenClaw 版本兼容性</span>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          制品 (26)
+        </button>
+        <button class="header-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          设置
+        </button>
+        <button class="header-btn primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          继续执行
+        </button>
+      </div>
+    </div>
+
+    <div class="content-body">
+      <div class="task-detail">
+        <div class="task-detail-header">
+          <div class="task-detail-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="task-detail-title">修复 OpenClaw 版本兼容性</div>
+            <div class="task-detail-meta">
+              <span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                运行中 · 2小时
+              </span>
+              <span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                林策, 产品经理, 架构师...
+              </span>
+              <span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                38 条消息
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active">对话</div>
+          <div class="tab">文件变更 (38)</div>
+          <div class="tab">制品 (26)</div>
+          <div class="tab">日志</div>
+        </div>
+
+        <div class="message-list">
+          <div class="message">
+            <div class="message-avatar user">F</div>
+            <div class="message-content">
+              <div class="message-header">
+                <span class="message-author">fcj</span>
+                <span class="message-time">2小时前</span>
+              </div>
+              <div class="message-text">
+                这个问题需要修复下，本质上是基于 OpenClaw 的一套与 WorkBuddy 对标的 App，请团队组织深度研判并落地执行。
+                <br><br>
+                截图中显示两个问题：
+                <br>1. OpenClaw 版本 <code>2026.5.20</code> 被标记为 above_max，需要升级或降级
+                <br>2. Socket 文件复制时崩溃，<code>fs.cp()</code> 遇到 <code>.sock</code> 文件抛出 EINVAL
+              </div>
+            </div>
+          </div>
+
+          <div class="message">
+            <div class="message-avatar ai">AI</div>
+            <div class="message-content">
+              <div class="message-header">
+                <span class="message-author" style="color:var(--accent);">软件研发中心</span>
+                <span class="message-time">1小时前</span>
+              </div>
+              <div class="message-text">
+                两个 Bug 已全部修复完成：
+                <br><br>
+                <strong>Bug 1：版本兼容性</strong>
+                <br>根因：<code>MAX_SUPPORTED = '2026.3.24'</code> 过于严格
+                <br>修复：<code>MAX → '2026.12.31'</code>，<code>PINNED → '2026.5.20'</code>
+                <br><br>
+                <strong>Bug 2：Socket 复制崩溃</strong>
+                <br>根因：<code>fs.cp({ recursive: true })</code> 遇到 Unix domain socket 时抛 EINVAL
+                <br>修复：新增 <code>safeCp()</code> 工具，跳过 socket/FIFO/设备文件
+                <br><br>
+                <pre>// safeCp 核心逻辑
+if (!isCopyableFileType(stats)) return  // 跳过
+await copyFile(sourcePath, targetPath)  // 安全复制</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="message">
+            <div class="message-avatar user">F</div>
+            <div class="message-content">
+              <div class="message-header">
+                <span class="message-author">fcj</span>
+                <span class="message-time">30分钟前</span>
+              </div>
+              <div class="message-text">
+                那就先做测试，可以打成 Windows 版本包吗？
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-box">
+        <textarea class="input-textarea" rows="1" placeholder="今天帮你做些什么？@引用对话文件，/调用技能与指令"></textarea>
+        <div class="input-toolbar">
+          <div class="input-tools">
+            <button class="input-tool-btn" title="附件">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <button class="input-tool-btn" title="技能">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </button>
+            <button class="input-tool-btn" title="代码">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </button>
+            <button class="input-tool-btn" title="截图">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </button>
+          </div>
+          <button class="input-send-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 右侧工具面板（可选，默认隐藏） ===== -->
+  <div class="right-panel" id="rightPanel">
+    <div class="panel-header">
+      <span class="panel-title">工具面板</span>
+      <div class="panel-actions">
+        <button class="panel-action-btn" onclick="document.getElementById('rightPanel').classList.remove('show')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div style="padding:16px;color:var(--text-secondary);font-size:13px;">
+      右侧工具面板区域<br><br>
+      可放置：
+      <ul style="margin-top:8px;padding-left:16px;line-height:1.8;">
+        <li>文件浏览器</li>
+        <li>Git 变更列表</li>
+        <li>终端输出</li>
+        <li>模型参数设置</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== 新建/编辑工作空间弹窗 ===== -->
+<div class="modal-overlay" id="workspaceModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">新建工作空间</span>
+      <span class="modal-close" onclick="document.getElementById('workspaceModal').classList.remove('show')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">工作空间名称</label>
+        <input class="form-input" type="text" placeholder="例如：ccclaw" value="">
+      </div>
+      <div class="form-group">
+        <label class="form-label">本地目录</label>
+        <div class="form-input-group">
+          <input class="form-input" type="text" placeholder="选择本地文件夹..." value="">
+          <button class="form-btn">浏览...</button>
+        </div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text-muted);">
+          工作空间将关联此目录，任务产生的文件变更都会在此目录下执行
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">描述（可选）</label>
+        <input class="form-input" type="text" placeholder="工作空间的简要描述">
+      </div>
+      <div class="form-group">
+        <label class="form-label">颜色标识</label>
+        <div style="display:flex;gap:8px;margin-top:6px;">
+          <div style="width:24px;height:24px;border-radius:6px;background:#238636;cursor:pointer;border:2px solid #fff;"></div>
+          <div style="width:24px;height:24px;border-radius:6px;background:#1f6feb;cursor:pointer;"></div>
+          <div style="width:24px;height:24px;border-radius:6px;background:#8957e5;cursor:pointer;"></div>
+          <div style="width:24px;height:24px;border-radius:6px;background:#da3633;cursor:pointer;"></div>
+          <div style="width:24px;height:24px;border-radius:6px;background:#d29922;cursor:pointer;"></div>
+          <div style="width:24px;height:24px;border-radius:6px;background:#58a6ff;cursor:pointer;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn secondary" onclick="document.getElementById('workspaceModal').classList.remove('show')">取消</button>
+      <button class="modal-btn primary">创建工作空间</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 演示：点击"新建工作空间"按钮打开弹窗
+  document.querySelector('.panel-actions .panel-action-btn[title="新建工作空间"]').addEventListener('click', () => {
+    document.getElementById('workspaceModal').classList.add('show');
+  });
+
+  // 演示：点击工作空间展开/折叠
+  document.querySelectorAll('.workspace-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const item = header.parentElement;
+      const chevron = header.querySelector('.workspace-chevron');
+      const taskList = item.querySelector('.task-list');
+      if (taskList) {
+        const isVisible = taskList.style.display !== 'none';
+        taskList.style.display = isVisible ? 'none' : 'block';
+        chevron.classList.toggle('expanded', !isVisible);
+      }
+    });
+  });
+
+  // 演示：点击右侧展开按钮
+  document.querySelector('.header-actions').addEventListener('click', (e) => {
+    if (e.target.closest('.header-btn')?.textContent?.includes('设置')) {
+      document.getElementById('rightPanel').classList.toggle('show');
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -54,3 +54,19 @@ skills-lock.json
 /local-tools/
 /docs/local-audits/
 /docs/plans/
+
+# Test coverage
+coverage/
+
+# Downloaded npm tarballs
+*.tgz
+
+# Frontend dependencies
+frontend/node_modules/
+frontend/dist/
+
+# Workspace memory (local only)
+/.workbuddy/
+
+# Local wiki
+/docs/wiki/

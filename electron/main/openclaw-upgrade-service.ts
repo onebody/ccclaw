@@ -38,11 +38,12 @@ import {
   runMacOpenClawElevatedLifecycleTransaction,
   type OpenClawElevatedLifecycleTransactionResult,
 } from './openclaw-elevated-lifecycle-transaction'
+import { safeCp } from './openclaw-safe-copy'
 
 const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const os = process.getBuiltinModule('node:os') as typeof import('node:os')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
-const { access, cp, mkdir, rm } = fs.promises
+const { access, mkdir, rm } = fs.promises
 const { homedir, userInfo } = os
 const RUNTIME_INSTALL_LOCK_KEY = 'runtime-install'
 const USER_MANAGED_INSTALL_SOURCES = new Set<OpenClawInstallCandidate['installSource']>([
@@ -68,16 +69,16 @@ function resolveActiveCandidate(candidates: OpenClawInstallCandidate[]): OpenCla
 function buildManualUpgradeHint(candidate: OpenClawInstallCandidate | null): string | undefined {
   if (!candidate) return undefined
   if (!isStrictOpenClawPolicyVersion(candidate.version)) {
-    return '当前 OpenClaw 版本号无法可靠解析。为避免误改现有安装，请先确认 `openclaw --version` 输出正常，并手动切换到 2026.3.24 后再回到 Ccclaw。'
+    return `当前 OpenClaw 版本号无法可靠解析。为避免误改现有安装，请先确认 \`openclaw --version\` 输出正常，并手动切换到 ${PINNED_OPENCLAW_VERSION} 后再回到 Ccclaw。`
   }
   if (candidate.installSource === 'homebrew' && !supportsPinnedOpenClawCorrection(candidate.installSource, candidate)) {
-    return '当前 OpenClaw 由 Homebrew 管理，程序内无法安全回退到 2026.3.24。请先在 Homebrew 环境中手动切换到 2026.3.24；若当前 Homebrew 源无法提供该版本，请先移除 brew 安装后，再让 Ccclaw 重新安装 2026.3.24。'
+    return `当前 OpenClaw 由 Homebrew 管理，程序内无法安全回退到 ${PINNED_OPENCLAW_VERSION}。请先在 Homebrew 环境中手动切换到 ${PINNED_OPENCLAW_VERSION}；若当前 Homebrew 源无法提供该版本，请先移除 brew 安装后，再让 Ccclaw 重新安装 ${PINNED_OPENCLAW_VERSION}。`
   }
   if (candidate.installSource === 'custom') {
-    return '当前 OpenClaw 来自自定义路径，程序内无法安全改写。请在原安装位置或原包管理器中手动安装 2026.3.24，并确认 PATH 指向该版本后再回到 Ccclaw。'
+    return `当前 OpenClaw 来自自定义路径，程序内无法安全改写。请在原安装位置或原包管理器中手动安装 ${PINNED_OPENCLAW_VERSION}，并确认 PATH 指向该版本后再回到 Ccclaw。`
   }
   if (candidate.installSource === 'unknown') {
-    return '当前 OpenClaw 安装来源无法识别。为避免误改系统环境，请先确认 which openclaw 对应的实际路径，并将 PATH 切换到 2026.3.24，或移除该版本后让 Ccclaw 重新安装。'
+    return `当前 OpenClaw 安装来源无法识别。为避免误改系统环境，请先确认 which openclaw 对应的实际路径，并将 PATH 切换到 ${PINNED_OPENCLAW_VERSION}，或移除该版本后让 Ccclaw 重新安装。`
   }
   return undefined
 }
@@ -96,7 +97,7 @@ async function replacePathIfExists(sourcePath: string | null | undefined, target
   if (!normalizedSource || !(await pathExists(normalizedSource))) return false
   await rm(targetPath, { recursive: true, force: true })
   await mkdir(path.dirname(targetPath), { recursive: true })
-  await cp(normalizedSource, targetPath, { recursive: true, force: true })
+  await safeCp(normalizedSource, targetPath)
   return true
 }
 
@@ -186,7 +187,7 @@ async function restoreUpgradeRollbackSnapshot(params: {
     if (backup.scopeAvailability.hasMemoryData && (await pathExists(archiveHomeDir))) {
       await rm(targetPaths.homeDir, { recursive: true, force: true })
       await mkdir(path.dirname(targetPaths.homeDir), { recursive: true })
-      await cp(archiveHomeDir, targetPaths.homeDir, { recursive: true, force: true })
+      await safeCp(archiveHomeDir, targetPaths.homeDir)
       restoredHome = true
     }
 

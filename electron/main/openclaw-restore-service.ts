@@ -8,6 +8,7 @@ import type {
 import { atomicWriteFile } from './atomic-write'
 import { collectChangedJsonPaths } from './openclaw-config-diff'
 import { applyGatewaySecretAction } from './gateway-secret-apply'
+import { safeCp } from './openclaw-safe-copy'
 import { resolveGatewayApplyAction } from './gateway-apply-policy'
 import { reloadGatewayForConfigChange } from './gateway-lifecycle-controller'
 import { readEnvFile as readRuntimeEnvFile, runCli, runCliWithBinary } from './cli'
@@ -28,7 +29,7 @@ import { MAIN_RUNTIME_POLICY } from './runtime-policy'
 
 const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
-const { access, cp, mkdir, readFile, readdir, rm, stat } = fs.promises
+const { access, mkdir, readFile, readdir, rm, stat } = fs.promises
 
 const MODEL_RELOAD_PATH_PREFIXES = [
   '$.defaultModel',
@@ -415,7 +416,7 @@ async function createRestorePreflightSnapshot(
 async function copyPathIfExists(sourcePath: string | null, targetPath: string): Promise<void> {
   if (!sourcePath) return
   if (!(await pathExists(sourcePath))) return
-  await cp(sourcePath, targetPath, { recursive: true, force: true })
+  await safeCp(sourcePath, targetPath)
 }
 
 async function removeIfExists(targetPath: string): Promise<void> {

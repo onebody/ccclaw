@@ -208,6 +208,10 @@ import {
 } from './skills-uninstall-safety'
 import { removeManagedSkillLocally, removeSkillDirectoryLocally } from './skills-managed-uninstall'
 import { withExclusiveSkillMutation } from './skill-mutation-guard'
+import { AgentStorage } from './agent-storage'
+import { AgentManager } from './agent-manager'
+import { AgentIPC } from './agent-ipc'
+import path from 'node:path'
 
 const { randomUUID } = process.getBuiltinModule('node:crypto') as typeof import('node:crypto')
 const { appendFile, readFile, rm } = process.getBuiltinModule('node:fs/promises') as typeof import('node:fs/promises')
@@ -491,6 +495,11 @@ async function waitForInstalledSkillVisibility(params: {
 export function registerIpcHandlers() {
   if (ipcHandlersRegistered) return
   ipcHandlersRegistered = true
+
+  // Initialize Agent IPC bridge
+  const storage = new AgentStorage(path.join(app.getPath('userData'), 'agents.json'))
+  const manager = new AgentManager(storage)
+  new AgentIPC(manager)
 
   ipcMain.handle('app:quit', () => {
     setImmediate(() => app.quit())

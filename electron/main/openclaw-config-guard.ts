@@ -12,6 +12,7 @@ import type {
 } from '../../src/shared/openclaw-phase2'
 import { shouldEnsureBaselineBackup } from '../../src/shared/openclaw-phase1'
 import { atomicWriteJson } from './atomic-write'
+import { safeCp } from './openclaw-safe-copy'
 import { readConfig, readEnvFile, writeConfig, writeEnvFile } from './cli'
 import { collectChangedJsonPaths } from './openclaw-config-diff'
 import {
@@ -34,7 +35,7 @@ import { resolveOpenClawPathsFromStateRoot } from './openclaw-paths'
 
 const fs = process.getBuiltinModule('node:fs') as typeof import('node:fs')
 const path = process.getBuiltinModule('node:path') as typeof import('node:path')
-const { access, cp, mkdir } = fs.promises
+const { access, mkdir } = fs.promises
 
 async function pathExists(targetPath: string): Promise<boolean> {
   try {
@@ -75,7 +76,7 @@ function createConfigSnapshotId(installFingerprint: string): string {
 
 async function copyIfExists(sourcePath: string, targetPath: string): Promise<void> {
   if (!(await pathExists(sourcePath))) return
-  await cp(sourcePath, targetPath, { recursive: true, force: true })
+  await safeCp(sourcePath, targetPath)
 }
 
 function buildSnapshotManifest(

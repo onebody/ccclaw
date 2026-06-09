@@ -9,6 +9,23 @@ import type {
   FeishuBotDiagnosticListenRequest,
   FeishuBotDiagnosticSendRequest,
 } from '../../src/shared/feishu-diagnostics'
+import type {
+  AgentCreateInput,
+  AgentUpdateInput,
+  AgentListFilter,
+  AgentStatus,
+  AgentConfig,
+  AgentIPCResponse,
+} from '../../src/types/agent'
+import type {
+  RpaTaskCreateInput,
+  RpaTaskUpdateInput,
+  RpaTaskListFilter,
+  ScreenCaptureOptions,
+  OcrOptions,
+  ElementRecognitionOptions,
+  WindowQueryOptions,
+} from '../../src/types/rpa'
 
 const OPEN_CONTACT_MODAL_CHANNEL = 'app:open-contact-modal'
 const OPEN_MODELS_PAGE_CHANNEL = 'app:open-models-page'
@@ -290,6 +307,39 @@ export const api = {
   onDepsInstallLog: (listener: (msg: string) => void) => subscribeToChannel('deps:install:log', listener),
   depsCheckBrew: () => ipcRenderer.invoke('deps:checkBrew'),
   depsInstallBrew: () => ipcRenderer.invoke('deps:installBrew'),
+
+  // Agents
+  agentsCreate: (input: AgentCreateInput) => ipcRenderer.invoke('agent:create', input),
+  agentsGet: (id: string) => ipcRenderer.invoke('agent:get', id),
+  agentsGetAll: (filter?: AgentListFilter) => ipcRenderer.invoke('agent:getAll', filter),
+  agentsUpdate: (id: string, input: AgentUpdateInput) => ipcRenderer.invoke('agent:update', id, input),
+  agentsDelete: (id: string) => ipcRenderer.invoke('agent:delete', id),
+  agentsSetStatus: (id: string, status: AgentStatus) => ipcRenderer.invoke('agent:setStatus', id, status),
+  agentsExists: (id: string) => ipcRenderer.invoke('agent:exists', id),
+
+  // RPA - Web RPA
+  rpaWebCreateTask: (input: RpaTaskCreateInput) => ipcRenderer.invoke('rpa:web:createTask', input),
+  rpaWebGetTask: (taskId: string) => ipcRenderer.invoke('rpa:web:getTask', taskId),
+  rpaWebGetAllTasks: (filter?: RpaTaskListFilter) => ipcRenderer.invoke('rpa:web:getAllTasks', filter),
+  rpaWebUpdateTask: (taskId: string, input: RpaTaskUpdateInput) => ipcRenderer.invoke('rpa:web:updateTask', taskId, input),
+  rpaWebDeleteTask: (taskId: string) => ipcRenderer.invoke('rpa:web:deleteTask', taskId),
+  rpaWebExecuteTask: (taskId: string) => ipcRenderer.invoke('rpa:web:executeTask', taskId),
+  rpaWebStopTask: (taskId: string) => ipcRenderer.invoke('rpa:web:stopTask', taskId),
+
+  // RPA - Desktop RPA
+  rpaDesktopCreateTask: (input: RpaTaskCreateInput) => ipcRenderer.invoke('rpa:desktop:createTask', input),
+  rpaDesktopGetTask: (taskId: string) => ipcRenderer.invoke('rpa:desktop:getTask', taskId),
+  rpaDesktopGetAllTasks: (filter?: RpaTaskListFilter) => ipcRenderer.invoke('rpa:desktop:getAllTasks', filter),
+  rpaDesktopUpdateTask: (taskId: string, input: RpaTaskUpdateInput) => ipcRenderer.invoke('rpa:desktop:updateTask', taskId, input),
+  rpaDesktopDeleteTask: (taskId: string) => ipcRenderer.invoke('rpa:desktop:deleteTask', taskId),
+  rpaDesktopExecuteTask: (taskId: string) => ipcRenderer.invoke('rpa:desktop:executeTask', taskId),
+  rpaDesktopStopTask: (taskId: string) => ipcRenderer.invoke('rpa:desktop:stopTask', taskId),
+  rpaDesktopCaptureScreen: (options: ScreenCaptureOptions) => ipcRenderer.invoke('rpa:desktop:captureScreen', options),
+  rpaDesktopRecognizeText: (imagePath: string, options?: OcrOptions) => ipcRenderer.invoke('rpa:desktop:recognizeText', imagePath, options),
+  rpaDesktopFindElement: (options: ElementRecognitionOptions) => ipcRenderer.invoke('rpa:desktop:findElement', options),
+  rpaDesktopClick: (x: number, y: number, options?: { button?: 'left' | 'right' | 'middle'; double?: boolean }) => ipcRenderer.invoke('rpa:desktop:click', x, y, options),
+  rpaDesktopType: (text: string, options?: { delay?: number }) => ipcRenderer.invoke('rpa:desktop:type', text, options),
+  rpaDesktopGetWindows: (options?: WindowQueryOptions) => ipcRenderer.invoke('rpa:desktop:getWindows', options),
 }
 
 contextBridge.exposeInMainWorld('api', api)

@@ -3,8 +3,9 @@
   "appId": "com.ccclawai.ccclaw",
   "productName": "Ccclaw",
   "asar": true,
-  "forceCodeSigning": false,
+  "forceCodeSigning": true,
   "afterAllArtifactBuild": "scripts/after-all-artifact-build.cjs",
+  "afterSign": "scripts/after-sign-notarize.cjs",
   "directories": {
     "output": "release/${env.CCCLAW_DISPLAY_VERSION}"
   },
@@ -32,6 +33,7 @@
     "artifactName": "Ccclaw-Lite_${env.CCCLAW_DISPLAY_VERSION}.${ext}",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
+    "sign": false,
     "strictVerify": false,
     "entitlements": "build/entitlements.mac.plist",
     "entitlementsInherit": "build/entitlements.mac.inherit.plist",
