@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { PlayCircle, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
@@ -60,9 +61,14 @@ interface TaskItemProps {
 }
 
 export function TaskItem({ task, workspaceId }: TaskItemProps) {
+  const navigate = useNavigate()
   const { start, complete, fail } = useTasks(
     workspaceId ? { workspaceId } : undefined
   )
+
+  const handleClick = () => {
+    navigate(`/tasks/${task.id}`)
+  }
 
   const handleStart = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -86,6 +92,7 @@ export function TaskItem({ task, workspaceId }: TaskItemProps) {
           "flex items-center gap-2 h-7 px-2 rounded-md text-xs cursor-pointer transition-colors",
           "hover:bg-accent/60 text-muted-foreground hover:text-foreground"
         )}
+        onClick={handleClick}
       >
         {/* Status dot */}
         <span className={cn(

@@ -3,8 +3,9 @@ import { ChevronDown, ChevronRight, MoreHorizontal, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import { useWorkspaces, useActiveWorkspace } from '@/hooks/useWorkspace'
-import { useWorkspaceTasks } from '@/hooks/useTask'
+import { useWorkspaceTasks, useTasks } from '@/hooks/useTask'
 import { CreateWorkspaceDialog } from './CreateWorkspaceDialog'
+import { CreateTaskDialog } from './CreateTaskDialog'
 import { TaskItem } from './TaskItem'
 import type { Workspace } from '@/types/workspace'
 
@@ -60,52 +61,78 @@ function WorkspaceTaskList({ workspaceId, isOpen }: { workspaceId: string; isOpe
 // Context menu state per workspace
 function WorkspaceItem({ workspace }: { workspace: Workspace }) {
   const { activate } = useActiveWorkspace()
+  const { create: createTask } = useTasks()
   const [expanded, setExpanded] = useState(false)
+  const [createTaskOpen, setCreateTaskOpen] = useState(false)
 
   const handleActivate = useCallback(() => {
     activate(workspace.id)
   }, [activate, workspace.id])
 
+  const handleCreateTask = async (input: any) => {
+    await createTask({ ...input, workspaceId: workspace.id })
+  }
+
   return (
-    <div className="group">
-      <div
-        className={cn(
-          "flex items-center h-8 px-2 rounded-md text-sm cursor-pointer select-none transition-colors",
-          workspace.isActive
-            ? "bg-accent text-accent-foreground font-medium"
-            : "hover:bg-accent/50 text-muted-foreground hover:text-foreground"
-        )}
-        onClick={handleActivate}
-      >
-        {/* Expand toggle */}
-        <button
-          className="mr-1 p-0.5 rounded hover:bg-accent flex-shrink-0"
-          onClick={e => { e.stopPropagation(); setExpanded(v => !v) }}
+    <>
+      <div className="group">
+        <div
+          className={cn(
+            "flex items-center h-8 px-2 rounded-md text-sm cursor-pointer select-none transition-colors",
+            workspace.isActive
+              ? "bg-accent text-accent-foreground font-medium"
+              : "hover:bg-accent/50 text-muted-foreground hover:text-foreground"
+          )}
+          onClick={handleActivate}
         >
-          {expanded
-            ? <ChevronDown className="h-3.5 w-3.5" />
-            : <ChevronRight className="h-3.5 w-3.5" />}
-        </button>
+          {/* Expand toggle */}
+          <button
+            className="mr-1 p-0.5 rounded hover:bg-accent flex-shrink-0"
+            onClick={e => { e.stopPropagation(); setExpanded(v => !v) }}
+          >
+            {expanded
+              ? <ChevronDown className="h-3.5 w-3.5" />
+              : <ChevronRight className="h-3.5 w-3.5" />}
+          </button>
 
-        {/* Color dot + name */}
-        <WsColorDot color={workspace.color} />
-        <span className="truncate flex-1 min-w-0">{workspace.name}</span>
+          {/* Color dot + name */}
+          <WsColorDot color={workspace.color} />
+          <span className="truncate flex-1 min-w-0">{workspace.name}</span>
 
-        {/* Task count */}
-        <TaskCountBadge workspaceId={workspace.id} />
+          {/* Task count */}
+          <TaskCountBadge workspaceId={workspace.id} />
 
-        {/* Context menu trigger */}
-        <button
-          className="ml-1 p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-accent flex-shrink-0"
-          onClick={e => { e.stopPropagation() }}
-        >
-          <MoreHorizontal className="h-3.5 w-3.5" />
-        </button>
+          {/* Add task */}
+          <button
+            className="ml-1 p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-blue-500/20 text-blue-500 flex-shrink-0"
+            onClick={e => { e.stopPropagation(); setCreateTaskOpen(true) }}
+            title="新建任务"
+          >
+            <Plus className="h-3.5 w-3.5" />
+          </button>
+
+          {/* Context menu trigger */}
+          <button
+            className="ml-0.5 p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-accent flex-shrink-0"
+            onClick={e => { e.stopPropagation() }}
+          >
+            <MoreHorizontal className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        {/* Collapsible task list */}
+        <WorkspaceTaskList workspaceId={workspace.id} isOpen={expanded} />
       </div>
 
-      {/* Collapsible task list */}
-      <WorkspaceTaskList workspaceId={workspace.id} isOpen={expanded} />
-    </div>
+      {/* Create task dialog */}
+      <CreateTaskDialog
+        open={createTaskOpen}
+        onOpenChange={setCreateTaskOpen}
+        onCreate={handleCreateTask}
+        workspaceId={workspace.id}
+        workspaceName={workspace.name}
+      />
+    </>
   )
 }
 

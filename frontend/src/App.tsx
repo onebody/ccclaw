@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route } from "react-router-dom"
 import { AppLayout } from "@/components/layout/AppLayout"
 import { HomePage } from "@/pages/HomePage"
 import { AgentManager } from "@/pages/AgentManager"
+import { TaskDetailPage } from "@/pages/TaskDetailPage"
 import RpaListPage from "@/pages/rpa"
 import RpaEditorPage from "@/pages/rpa/editor"
 import RpaExecutePage from "@/pages/rpa/execute"
@@ -17,6 +18,9 @@ function App() {
           <Route path="/agents" element={<AgentManager />} />
           <Route path="/workflows" element={<div className="p-6"><h2 className="text-2xl font-bold">工作流</h2><p className="text-muted-foreground mt-2">工作流管理（即将推出）</p></div>} />
           <Route path="/settings" element={<div className="p-6"><h2 className="text-2xl font-bold">设置</h2><p className="text-muted-foreground mt-2">应用设置（即将推出）</p></div>} />
+
+          {/* Task routes */}
+          <Route path="/tasks/:taskId" element={<TaskDetailPage />} />
 
           {/* Chat routes */}
           <Route path="/chat" element={<div className="p-6"><h2 className="text-2xl font-bold">助手</h2><p className="text-muted-foreground mt-2">AI 对话（即将推出）</p></div>} />
