@@ -416,4 +416,31 @@ export class WorkspaceStorage {
       all.filter(a => a.id !== id)
     )
   }
+
+  getArtifact(id: string): Artifact | null {
+    const all: Artifact[] = readJsonFile<Artifact[]>(path.join(this.artifactsDir, 'index.json')) ?? []
+    return all.find(a => a.id === id) ?? null
+  }
+
+  updateArtifact(id: string, input: Partial<Artifact>): Artifact | null {
+    const all: Artifact[] = readJsonFile<Artifact[]>(path.join(this.artifactsDir, 'index.json')) ?? []
+    const idx = all.findIndex(a => a.id === id)
+    if (idx === -1) return null
+
+    const updated: Artifact = {
+      ...all[idx],
+      ...(input.name !== undefined && { name: input.name }),
+      ...(input.description !== undefined && { description: input.description }),
+      ...(input.type !== undefined && { type: input.type }),
+      ...(input.path !== undefined && { path: input.path }),
+      ...(input.size !== undefined && { size: input.size }),
+      ...(input.gitChangeType !== undefined && { gitChangeType: input.gitChangeType }),
+      ...(input.isNew !== undefined && { isNew: input.isNew }),
+      createdAt: all[idx].createdAt, // 保持不变
+    }
+
+    all[idx] = updated
+    writeJsonFile(path.join(this.artifactsDir, 'index.json'), all)
+    return updated
+  }
 }

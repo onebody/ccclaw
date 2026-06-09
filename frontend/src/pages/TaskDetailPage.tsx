@@ -16,6 +16,14 @@ import {
   System,
   Clock,
   ChevronRight,
+  FileText,
+  Image,
+  Code2,
+  FileJson,
+  Download,
+  Eye,
+  GitBranch,
+  RefreshCw,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -26,8 +34,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { useTasks } from '@/hooks/useTask'
 import { useSessions, useMessages } from '@/hooks/useSession'
 import { useWorkspaces } from '@/hooks/useWorkspace'
+import { useArtifacts, getFileIcon, formatFileSize } from '@/hooks/useArtifact'
 import { STATUS_CONFIG } from '@/components/workspace/TaskItem'
-import type { Task, ChatSession, ChatMessage, MessageSender } from '@/types/workspace'
+import type { Task, ChatSession, ChatMessage, MessageSender, Artifact } from '@/types/workspace'
 
 const PRIORITY_LABEL: Record<string, { label: string; color: string }> = {
   urgent: { label: '紧急', color: 'text-red-500 bg-red-500/10' },
@@ -316,47 +325,198 @@ function SessionTab({
 }
 
 // ----------------------------------------------------------------
-// Artifacts tab (placeholder)
+// Artifacts tab
 // ----------------------------------------------------------------
-function ArtifactsTab({ taskId }: { taskId: string }) {
-  const [artifacts, setArtifacts] = useState<any[]>([])
+function ArtifactsTab({ taskId, workspacePath }: { taskId: string; workspacePath?: string }) {
+  const { artifacts, loading, error, refetch } = useArtifacts(taskId)
+  const [scanning, setScanning] = useState(false)
+  const [scanResult, setScanResult] = useState<string | null>(null)
   const api = (window as any).api
 
-  useEffect(() => {
-    api.artifactListByTask(taskId).then((data: any[]) => setArtifacts(data ?? [])).catch(() => setArtifacts([]))
-  }, [taskId])
+  const handleScanChanges = async () => {
+    setScanning(true)
+    setScanResult(null)
+    try {
+      const result = await api.gitScanChanges(taskId)
+      if (result?.error) {
+        setScanResult(`错误: ${result.error}`)
+      } else {
+        setScanResult(`成功扫描 ${result?.count ?? 0} 个变更文件`)
+        refetch()
+      }
+    } catch (err: any) {
+      setScanResult(`错误: ${err.message ?? '扫描失败'}`)
+    } finally {
+      setScanning(false)
+    }
+  }
 
-  if (artifacts.length === 0) {
+  const handlePreview = (artifact: any) => {
+    if (!artifact.path) return
+    // 使用 Electron 的 shell 模块打开文件
+    if (window.api?.openFile) {
+      window.api.openFile(artifact.path)
+    } else {
+      // 降级方案：在新窗口中显示文件内容
+      alert(`预览功能即将推出\n文件路径: ${artifact.path}`)
+    }
+  }
+
+  const handleDownload = (artifact: any) => {
+    if (!artifact.path) return
+    // 使用 Electron 的 dialog 模块保存文件
+    if (window.api?.saveFile) {
+      window.api.saveFile(artifact.path)
+    } else {
+      // 降级方案：提示用户
+      alert(`下载功能即将推出\n文件路径: ${artifact.path}`)
+    }
+  }
+
+  const getChangeTypeBadge = (type?: string) => {
+    if (!type) return null
+    const config = {
+      added: { label: '新增', class: 'bg-green-500/10 text-green-600 border-green-500/20' },
+      modified: { label: '修改', class: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+      deleted: { label: '删除', class: 'bg-red-500/10 text-red-600 border-red-500/20' },
+    }
+    const c = config[type as keyof typeof config]
+    if (!c) return null
     return (
-      <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-16">
-        <FileBox className="h-8 w-8 mb-2 opacity-30" />
-        <p className="text-sm">暂无制品</p>
-        <p className="text-xs mt-1">任务执行产生的文件、截图等会显示在这里</p>
+      <Badge variant="outline" className={cn('text-xs', c.class)}>
+        {c.label}
+      </Badge>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full text-muted-foreground">
+        <RefreshCw className="h-5 w-5 animate-spin mr-2" />
+        加载中...
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-destructive">
+        <XCircle className="h-8 w-8 mb-2" />
+        <p className="text-sm">{error}</p>
       </div>
     )
   }
 
   return (
-    <ScrollArea className="h-full">
-      <div className="p-4 space-y-2">
-        {artifacts.map(a => (
-          <div key={a.id} className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent/30 transition-colors cursor-pointer">
-            <FileBox className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{a.name}</p>
-              {a.description && (
-                <p className="text-xs text-muted-foreground truncate">{a.description}</p>
-              )}
-            </div>
-            {a.gitChangeType && (
-              <Badge variant="outline" className="text-xs">
-                {a.gitChangeType === 'added' ? '+' : a.gitChangeType === 'modified' ? '~' : '-'}
-              </Badge>
-            )}
-          </div>
-        ))}
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-medium">制品列表</h3>
+          {artifacts.length > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              {artifacts.length}
+            </Badge>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {scanResult && (
+            <span className={cn(
+              'text-xs',
+              scanResult.includes('错误') ? 'text-destructive' : 'text-green-600'
+            )}>
+              {scanResult}
+            </span>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleScanChanges}
+            disabled={scanning || !workspacePath}
+            className="gap-1.5"
+          >
+            <GitBranch className={cn('h-4 w-4', scanning && 'animate-spin')} />
+            {scanning ? '扫描中...' : '扫描变更'}
+          </Button>
+        </div>
       </div>
-    </ScrollArea>
+
+      {/* Artifacts list */}
+      <ScrollArea className="flex-1">
+        {artifacts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
+            <FileBox className="h-8 w-8 mb-2 opacity-30" />
+            <p className="text-sm">暂无制品</p>
+            <p className="text-xs mt-1">点击"扫描变更"检测文件变更</p>
+          </div>
+        ) : (
+          <div className="p-4 space-y-2">
+            {artifacts.map(a => (
+              <div
+                key={a.id}
+                className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent/30 transition-colors"
+              >
+                {/* File icon */}
+                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent/50 flex items-center justify-center text-lg">
+                  {a.type === 'screenshot' ? '🖼️' :
+                   a.type === 'code' ? '📄' :
+                   a.type === 'report' ? '📊' :
+                   getFileIcon(a.name)}
+                </div>
+
+                {/* File info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium truncate">{a.name}</p>
+                    {getChangeTypeBadge(a.gitChangeType)}
+                  </div>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-xs text-muted-foreground">
+                      {formatFileSize(a.size)}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(a.createdAt).toLocaleString('zh-CN')}
+                    </span>
+                    {a.isNew && (
+                      <Badge variant="secondary" className="text-xs">新文件</Badge>
+                    )}
+                  </div>
+                  {a.description && (
+                    <p className="text-xs text-muted-foreground mt-1 truncate">{a.description}</p>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  {a.path && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handlePreview(a)}
+                        title="预览"
+                        className="h-8 w-8"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDownload(a)}
+                        title="下载"
+                        className="h-8 w-8"
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </ScrollArea>
+    </div>
   )
 }
 
@@ -588,7 +748,7 @@ export function TaskDetailPage() {
           />
         )}
         {activeTab === 'artifacts' && (
-          <ArtifactsTab taskId={task.id} />
+          <ArtifactsTab taskId={task.id} workspacePath={workspace?.rootPath} />
         )}
         {activeTab === 'details' && (
           <DetailsTab task={task} workspaceName={workspace?.name} />

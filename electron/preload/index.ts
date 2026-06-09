@@ -381,9 +381,16 @@ export const api = {
 
   // Artifact
   artifactListByTask: (taskId: string) => ipcRenderer.invoke('artifact:listByTask', taskId),
+  artifactGet: (id: string) => ipcRenderer.invoke('artifact:get', id),
   artifactAdd: (artifact: Omit<import('../../src/types/workspace').Artifact, 'id' | 'createdAt'>) =>
     ipcRenderer.invoke('artifact:add', artifact),
+  artifactUpdate: (id: string, input: Partial<import('../../src/types/workspace').Artifact>) =>
+    ipcRenderer.invoke('artifact:update', id, input),
   artifactDelete: (id: string) => ipcRenderer.invoke('artifact:delete', id),
+
+  // Git
+  gitStatus: (taskId: string) => ipcRenderer.invoke('git:status', taskId),
+  gitScanChanges: (taskId: string) => ipcRenderer.invoke('git:scanChanges', taskId),
 }
 
 contextBridge.exposeInMainWorld('api', api)

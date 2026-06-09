@@ -337,6 +337,19 @@ export interface Artifact {
   isNew: boolean
 }
 
+/**
+ * 更新制品时的输入参数
+ */
+export interface ArtifactUpdateInput {
+  name?: string
+  description?: string
+  type?: ArtifactType
+  path?: string
+  size?: number
+  gitChangeType?: 'added' | 'modified' | 'deleted'
+  isNew?: boolean
+}
+
 // ============================================================================
 // IPC API 类型（前端调用后端的接口定义）
 // ============================================================================

@@ -8,6 +8,7 @@
 import { ipcMain, dialog, BrowserWindow } from 'electron'
 import * as path from 'node:path'
 import { WorkspaceStorage } from './workspace-storage'
+import simpleGit, { SimpleGit } from 'simple-git'
 import type {
   WorkspaceCreateInput,
   WorkspaceUpdateInput,
@@ -15,6 +16,7 @@ import type {
   TaskUpdateInput,
   TaskListFilter,
   ChatSession,
+  Artifact,
 } from '../../src/types/workspace'
 
 let storage: WorkspaceStorage | null = null
@@ -161,12 +163,121 @@ export function initWorkspaceIPC(userDataPath: string): void {
     return getStorage().listArtifactsByTask(taskId)
   })
 
+  ipcMain.handle('artifact:get', async (_, id: string) => {
+    return getStorage().getArtifact(id)
+  })
+
   ipcMain.handle('artifact:add', async (_, artifact) => {
     return getStorage().addArtifact(artifact)
+  })
+
+  ipcMain.handle('artifact:update', async (_, id: string, input: Partial<Artifact>) => {
+    return getStorage().updateArtifact(id, input)
   })
 
   ipcMain.handle('artifact:delete', async (_, id: string) => {
     getStorage().deleteArtifact(id)
     return true
+  })
+
+  // ===================== Git =====================
+
+  /**
+   * 获取任务关联的工作空间路径
+   */
+  function getWorkspacePath(taskId: string): string | null {
+    const task = getStorage().getTask(taskId)
+    if (!task) return null
+    const workspace = getStorage().getWorkspace(task.workspaceId)
+    if (!workspace) return null
+    return workspace.rootPath
+  }
+
+  /**
+   * 获取任务的 Git 变更列表
+   * 返回：{ path, changeType }[]
+   */
+  ipcMain.handle('git:status', async (_, taskId: string) => {
+    const repoPath = getWorkspacePath(taskId)
+    if (!repoPath) return { error: '工作空间不存在' }
+
+    try {
+      const git: SimpleGit = simpleGit({ baseDir: repoPath })
+      const isRepo = await git.checkIsRepo()
+      if (!isRepo) return { error: '不是 Git 仓库' }
+
+      const status = await git.status()
+      return {
+        modified: status.modified,
+        created: status.created,
+        deleted: status.deleted,
+        renamed: status.renamed,
+        conflicted: status.conflicted,
+      }
+    } catch (e: any) {
+      return { error: e.message ?? 'Git 操作失败' }
+    }
+  })
+
+  /**
+   * 扫描任务工作空间的 Git 变更并创建制品
+   */
+  ipcMain.handle('git:scanChanges', async (_, taskId: string) => {
+    const repoPath = getWorkspacePath(taskId)
+    if (!repoPath) return { error: '工作空间不存在' }
+
+    try {
+      const git: SimpleGit = simpleGit({ baseDir: repoPath })
+      const isRepo = await git.checkIsRepo()
+      if (!isRepo) return { error: '不是 Git 仓库' }
+
+      const status = await git.status()
+
+      const storage = getStorage()
+      const createdArtifacts: any[] = []
+
+      // 新增文件
+      for (const file of status.created) {
+        const artifact = storage.addArtifact({
+          taskId,
+          type: 'file',
+          name: file,
+          path: path.join(repoPath, file),
+          gitChangeType: 'added',
+          isNew: true,
+        })
+        createdArtifacts.push(artifact)
+      }
+
+      // 修改文件
+      for (const file of status.modified) {
+        const artifact = storage.addArtifact({
+          taskId,
+          type: 'file',
+          name: file,
+          path: path.join(repoPath, file),
+          gitChangeType: 'modified',
+          isNew: false,
+        })
+        createdArtifacts.push(artifact)
+      }
+
+      // 删除文件
+      for (const file of status.deleted) {
+        const artifact = storage.addArtifact({
+          taskId,
+          type: 'file',
+          name: file,
+          path: path.join(repoPath, file),
+          gitChangeType: 'deleted',
+          isNew: false,
+        })
+        createdArtifacts.push(artifact)
+      }
+
+      return { count: createdArtifacts.length, artifacts: createdArtifacts }
+    } catch (e: any) {
+      return { error: e.message ?? '扫描变更失败' }
+    }
   })
 }
