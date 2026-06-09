@@ -21,6 +21,7 @@ function App() {
 
           {/* Task routes */}
           <Route path="/tasks/:taskId" element={<TaskDetailPage />} />
+          <Route path="/tasks/:taskId/:tab" element={<TaskDetailPage />} />
 
           {/* Chat routes */}
           <Route path="/chat" element={<div className="p-6"><h2 className="text-2xl font-bold">助手</h2><p className="text-muted-foreground mt-2">AI 对话（即将推出）</p></div>} />

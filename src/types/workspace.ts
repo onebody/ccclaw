@@ -338,6 +338,50 @@ export interface Artifact {
 }
 
 /**
+ * Git diff 文件信息
+ */
+export interface GitDiffFile {
+  /** 文件路径 */
+  path: string
+  /** 旧文件路径（重命名时使用） */
+  oldPath?: string | null
+  /** 变更类型 */
+  status: 'added' | 'modified' | 'deleted' | 'renamed'
+  /** diff hunks */
+  hunks: GitDiffHunk[]
+}
+
+/**
+ * Git diff hunk（差异块）
+ */
+export interface GitDiffHunk {
+  /** 旧文件起始行号 */
+  oldStart: number
+  /** 旧文件行数 */
+  oldLines: number
+  /** 新文件起始行号 */
+  newStart: number
+  /** 新文件行数 */
+  newLines: number
+  /** 差异行 */
+  lines: GitDiffLine[]
+}
+
+/**
+ * Git diff 行
+ */
+export interface GitDiffLine {
+  /** 行类型 */
+  type: 'context' | 'added' | 'removed'
+  /** 旧文件行号（移除行有值） */
+  oldLine: number | null
+  /** 新文件行号（新增行有值） */
+  newLine: number | null
+  /** 行内容 */
+  content: string
+}
+
+/**
  * 更新制品时的输入参数
  */
 export interface ArtifactUpdateInput {

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import {
   ArrowLeft,
   PlayCircle,
@@ -24,6 +24,7 @@ import {
   Eye,
   GitBranch,
   RefreshCw,
+  File,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -36,7 +37,7 @@ import { useSessions, useMessages } from '@/hooks/useSession'
 import { useWorkspaces } from '@/hooks/useWorkspace'
 import { useArtifacts, getFileIcon, formatFileSize } from '@/hooks/useArtifact'
 import { STATUS_CONFIG } from '@/components/workspace/TaskItem'
-import type { Task, ChatSession, ChatMessage, MessageSender, Artifact } from '@/types/workspace'
+import { SessionsTab, FileChangesTab, LogsTab } from '@/components/workspace/TaskTabs'
 
 const PRIORITY_LABEL: Record<string, { label: string; color: string }> = {
   urgent: { label: '紧急', color: 'text-red-500 bg-red-500/10' },
@@ -45,7 +46,7 @@ const PRIORITY_LABEL: Record<string, { label: string; color: string }> = {
   low: { label: '低', color: 'text-muted-foreground bg-muted' },
 }
 
-type Tab = 'sessions' | 'artifacts' | 'details'
+type Tab = 'sessions' | 'files' | 'artifacts' | 'logs' | 'details'
 
 // ----------------------------------------------------------------
 // Message bubble
@@ -574,7 +575,8 @@ function DetailsTab({ task, workspaceName }: { task: Task; workspaceName?: strin
 // TaskDetailPage
 // ----------------------------------------------------------------
 export function TaskDetailPage() {
-  const { taskId } = useParams<{ taskId: string }>()
+  const { taskId, tab } = useParams<{ taskId: string; tab?: string }>()
+  const location = useLocation()
   const navigate = useNavigate()
   const { tasks, start, complete, fail, cancel } = useTasks()
   const { workspaces } = useWorkspaces()
@@ -582,6 +584,13 @@ export function TaskDetailPage() {
   const [activeTab, setActiveTab] = useState<Tab>('sessions')
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+
+  // Sync activeTab with URL param
+  useEffect(() => {
+    if (tab && ['sessions', 'files', 'artifacts', 'logs', 'details'].includes(tab)) {
+      setActiveTab(tab as Tab)
+    }
+  }, [tab])
 
   // Auto-select first session
   useEffect(() => {
@@ -716,13 +725,18 @@ export function TaskDetailPage() {
         {/* Tab bar */}
         <div className="flex items-center gap-1 px-4">
           {([
-            { key: 'sessions', label: '会话', icon: MessageSquare },
+            { key: 'sessions', label: '对话', icon: MessageSquare },
+            { key: 'files', label: '文件变更', icon: File },
             { key: 'artifacts', label: '制品', icon: FileBox },
+            { key: 'logs', label: '日志', icon: Info },
             { key: 'details', label: '详情', icon: Info },
           ] as { key: Tab; label: string; icon: any }[]).map(tab => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => {
+                setActiveTab(tab.key)
+                navigate(`/tasks/${task.id}/${tab.key}`)
+              }}
               className={cn(
                 'flex items-center gap-1.5 px-3 py-2 text-sm border-b-2 transition-colors',
                 activeTab === tab.key
@@ -747,8 +761,14 @@ export function TaskDetailPage() {
             setActiveSessionId={setActiveSessionId}
           />
         )}
+        {activeTab === 'files' && (
+          <FileChangesTab taskId={task.id} workspacePath={workspace?.rootPath} />
+        )}
         {activeTab === 'artifacts' && (
           <ArtifactsTab taskId={task.id} workspacePath={workspace?.rootPath} />
+        )}
+        {activeTab === 'logs' && (
+          <LogsTab task={task} />
         )}
         {activeTab === 'details' && (
           <DetailsTab task={task} workspaceName={workspace?.name} />
