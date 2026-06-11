@@ -658,14 +658,13 @@ function App() {
     <Flex direction="column" style={{ height: '100vh' }}>
       <Flex
         h={40}
-        shrink={0}
         align="center"
         justify="center"
         gap="xs"
-        style={{ WebkitAppRegion: 'drag' } as any}
+        style={{ flexShrink: 0, WebkitAppRegion: 'drag' } as any}
       >
         <img src={logoSrc} alt="" style={{ width: 24, height: 24, userSelect: 'none', pointerEvents: 'none' }} />
-        <Text size="xs" c="dimmed" select={false}>Ccclaw</Text>
+        <Text size="xs" c="dimmed" style={{ userSelect: 'none' }}>Ccclaw</Text>
       </Flex>
       <Box
         flex={1}
@@ -766,14 +765,13 @@ function App() {
     <Flex direction="column" style={{ height: '100vh' }}>
       <Flex
         h={32}
-        shrink={0}
         align="center"
         justify="center"
         gap="xs"
-        style={{ WebkitAppRegion: 'drag' } as any}
+        style={{ flexShrink: 0, WebkitAppRegion: 'drag' } as any}
       >
         <img src={logoSrc} alt="" style={{ width: 16, height: 16, userSelect: 'none', pointerEvents: 'none' }} />
-        <Text size={10} c="dimmed" select={false}>Ccclaw</Text>
+        <Text size="sm" c="dimmed" style={{ userSelect: 'none' }}>Ccclaw</Text>
       </Flex>
 
       {/* Step labels */}

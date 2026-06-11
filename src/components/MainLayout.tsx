@@ -69,14 +69,13 @@ export default function MainLayout() {
       {/* Draggable title bar */}
       <Flex
         h={32}
-        shrink={0}
         align="center"
         justify="center"
         gap="xs"
-        style={{ borderBottom: '1px solid var(--app-border)', WebkitAppRegion: 'drag' } as React.CSSProperties}
+        style={{ flexShrink: 0, borderBottom: '1px solid var(--app-border)', WebkitAppRegion: 'drag' } as React.CSSProperties}
       >
         <img src={logoSrc} alt="" style={{ width: 32, height: 32, userSelect: 'none', pointerEvents: 'none' }} />
-        <Text size="sm" c="secondary" select={false} style={{ fontWeight: 500 }}>Ccclaw</Text>
+        <Text size="sm" c="secondary" style={{ fontWeight: 500, userSelect: 'none' }}>Ccclaw</Text>
       </Flex>
 
       <Flex flex={1} style={{ minHeight: 0 }}>
