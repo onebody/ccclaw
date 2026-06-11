@@ -1,5 +1,5 @@
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { MantineThemeProvider } from '@mantine/core'
+import { MantineThemeProvider, Flex, Box, Text, Group } from '@mantine/core'
 import { notifications } from '@mantine/notifications'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import logoSrc from '@/assets/logo.png'
@@ -655,13 +655,29 @@ function App() {
   }, [appState, entryCompatibilitySnapshot])
 
   const renderFrame = (content: ReactNode, scrollable = true) => (
-    <div className="h-screen flex flex-col app-bg-primary app-text-primary">
-      <div className="h-10 flex-shrink-0 flex items-center justify-center gap-1.5" style={{ WebkitAppRegion: 'drag' } as any}>
-        <img src={logoSrc} alt="" className="w-6 h-6 select-none pointer-events-none" />
-        <span className="text-xs app-text-faint select-none">Ccclaw</span>
-      </div>
-      <div className={`flex-1 flex items-center justify-center px-6 pb-6 ${scrollable ? 'overflow-y-auto' : 'overflow-hidden'}`}>{content}</div>
-    </div>
+    <Flex direction="column" style={{ height: '100vh' }}>
+      <Flex
+        h={40}
+        shrink={0}
+        align="center"
+        justify="center"
+        gap="xs"
+        style={{ WebkitAppRegion: 'drag' } as any}
+      >
+        <img src={logoSrc} alt="" style={{ width: 24, height: 24, userSelect: 'none', pointerEvents: 'none' }} />
+        <Text size="xs" c="dimmed" select={false}>Ccclaw</Text>
+      </Flex>
+      <Box
+        flex={1}
+        style={{
+          overflowY: scrollable ? 'auto' : 'hidden',
+          padding: '24px 16px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >{content}</Box>
+    </Flex>
   )
 
   const renderWithContactModal = (content: ReactNode) => (
@@ -675,15 +691,15 @@ function App() {
 
   if (appState === 'welcome') {
     return renderWithContactModal(renderFrame(
-      <div className="w-full max-w-md px-2">
+      <Box style={{ width: '100%', maxWidth: 480, padding: '0 8px' }}>
         <Welcome onAccept={() => setAppState('env-check')} />
-      </div>
+      </Box>
     , false))
   }
 
   if (appState === 'env-check') {
     return renderWithContactModal(renderFrame(
-      <div className="w-full max-w-md px-2">
+      <Box style={{ width: '100%', maxWidth: 480, padding: '0 8px' }}>
         <EnvCheck
           onReady={handleEnvReady}
           pluginRepairRunning={pluginRepairRunning}
@@ -691,7 +707,7 @@ function App() {
           onRepairPlugins={() => runPluginRepair('manual')}
           onEnsurePluginRepairReady={() => runPluginRepair('startup')}
         />
-      </div>
+      </Box>
     ))
   }
 
@@ -747,42 +763,76 @@ function App() {
 
   // Setup wizard
   const setupView = (
-    <div className="h-screen app-bg-primary app-text-primary flex flex-col">
-      <div className="h-8 flex-shrink-0 flex items-center justify-center gap-1.5" style={{ WebkitAppRegion: 'drag' } as any}>
-        <img src={logoSrc} alt="" className="w-4 h-4 select-none pointer-events-none" />
-        <span className="text-[10px] app-text-faint select-none">Ccclaw</span>
-      </div>
+    <Flex direction="column" style={{ height: '100vh' }}>
+      <Flex
+        h={32}
+        shrink={0}
+        align="center"
+        justify="center"
+        gap="xs"
+        style={{ WebkitAppRegion: 'drag' } as any}
+      >
+        <img src={logoSrc} alt="" style={{ width: 16, height: 16, userSelect: 'none', pointerEvents: 'none' }} />
+        <Text size={10} c="dimmed" select={false}>Ccclaw</Text>
+      </Flex>
 
       {/* Step labels */}
-      <div className="flex justify-center gap-6 pt-2 pb-4">
-        {SETUP_STEPS.map((s, i) => (
-          <div key={s.key} className="flex items-center gap-2">
-            <div
-              className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                i < currentStepIndex
-                  ? 'bg-emerald-500 text-black'
-                  : i === currentStepIndex
-                  ? 'bg-emerald-500/20 text-emerald-400 ring-2 ring-emerald-500'
-                  : 'app-bg-tertiary app-text-muted'
-              }`}
-            >
-              {i < currentStepIndex ? '✓' : i + 1}
-            </div>
-            <span
-              className={`text-xs transition-colors ${
-                i === currentStepIndex ? 'app-text-secondary' : 'app-text-muted'
-              }`}
-            >
-              {s.label}
-            </span>
-            {i < SETUP_STEPS.length - 1 && <div className="w-8 h-px app-bg-tertiary ml-2" />}
-          </div>
-        ))}
-      </div>
+      <Group justify="center" gap="lg" pt="xs" pb="sm">
+        {SETUP_STEPS.map((s, i) => {
+          const isCompleted = i < currentStepIndex
+          const isCurrent = i === currentStepIndex
+          const stepCircleStyles: React.CSSProperties = {
+            width: 24,
+            height: 24,
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 12,
+            fontWeight: 700,
+            transition: 'all 0.2s',
+          }
+          if (isCompleted) {
+            stepCircleStyles.backgroundColor = 'var(--mantine-color-emerald-5)'
+            stepCircleStyles.color = 'black'
+          } else if (isCurrent) {
+            stepCircleStyles.backgroundColor = 'rgba(16, 185, 129, 0.2)'
+            stepCircleStyles.color = '#34d399'
+            stepCircleStyles.boxShadow = '0 0 0 2px #10b981'
+          } else {
+            stepCircleStyles.backgroundColor = 'var(--app-bg-tertiary)'
+            stepCircleStyles.color = 'var(--app-text-muted)'
+          }
+          
+          const labelColor = isCurrent ? 'var(--app-text-secondary)' : 'var(--app-text-muted)'
+          
+          return (
+            <Group key={s.key} align="center" gap="xs">
+              <Box style={stepCircleStyles}>
+                {isCompleted ? '✓' : i + 1}
+              </Box>
+              <Text size="xs" style={{ transition: 'color 0.2s', color: labelColor }}>
+                {s.label}
+              </Text>
+              {i < SETUP_STEPS.length - 1 && (
+                <Box w={32} h={1} style={{ backgroundColor: 'var(--app-bg-tertiary)', marginLeft: 8 }} />
+              )}
+            </Group>
+          )
+        })}
+      </Group>
 
       {/* Content */}
-      <div className="flex-1 flex justify-center px-6 pb-6 overflow-y-auto">
-        <div className="w-full max-w-lg pt-2">
+      <Box
+        flex={1}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '0 24px 24px',
+          overflowY: 'auto',
+        }}
+      >
+        <Box style={{ width: '100%', maxWidth: 512, paddingTop: 8 }}>
           {setupStep === 'api-keys' && (
             <ApiKeys
               onNext={(context) => {
@@ -819,9 +869,9 @@ function App() {
               onSkip={handleSetupComplete}
             />
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Flex>
   )
 
   return renderWithContactModal(setupView)
