@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { PlayCircle, CheckCircle2, XCircle, Clock } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { useTasks } from '@/hooks/useTask'
 import type { Task } from '@/types/workspace'
+import { Group, Text, ActionIcon } from '@mantine/core'
 
 type TaskStatus = Task['status']
 
@@ -11,45 +11,44 @@ const STATUS_CONFIG: Record<TaskStatus, {
   label: string
   variant: 'pending' | 'running' | 'completed' | 'failed' | 'outline'
   icon: React.ComponentType<{ className?: string }>
-  dotClass: string
+  color: string
 }> = {
   pending: {
     label: '待执行',
     variant: 'pending',
     icon: Clock,
-    dotClass: 'bg-yellow-400',
+    color: 'yellow',
   },
   running: {
     label: '运行中',
     variant: 'running',
     icon: PlayCircle,
-    dotClass: 'bg-blue-500 animate-pulse',
+    color: 'blue',
   },
   completed: {
     label: '已完成',
     variant: 'completed',
     icon: CheckCircle2,
-    dotClass: 'bg-green-500',
+    color: 'green',
   },
   failed: {
     label: '失败',
     variant: 'failed',
     icon: XCircle,
-    dotClass: 'bg-red-500',
+    color: 'red',
   },
   cancelled: {
     label: '已取消',
     variant: 'outline',
     icon: XCircle,
-    dotClass: 'bg-muted',
+    color: 'gray',
   },
 }
 
 function TaskStatusBadge({ status }: { status: Task['status'] }) {
   const config = STATUS_CONFIG[status]
   return (
-    <Badge variant={config.variant} className="gap-1 text-xs px-1.5 py-0">
-      <span className={cn('h-1.5 w-1.5 rounded-full', config.dotClass)} />
+    <Badge variant={config.variant} color={config.color} className="gap-1 text-xs px-1.5 py-0">
       {config.label}
     </Badge>
   )
@@ -86,60 +85,51 @@ export function TaskItem({ task, workspaceId }: TaskItemProps) {
   }
 
   return (
-    <div className="group">
-      <div
-        className={cn(
-          "flex items-center gap-2 h-7 px-2 rounded-md text-xs cursor-pointer transition-colors",
-          "hover:bg-accent/60 text-muted-foreground hover:text-foreground"
+    <Group 
+      className="cursor-pointer hover:bg-accent/60" 
+      onClick={handleClick}
+      gap="xs"
+      p="xs"
+    >
+      <TaskStatusBadge status={task.status} />
+      
+      <Text size="sm" className="flex-1 truncate">{task.title}</Text>
+      
+      <Text size="xs" c="dimmed">{formatDate(task.createdAt)}</Text>
+      
+      <Group gap={4} className="opacity-0 group-hover:opacity-100">
+        {task.status === 'pending' && (
+          <ActionIcon 
+            size="sm" 
+            color="blue" 
+            onClick={handleStart}
+            title="开始任务"
+          >
+            <PlayCircle size={14} />
+          </ActionIcon>
         )}
-        onClick={handleClick}
-      >
-        {/* Status dot */}
-        <span className={cn(
-          'h-1.5 w-1.5 rounded-full flex-shrink-0',
-          STATUS_CONFIG[task.status].dotClass
-        )} />
-
-        {/* Task name */}
-        <span className="truncate flex-1 min-w-0">{task.title}</span>
-
-        {/* Date */}
-        <span className="text-muted-foreground/60 flex-shrink-0">
-          {formatDate(task.createdAt)}
-        </span>
-
-        {/* Quick actions (show on hover) */}
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 flex-shrink-0">
-          {task.status === 'pending' && (
-            <button
-              className="p-0.5 rounded hover:bg-blue-500/20 text-blue-500"
-              onClick={handleStart}
-              title="开始任务"
-            >
-              <PlayCircle className="h-3 w-3" />
-            </button>
-          )}
-          {task.status === 'running' && (
-            <>
-              <button
-                className="p-0.5 rounded hover:bg-green-500/20 text-green-500"
+        {task.status === 'running' && (
+          <>
+              <ActionIcon 
+                size="sm" 
+                color="green" 
                 onClick={handleComplete}
                 title="标记完成"
               >
-                <CheckCircle2 className="h-3 w-3" />
-              </button>
-              <button
-                className="p-0.5 rounded hover:bg-red-500/20 text-red-500"
-                onClick={e => { e.stopPropagation(); fail(task.id, '') }}
+                <CheckCircle2 size={14} />
+              </ActionIcon>
+              <ActionIcon 
+                size="sm" 
+                color="red" 
+                onClick={(e) => { e.stopPropagation(); fail(task.id, '') }}
                 title="标记失败"
               >
-                <XCircle className="h-3 w-3" />
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+                <XCircle size={14} />
+              </ActionIcon>
+          </>
+        )}
+      </Group>
+    </Group>
   )
 }
 

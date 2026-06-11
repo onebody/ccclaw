@@ -6,9 +6,18 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import type { Artifact, ArtifactUpdateInput } from '@/types/workspace'
+import type { Artifact } from '@/types/workspace'
 
 const api = (window as any).api
+
+interface ArtifactUpdateInput {
+  name?: string
+  description?: string
+  isNew?: boolean
+  path?: string
+  size?: number
+  type?: any
+}
 
 /**
  * 获取任务的制品列表
@@ -163,7 +172,6 @@ export function getFileIcon(fileName: string): string {
     // 其他
     'sh': '⚡', 'bash': '⚡', 'zsh': '⚡',
     'zip': '📦', 'tar': '📦', 'gz': '📦',
-    'lock': '🔒',
   }
 
   return iconMap[ext] ?? '📄'

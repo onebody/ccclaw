@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom'
-import {
-  Hexagon, Plus, MessageSquare, Users, Zap, MoreHorizontal,
-  Settings, User,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Separator } from '@/components/ui/separator'
+import { Hexagon, Plus, MessageSquare, Users, Zap, MoreHorizontal, Settings, User } from 'lucide-react'
+import { 
+  Stack, 
+  ActionIcon, 
+  Tooltip,
+} from '@mantine/core'
 
 interface IconBarProps {
   onNewTask?: () => void
@@ -19,65 +19,84 @@ const NAV_ITEMS = [
 
 export function SidebarIconBar({ onNewTask }: IconBarProps) {
   return (
-    <div className="flex flex-col h-full bg-sidebar border-r border-border w-14">
+    <Stack 
+      h="100%" 
+      w={56} 
+      bg="sidebar" 
+      px="xs" 
+      py="md" 
+      justify="space-between"
+      className="border-r border-border"
+    >
       {/* Top: Logo */}
-      <div className="flex items-center justify-center h-14 flex-shrink-0 border-b border-border">
-        <Hexagon className="h-6 w-6 text-blue-500" />
-      </div>
+      <Stack align="center" gap="xs">
+        <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center text-white font-bold text-sm">
+          C
+        </div>
 
-      {/* Main nav */}
-      <div className="flex-1 flex flex-col items-center py-3 gap-1">
         {/* New task button */}
-        <button
-          className="flex items-center justify-center h-10 w-10 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors mb-2"
-          onClick={onNewTask}
-          title="新建任务"
-        >
-          <Plus className="h-5 w-5" />
-        </button>
+        <Tooltip label="新建任务" position="right">
+          <ActionIcon
+            size="lg"
+            color="blue"
+            variant="filled"
+            onClick={onNewTask}
+            className="mb-2"
+          >
+            <Plus size={18} />
+          </ActionIcon>
+        </Tooltip>
 
-        <Separator className="w-8 mb-2" />
+        <div className="w-8 h-px border-t border-border my-1" />
 
         {/* Nav items */}
         {NAV_ITEMS.map(({ icon: Icon, label, path }) => (
           <NavLink
             key={path}
             to={path}
-            className={({ isActive }) => cn(
-              "flex items-center justify-center h-10 w-10 rounded-xl transition-colors",
-              "text-muted-foreground hover:text-foreground hover:bg-accent",
-              isActive && "bg-accent text-accent-foreground"
-            )}
+            className={({ isActive }) => 
+              `flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${
+                isActive 
+                  ? 'bg-accent text-accent-foreground' 
+                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+              }`
+            }
             title={label}
           >
-            <Icon className="h-5 w-5" />
+            <Icon size={20} />
           </NavLink>
         ))}
+      </Stack>
 
-        {/* More */}
-        <button
-          className="flex items-center justify-center h-10 w-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent transition-colors mt-1"
+      {/* Bottom: More + Settings + User */}
+      <Stack align="center" gap="xs">
+        <ActionIcon
+          size="lg"
+          variant="subtle"
+          onClick={() => {}}
           title="更多"
         >
-          <MoreHorizontal className="h-5 w-5" />
-        </button>
-      </div>
+          <MoreHorizontal size={20} />
+        </ActionIcon>
 
-      {/* Bottom: Settings + User */}
-      <div className="flex flex-col items-center py-3 gap-1 border-t border-border">
-        <button
-          className="flex items-center justify-center h-10 w-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+        <ActionIcon
+          size="lg"
+          variant="subtle"
+          onClick={() => {}}
           title="设置"
         >
-          <Settings className="h-5 w-5" />
-        </button>
-        <button
-          className="flex items-center justify-center h-10 w-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          <Settings size={20} />
+        </ActionIcon>
+
+        <ActionIcon
+          size="lg"
+          variant="subtle"
+          onClick={() => {}}
           title="用户"
         >
-          <User className="h-5 w-5" />
-        </button>
-      </div>
-    </div>
+          <User size={20} />
+        </ActionIcon>
+      </Stack>
+    </Stack>
   )
 }

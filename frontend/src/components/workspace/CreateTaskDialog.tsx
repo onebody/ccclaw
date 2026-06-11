@@ -1,24 +1,15 @@
 import { useState } from 'react'
 import { ListTodo } from 'lucide-react'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import {
+  Modal,
+  Stack,
+  TextInput,
+  Textarea,
   Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
+  Button,
+  Group,
+  Text,
+} from '@mantine/core'
 import type { TaskCreateInput, TaskPriority } from '@/types/workspace'
 
 interface CreateTaskDialogProps {
@@ -30,10 +21,10 @@ interface CreateTaskDialogProps {
 }
 
 const PRIORITY_OPTIONS: { value: TaskPriority; label: string; color: string }[] = [
-  { value: 'urgent', label: '紧急', color: 'text-red-500' },
-  { value: 'high', label: '高', color: 'text-orange-500' },
-  { value: 'normal', label: '普通', color: 'text-blue-500' },
-  { value: 'low', label: '低', color: 'text-muted-foreground' },
+  { value: 'urgent', label: '紧急', color: 'red' },
+  { value: 'high', label: '高', color: 'orange' },
+  { value: 'normal', label: '普通', color: 'blue' },
+  { value: 'low', label: '低', color: 'gray' },
 ]
 
 export function CreateTaskDialog({
@@ -52,7 +43,7 @@ export function CreateTaskDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim()) { setError('请输入任务标题'); return }
-
+    
     setLoading(true)
     setError('')
     try {
@@ -77,82 +68,82 @@ export function CreateTaskDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <ListTodo className="h-5 w-5" />
-            新建任务
-          </DialogTitle>
-          {workspaceName && (
-            <p className="text-sm text-muted-foreground font-normal">
-              工作空间：{workspaceName}
-            </p>
-          )}
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <Modal
+      opened={open}
+      onClose={() => handleOpenChange(false)}
+      title={
+        <Group gap="xs">
+          <ListTodo size={18} />
+          新建任务
+        </Group>
+      }
+      size="md"
+    >
+      <form onSubmit={handleSubmit}>
+        <Stack gap="md">
           {/* Title */}
-          <div className="space-y-1.5">
-            <Label htmlFor="task-title">任务标题 *</Label>
-            <Input
-              id="task-title"
-              placeholder="例如：完成用户认证功能"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              autoFocus
-            />
-          </div>
+          <TextInput
+            label="任务标题 *"
+            placeholder="例如：完成用户认证功能"
+            value={title}
+            onChange={e => setTitle(e.currentTarget.value)}
+            required
+            size="sm"
+          />
 
           {/* Description */}
-          <div className="space-y-1.5">
-            <Label htmlFor="task-desc">描述（可选）</Label>
-            <Textarea
-              id="task-desc"
-              placeholder="详细描述任务内容、目标或期望结果..."
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              rows={3}
-              className="resize-none"
-            />
-          </div>
+          <Textarea
+            label="描述（可选）"
+            placeholder="详细描述任务内容、目标或期望结果..."
+            value={description}
+            onChange={e => setDescription(e.currentTarget.value)}
+            minRows={3}
+            maxRows={6}
+            size="sm"
+          />
 
           {/* Priority */}
-          <div className="space-y-1.5">
-            <Label htmlFor="task-priority">优先级</Label>
-            <Select value={priority} onValueChange={v => setPriority(v as TaskPriority)}>
-              <SelectTrigger id="task-priority">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {PRIORITY_OPTIONS.map(opt => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    <span className="flex items-center gap-2">
-                      <span className={opt.color}>●</span>
-                      {opt.label}
-                    </span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Select
+            label="优先级"
+            value={priority}
+            onChange={v => setPriority(v as TaskPriority)}
+            size="sm"
+            data={PRIORITY_OPTIONS.map(opt => ({
+              value: opt.value,
+              label: opt.label,
+            }))}
+          />
 
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
+          {workspaceName && (
+            <Text size="sm" c="dimmed">
+              工作空间：{workspaceName}
+            </Text>
           )}
 
-          <Separator />
+          {error && (
+            <Text size="sm" c="red">
+              {error}
+            </Text>
+          )}
 
-          <DialogFooter className="gap-2">
-            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
+          <Group justify="flex-end" gap="sm" mt="md">
+            <Button
+              variant="outline"
+              onClick={() => handleOpenChange(false)}
+              size="sm"
+            >
               取消
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button
+              type="submit"
+              loading={loading}
+              size="sm"
+            >
               {loading ? '创建中...' : '创建任务'}
             </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          </Group>
+        </Stack>
+      </form>
+    </Modal>
   )
 }

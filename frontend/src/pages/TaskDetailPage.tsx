@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
   PlayCircle,
@@ -13,18 +13,14 @@ import {
   Send,
   Bot,
   User,
-  System,
+  Cog,
   Clock,
   ChevronRight,
-  FileText,
-  Image,
-  Code2,
-  FileJson,
+  File,
   Download,
   Eye,
   GitBranch,
   RefreshCw,
-  File,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -37,7 +33,9 @@ import { useSessions, useMessages } from '@/hooks/useSession'
 import { useWorkspaces } from '@/hooks/useWorkspace'
 import { useArtifacts, getFileIcon, formatFileSize } from '@/hooks/useArtifact'
 import { STATUS_CONFIG } from '@/components/workspace/TaskItem'
-import { SessionsTab, FileChangesTab, LogsTab } from '@/components/workspace/TaskTabs'
+import { type ChatMessage, type ChatSession, type Task } from '@/types/workspace'
+import { FileChangesTab } from '@/components/workspace/FileChangesTab'
+import { LogsTab } from '@/components/workspace/LogsTab'
 
 const PRIORITY_LABEL: Record<string, { label: string; color: string }> = {
   urgent: { label: '紧急', color: 'text-red-500 bg-red-500/10' },
@@ -55,7 +53,7 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
   const senderIcon = {
     user: <User className="h-3.5 w-3.5 text-blue-500" />,
     ai: <Bot className="h-3.5 w-3.5 text-green-500" />,
-    system: <System className="h-3.5 w-3.5 text-muted-foreground" />,
+    system: <Cog className="h-3.5 w-3.5 text-muted-foreground" />,
   }
 
   const senderLabel = { user: '我', ai: 'AI', system: '系统' }
@@ -133,11 +131,10 @@ function SessionTab({
   const [addingSession, setAddingSession] = useState(false)
 
   const activeSession = sessions.find(s => s.id === activeSessionId)
-  const chatSessionId = activeSession?.chatSessionId ?? null
 
   const { messages, send, streamingContent, isStreaming } = useMessages(
     activeSessionId,
-    chatSessionId
+    activeSessionId
   )
   const scrollRef = useRef<HTMLDivElement>(null)
   const { create: createSession } = useSessions(taskId)
@@ -185,8 +182,6 @@ function SessionTab({
       setAddingSession(false)
     }
   }
-
-  const activeSession = sessions.find(s => s.id === activeSessionId)
 
   return (
     <div className="flex flex-col h-full">
@@ -355,8 +350,8 @@ function ArtifactsTab({ taskId, workspacePath }: { taskId: string; workspacePath
   const handlePreview = (artifact: any) => {
     if (!artifact.path) return
     // 使用 Electron 的 shell 模块打开文件
-    if (window.api?.openFile) {
-      window.api.openFile(artifact.path)
+    if ((window as any).api?.openFile) {
+      (window as any).api.openFile(artifact.path)
     } else {
       // 降级方案：在新窗口中显示文件内容
       alert(`预览功能即将推出\n文件路径: ${artifact.path}`)
@@ -366,8 +361,8 @@ function ArtifactsTab({ taskId, workspacePath }: { taskId: string; workspacePath
   const handleDownload = (artifact: any) => {
     if (!artifact.path) return
     // 使用 Electron 的 dialog 模块保存文件
-    if (window.api?.saveFile) {
-      window.api.saveFile(artifact.path)
+    if ((window as any).api?.saveFile) {
+      (window as any).api.saveFile(artifact.path)
     } else {
       // 降级方案：提示用户
       alert(`下载功能即将推出\n文件路径: ${artifact.path}`)
@@ -542,7 +537,7 @@ function DetailsTab({ task, workspaceName }: { task: Task; workspaceName?: strin
     { label: '任务标题', value: task.title },
     { label: '工作空间', value: workspaceName ?? task.workspaceId },
     { label: '状态', value: <span className="flex items-center gap-1.5">
-      <span className={cn('h-2 w-2 rounded-full', STATUS_CONFIG[task.status]?.dotClass)} />
+      <span className={cn('h-2 w-2 rounded-full', `bg-${STATUS_CONFIG[task.status]?.color}-500`)} />
       {STATUS_CONFIG[task.status]?.label ?? task.status}
     </span> },
     { label: '优先级', value: <span className={cn('text-xs px-1.5 py-0.5 rounded', PRIORITY_LABEL[task.priority]?.color)}>
@@ -576,7 +571,6 @@ function DetailsTab({ task, workspaceName }: { task: Task; workspaceName?: strin
 // ----------------------------------------------------------------
 export function TaskDetailPage() {
   const { taskId, tab } = useParams<{ taskId: string; tab?: string }>()
-  const location = useLocation()
   const navigate = useNavigate()
   const { tasks, start, complete, fail, cancel } = useTasks()
   const { workspaces } = useWorkspaces()
@@ -606,7 +600,7 @@ export function TaskDetailPage() {
   useEffect(() => {
     if (!task && taskId) {
       // Try to fetch from API
-      ;(window as any).api.taskGet(taskId).then((t: Task) => {
+      ;(window as any).api.taskGet(taskId).then(() => {
         // Task loaded via useTasks refetch
       }).catch(() => {}).finally(() => setLoading(false))
     } else {
@@ -673,12 +667,9 @@ export function TaskDetailPage() {
 
           <Separator orientation="vertical" className="h-5" />
 
-          {/* Title + status */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-semibold truncate">{task.title}</h2>
-              <Badge variant={statusConfig.variant as any} className="gap-1 text-xs flex-shrink-0">
-                <span className={cn('h-1.5 w-1.5 rounded-full', statusConfig.dotClass)} />
+              <Badge variant={statusConfig.variant as any} color={statusConfig.color} className="gap-1 text-xs flex-shrink-0">
                 {statusConfig.label}
               </Badge>
             </div>

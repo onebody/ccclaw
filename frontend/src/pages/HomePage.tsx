@@ -1,30 +1,35 @@
+import { Stack, Title, Text, Grid, Card } from '@mantine/core'
+
 export function HomePage() {
   return (
-    <div className="space-y-6">
-      <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-      <p className="text-muted-foreground">
-        Welcome to Ccclaw - Your AI Agent Management Platform
-      </p>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-lg border p-6">
-          <h3 className="text-lg font-medium">Agents</h3>
-          <p className="text-sm text-muted-foreground mt-2">
-            Manage your AI agents
-          </p>
-        </div>
-        <div className="rounded-lg border p-6">
-          <h3 className="text-lg font-medium">Workflows</h3>
-          <p className="text-sm text-muted-foreground mt-2">
-            Orchestrate agent workflows
-          </p>
-        </div>
-        <div className="rounded-lg border p-6">
-          <h3 className="text-lg font-medium">Settings</h3>
-          <p className="text-sm text-muted-foreground mt-2">
-            Configure your preferences
-          </p>
-        </div>
+    <Stack gap="xl">
+      <div>
+        <Title order={2}>Dashboard</Title>
+        <Text c="dimmed" mt="xs">Welcome to Ccclaw - Your AI Agent Management Platform</Text>
       </div>
-    </div>
+      
+      <Grid>
+        <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
+          <Card withBorder p="lg">
+            <Text size="lg" fw={500}>Agents</Text>
+            <Text size="sm" c="dimmed" mt="xs">Manage your AI agents</Text>
+          </Card>
+        </Grid.Col>
+        
+        <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
+          <Card withBorder p="lg">
+            <Text size="lg" fw={500}>Workflows</Text>
+            <Text size="sm" c="dimmed" mt="xs">Orchestrate agent workflows</Text>
+          </Card>
+        </Grid.Col>
+        
+        <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
+          <Card withBorder p="lg">
+            <Text size="lg" fw={500}>Settings</Text>
+            <Text size="sm" c="dimmed" mt="xs">Configure your preferences</Text>
+          </Card>
+        </Grid.Col>
+      </Grid>
+    </Stack>
   )
 }

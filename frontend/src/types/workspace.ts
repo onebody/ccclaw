@@ -268,6 +268,9 @@ export interface ChatSession {
   /** 唯一标识 */
   id: string
 
+  /** OpenClaw 聊天会话 ID（可选，创建时关联） */
+  chatSessionId?: string
+
   /** 所属任务 ID */
   taskId: string
 

@@ -1,39 +1,36 @@
 import { useState, useCallback } from 'react';
-import {
-  useAgents,
-  useCreateAgent,
-  useUpdateAgent,
-  useDeleteAgent,
-  useSetAgentStatus,
+import { Plus } from 'lucide-react';
+import { 
+  useAgents, 
+  useCreateAgent, 
+  useUpdateAgent, 
+  useDeleteAgent, 
+  useSetAgentStatus 
 } from '@/hooks/useAgent';
 import type { AgentConfig, AgentStatus, AgentCreateInput } from '@/types/agent';
 import { AgentCard } from '@/components/common/AgentCard';
 import { AgentEditor } from '@/components/common/AgentEditor';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Plus } from 'lucide-react';
+import { 
+  Modal, 
+  Stack, 
+  Group, 
+  TextInput, 
+  Select, 
+  Button, 
+  Text,
+  Loader,
+  Center,
+  Grid,
+} from '@mantine/core';
 
-export function AgentManager() {
+interface AgentManagerProps {}
+
+export function AgentManager({}: AgentManagerProps) {
   const [filter, setFilter] = useState<{ status?: AgentStatus; search?: string }>({});
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingAgent, setEditingAgent] = useState<AgentConfig | undefined>(undefined);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
-
+  
   const { agents, loading, error, refetch } = useAgents({
     status: filter.status,
     search: filter.search,
@@ -42,23 +39,23 @@ export function AgentManager() {
   const { updateAgent } = useUpdateAgent();
   const { deleteAgent, loading: deleteLoading } = useDeleteAgent();
   const { setStatus } = useSetAgentStatus();
-
+  
   const handleSave = useCallback(() => {
     setEditorOpen(false);
     setEditingAgent(undefined);
     refetch();
   }, [refetch]);
-
+  
   const handleCancel = useCallback(() => {
     setEditorOpen(false);
     setEditingAgent(undefined);
   }, []);
-
+  
   const handleCreate = useCallback(() => {
     setEditingAgent(undefined);
     setEditorOpen(true);
   }, []);
-
+  
   const handleEdit = useCallback((id: string) => {
     const agent = agents.find(a => a.id === id);
     if (agent) {
@@ -66,11 +63,11 @@ export function AgentManager() {
       setEditorOpen(true);
     }
   }, [agents]);
-
+  
   const handleDelete = useCallback((id: string) => {
     setDeleteTarget(id);
   }, []);
-
+  
   const confirmDelete = useCallback(async () => {
     if (deleteTarget) {
       await deleteAgent(deleteTarget);
@@ -78,113 +75,128 @@ export function AgentManager() {
       refetch();
     }
   }, [deleteTarget, deleteAgent, refetch]);
-
+  
   const handleStatusChange = useCallback(async (id: string, status: AgentStatus) => {
     await setStatus(id, status);
     refetch();
   }, [setStatus, refetch]);
-
-  const handleSaveAgent = useCallback(async (input: AgentCreateInput) => {
-    await createAgent(input);
-  }, [createAgent]);
-
-  const handleUpdateAgent = useCallback(async (id: string, input: Partial<AgentConfig>) => {
-    await updateAgent(id, input);
-  }, [updateAgent]);
-
+  
   if (loading) {
-    return <div className="flex justify-center items-center h-64">加载中...</div>;
+    return (
+      <Center h={200}>
+        <Loader size="md" />
+      </Center>
+    );
   }
-
+  
   if (error) {
-    return <div className="text-red-500">错误: {error.message}</div>;
+    return (
+      <Text c="red" ta="center" mt="xl">
+        错误: {error.message}
+      </Text>
+    );
   }
-
+  
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Agent 管理</h2>
-        <Button onClick={handleCreate}>
-          <Plus className="mr-2 h-4 w-4" />
+    <Stack gap="xl" p="md">
+      <Group justify="space-between" align="center">
+        <Text size="xl" fw={700}>Agent 管理</Text>
+        <Button onClick={handleCreate} leftSection={<Plus size={16} />}>
           创建 Agent
         </Button>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <Input
+      </Group>
+      
+      <Group align="center" gap="md">
+        <TextInput 
           placeholder="搜索 Agent..."
           value={filter.search || ''}
           onChange={(e) => setFilter(prev => ({ ...prev, search: e.target.value || undefined }))}
-          className="max-w-sm"
+          w={300}
         />
         <Select
           value={filter.status || 'all'}
-          onValueChange={(v) => setFilter(prev => ({ ...prev, status: v === 'all' ? undefined : v as AgentStatus }))}
+          onChange={(v) => setFilter(prev => ({ ...prev, status: v === 'all' ? undefined : v as AgentStatus }))}
+          w={180}
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="所有状态" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">所有状态</SelectItem>
-            <SelectItem value="idle">空闲</SelectItem>
-            <SelectItem value="running">运行中</SelectItem>
-            <SelectItem value="error">错误</SelectItem>
-            <SelectItem value="disabled">已停用</SelectItem>
-            <SelectItem value="initializing">初始化中</SelectItem>
-          </SelectContent>
+          <option value="all">所有状态</option>
+          <option value="idle">空闲</option>
+          <option value="running">运行中</option>
+          <option value="error">错误</option>
+          <option value="disabled">已停用</option>
+          <option value="initializing">初始化中</option>
         </Select>
-      </div>
-
+      </Group>
+      
       {agents.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 space-y-4">
-          <p className="text-muted-foreground">暂无 Agent</p>
-          <Button onClick={handleCreate}>创建第一个 Agent</Button>
-        </div>
+        <Center h={200} ta="center">
+          <Stack gap="md">
+            <Text c="dimmed">暂无 Agent</Text>
+            <Button onClick={handleCreate} variant="outline">
+              创建第一个 Agent
+            </Button>
+          </Stack>
+        </Center>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Grid>
           {agents.map(agent => (
-            <AgentCard
-              key={agent.id}
-              agent={agent}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onStatusChange={handleStatusChange}
-            />
+            <Grid.Col span={{ base: 12, md: 6, lg: 4 }} key={agent.id}>
+              <AgentCard 
+                agent={agent}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onStatusChange={handleStatusChange}
+              />
+            </Grid.Col>
           ))}
-        </div>
+        </Grid>
       )}
-
-      <AgentEditor
-        open={editorOpen}
-        agent={editingAgent}
-        onSave={handleSave}
-        onCancel={handleCancel}
-        onSaveAgent={handleSaveAgent}
-        onUpdateAgent={handleUpdateAgent}
-      />
-
-      <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>确认删除</DialogTitle>
-            <DialogDescription>
-              确定要删除此 Agent 吗？此操作不可撤销。
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
+      
+      <Modal 
+        opened={editorOpen}
+        onClose={() => { setEditorOpen(false); setEditingAgent(undefined); }}
+        title={editingAgent ? '编辑 Agent' : '创建 Agent'}
+        size="lg"
+      >
+        <AgentEditor 
+          open={editorOpen}
+          agent={editingAgent}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          onSaveAgent={async (input: AgentCreateInput) => {
+            if (editingAgent) {
+              await updateAgent(editingAgent.id, input);
+            } else {
+              await createAgent(input);
+            }
+          }}
+          onUpdateAgent={async (id: string, input: Partial<AgentConfig>) => {
+            await updateAgent(id, input);
+          }}
+        />
+      </Modal>
+      
+      <Modal 
+        opened={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="确认删除"
+        size="sm"
+      >
+        <Stack gap="md">
+          <Text>确定要删除此 Agent 吗？此操作不可撤销。</Text>
+          <Group justify="flex-end" gap="sm">
             <Button variant="outline" onClick={() => setDeleteTarget(null)}>
               取消
             </Button>
-            <Button
-              variant="destructive"
+            <Button 
+              color="red" 
               onClick={confirmDelete}
-              disabled={deleteLoading}
+              loading={deleteLoading}
             >
               删除
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+          </Group>
+        </Stack>
+      </Modal>
+    </Stack>
   );
 }

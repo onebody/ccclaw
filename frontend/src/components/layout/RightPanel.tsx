@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   FolderOpen,
@@ -17,7 +16,6 @@ import {
   FileSpreadsheet,
   File,
 } from 'lucide-react'
-import type { Workspace } from '@/types/workspace'
 
 // ----------------------------------------------------------------
 // File tree types
@@ -35,11 +33,11 @@ interface FileNode {
 // FileBrowser - 文件浏览器
 // ----------------------------------------------------------------
 function FileBrowser({ workspacePath }: { workspacePath?: string }) {
-  const [fileTree, setFileTree] = useState<FileNode[]>([])
+  const [fileTree] = useState<FileNode[]>([])
   const [loading, setLoading] = useState(false)
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
 
-  const loadDirectory = useCallback(async (dirPath: string) => {
+  const loadDirectory = useCallback(async (_dirPath: string) => {
     if (!workspacePath) return
     setLoading(true)
     try {
@@ -348,7 +346,7 @@ function TerminalPanel({ workspacePath }: { workspacePath?: string }) {
 // ----------------------------------------------------------------
 // AgentConfig - Agent 配置面板
 // ----------------------------------------------------------------
-function AgentConfig({ taskId }: { taskId?: string }) {
+function AgentConfig() {
   const [agentId, setAgentId] = useState<string | null>(null)
   const availableAgents = [
     { id: 'agent-1', name: '代码助手', description: '代码编写与重构' },
@@ -456,7 +454,7 @@ export function RightPanel({ isOpen, onToggle, workspacePath, taskId }: RightPan
             </TabsContent>
 
             <TabsContent value="agent" className="flex-1 overflow-hidden mt-0">
-              <AgentConfig taskId={taskId} />
+              <AgentConfig />
             </TabsContent>
           </Tabs>
         )}

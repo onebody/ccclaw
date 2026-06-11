@@ -1,16 +1,15 @@
 import { useState } from 'react'
 import { FolderOpen } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+import { 
+  Modal, 
+  Stack, 
+  Group, 
+  Text, 
+  TextInput, 
+  Button, 
+  Divider,
+  ActionIcon,
+} from '@mantine/core'
 import type { WorkspaceCreateInput, WorkspaceColor } from '@/types/workspace'
 
 interface CreateWorkspaceDialogProps {
@@ -30,17 +29,6 @@ const COLOR_LABELS: Record<WorkspaceColor, string> = {
   cyan: '青色',
   orange: '橙色',
   gray: '灰色',
-}
-
-const COLOR_HEX: Record<WorkspaceColor, string> = {
-  blue: '#1f6feb',
-  green: '#238636',
-  purple: '#8957e5',
-  red: '#da3633',
-  yellow: '#d29922',
-  cyan: '#58a6ff',
-  orange: '#db6d28',
-  gray: '#6e7681',
 }
 
 export function CreateWorkspaceDialog({ open, onOpenChange, onCreate }: CreateWorkspaceDialogProps) {
@@ -91,95 +79,103 @@ export function CreateWorkspaceDialog({ open, onOpenChange, onCreate }: CreateWo
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FolderOpen className="h-5 w-5" />
-            新建工作空间
-          </DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <Modal 
+      opened={open} 
+      onClose={() => handleOpenChange(false)} 
+      title={
+        <Group gap="sm">
+          <FolderOpen size={20} />
+          <Text size="lg" fw={600}>新建工作空间</Text>
+        </Group>
+      }
+      size="md"
+    >
+      <form onSubmit={handleSubmit}>
+        <Stack gap="md">
           {/* Name */}
-          <div className="space-y-1.5">
-            <Label htmlFor="ws-name">工作空间名称</Label>
-            <Input
-              id="ws-name"
-              placeholder="例如：ccclaw 开发"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              autoFocus
-            />
-          </div>
+          <TextInput
+            label="工作空间名称"
+            placeholder="例如：ccclaw 开发"
+            value={name}
+            onChange={(e) => setName(e.currentTarget.value)}
+            required
+          />
 
           {/* Path */}
-          <div className="space-y-1.5">
-            <Label htmlFor="ws-rootPath">本地目录</Label>
-            <div className="flex gap-2">
-              <Input
-                id="ws-rootPath"
+          <div>
+            <Text size="sm" fw={500} mb="xs">本地目录</Text>
+            <Group gap="sm" align="flex-start">
+              <TextInput
                 placeholder="选择或输入本地目录路径"
                 value={rootPath}
-                onChange={e => setRootPath(e.target.value)}
-                className="flex-1"
+                onChange={(e) => setRootPath(e.currentTarget.value)}
+                style={{ flex: 1 }}
               />
-              <Button type="button" variant="outline" onClick={handleBrowse}>
+              <Button 
+                variant="outline" 
+                onClick={handleBrowse}
+                style={{ flexShrink: 0 }}
+              >
                 浏览
               </Button>
-            </div>
-            <p className="text-xs text-muted-foreground">
+            </Group>
+            <Text size="xs" c="dimmed" mt="xs">
               工作空间将关联此目录，所有文件操作和 Git 变更都在该目录下执行。
-            </p>
+            </Text>
           </div>
 
           {/* Description */}
-          <div className="space-y-1.5">
-            <Label htmlFor="ws-desc">描述（可选）</Label>
-            <Input
-              id="ws-desc"
-              placeholder="简短描述此工作空间的用途"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-            />
-          </div>
+          <TextInput
+            label="描述（可选）"
+            placeholder="简短描述此工作空间的用途"
+            value={description}
+            onChange={(e) => setDescription(e.currentTarget.value)}
+          />
 
           {/* Color */}
-          <div className="space-y-1.5">
-            <Label>颜色标识</Label>
-            <div className="flex gap-2 flex-wrap">
+          <div>
+            <Text size="sm" fw={500} mb="xs">颜色标识</Text>
+            <Group gap="sm">
               {PRESET_COLORS.map(c => (
-                <button
+                <ActionIcon
                   key={c}
-                  type="button"
-                  className="h-8 w-8 rounded-full border-2 transition-transform hover:scale-110 focus:outline-none"
-                  style={{
-                    backgroundColor: COLOR_HEX[c],
-                    borderColor: color === c ? COLOR_HEX[c] : 'transparent',
-                  }}
+                  size="lg"
+                  radius="xl"
+                  variant={color === c ? 'filled' : 'subtle'}
+                  color={c}
                   onClick={() => setColor(c)}
                   title={COLOR_LABELS[c]}
-                />
+                >
+                  {COLOR_LABELS[c][0]}
+                </ActionIcon>
               ))}
-            </div>
+            </Group>
           </div>
 
           {error && (
-            <p className="text-sm text-destructive">{error}</p>
+            <Text size="sm" c="red">
+              {error}
+            </Text>
           )}
 
-          <Separator />
+          <Divider />
 
-          <DialogFooter className="gap-2">
-            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
+          <Group justify="flex-end" gap="sm">
+            <Button 
+              variant="outline" 
+              onClick={() => handleOpenChange(false)}
+            >
               取消
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button 
+              type="submit" 
+              loading={loading}
+            >
               {loading ? '创建中...' : '创建'}
             </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          </Group>
+        </Stack>
+      </form>
+    </Modal>
   )
 }

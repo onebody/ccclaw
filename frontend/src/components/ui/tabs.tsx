@@ -1,4 +1,6 @@
-import { useState, useCallback, ReactNode, ReactElement } from 'react'
+import { useState, useCallback } from 'react'
+import type { ReactNode } from 'react'
+import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 // ----------------------------------------------------------------
