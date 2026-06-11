@@ -22,12 +22,18 @@ import {
   GitBranch,
   RefreshCw,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Button,
+  Badge,
+  Textarea,
+  ScrollArea,
+  Group,
+  Text,
+  Stack,
+  ActionIcon,
+  Divider,
+  Tabs,
+} from '@mantine/core'
 import { useTasks } from '@/hooks/useTask'
 import { useSessions, useMessages } from '@/hooks/useSession'
 import { useWorkspaces } from '@/hooks/useWorkspace'
@@ -38,10 +44,10 @@ import { FileChangesTab } from '@/components/workspace/FileChangesTab'
 import { LogsTab } from '@/components/workspace/LogsTab'
 
 const PRIORITY_LABEL: Record<string, { label: string; color: string }> = {
-  urgent: { label: '紧急', color: 'text-red-500 bg-red-500/10' },
-  high: { label: '高', color: 'text-orange-500 bg-orange-500/10' },
-  normal: { label: '普通', color: 'text-blue-500 bg-blue-500/10' },
-  low: { label: '低', color: 'text-muted-foreground bg-muted' },
+  urgent: { label: '紧急', color: 'red' },
+  high: { label: '高', color: 'orange' },
+  normal: { label: '普通', color: 'blue' },
+  low: { label: '低', color: 'gray' },
 }
 
 type Tab = 'sessions' | 'files' | 'artifacts' | 'logs' | 'details'
@@ -51,64 +57,84 @@ type Tab = 'sessions' | 'files' | 'artifacts' | 'logs' | 'details'
 // ----------------------------------------------------------------
 function MessageBubble({ msg }: { msg: ChatMessage }) {
   const senderIcon = {
-    user: <User className="h-3.5 w-3.5 text-blue-500" />,
-    ai: <Bot className="h-3.5 w-3.5 text-green-500" />,
-    system: <Cog className="h-3.5 w-3.5 text-muted-foreground" />,
+    user: <User size={14} style={{ color: 'var(--mantine-color-blue-5)' }} />,
+    ai: <Bot size={14} style={{ color: 'var(--mantine-color-green-5)' }} />,
+    system: <Cog size={14} style={{ color: 'var(--mantine-color-dimmed)' }} />,
   }
 
   const senderLabel = { user: '我', ai: 'AI', system: '系统' }
 
   return (
-    <div className="flex gap-3 px-4 py-2 hover:bg-accent/30 transition-colors">
+    <Group gap="md" px="md" py="xs" style={{ '&:hover': { backgroundColor: 'var(--mantine-color-gray-0)' } }}>
       {/* Avatar */}
-      <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-full bg-accent flex items-center justify-center">
+      <div style={{
+        flexShrink: 0,
+        width: 28,
+        height: 28,
+        borderRadius: '50%',
+        backgroundColor: 'var(--mantine-color-gray-1)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
         {senderIcon[msg.sender]}
       </div>
 
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-medium text-foreground">
-            {senderLabel[msg.sender]}
-          </span>
-          <span className="text-xs text-muted-foreground">
+      <Stack gap={4} style={{ flex: 1, minWidth: 0 }}>
+        <Group gap="sm">
+          <Text size="xs" fw={500}>{senderLabel[msg.sender]}</Text>
+          <Text size="xs" c="dimmed">
             {new Date(msg.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
-          </span>
+          </Text>
           {msg.source && (
-            <span className="text-xs text-muted-foreground">via {msg.source}</span>
+            <Text size="xs" c="dimmed">via {msg.source}</Text>
           )}
-        </div>
+        </Group>
 
         {/* Content */}
-        <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+        <Text size="sm" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', lineHeight: 1.6 }}>
           {msg.content}
-        </div>
+        </Text>
 
         {/* Code blocks */}
         {msg.codeBlocks.length > 0 && (
-          <div className="mt-2 space-y-2">
+          <Stack gap="xs" mt="xs">
             {msg.codeBlocks.map((block, i) => (
-              <pre key={i} className="bg-muted rounded-md p-3 text-xs overflow-x-auto">
-                <code className={block.language ? `language-${block.language}` : ''}>
+              <pre key={i} style={{
+                backgroundColor: 'var(--mantine-color-gray-1)',
+                borderRadius: 6,
+                padding: 12,
+                fontSize: 12,
+                overflowX: 'auto',
+              }}>
+                <code data-language={block.language || undefined}>
                   {block.code}
                 </code>
               </pre>
             ))}
-          </div>
+          </Stack>
         )}
 
         {/* Attachments */}
         {msg.attachments.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2">
+          <Group gap="xs" mt="xs">
             {msg.attachments.map((att, i) => (
-              <div key={i} className="flex items-center gap-1.5 text-xs bg-accent rounded px-2 py-1">
-                <FileBox className="h-3.5 w-3.5" />
-                <span className="truncate max-w-[120px]">{att.name}</span>
-              </div>
+              <Group key={i} gap="xs" style={{
+                fontSize: 12,
+                backgroundColor: 'var(--mantine-color-gray-1)',
+                borderRadius: 4,
+                padding: '2px 8px',
+              }}>
+                <FileBox size={14} />
+                <Text size="xs" style={{ maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {att.name}
+                </Text>
+              </Group>
             ))}
-          </div>
+          </Group>
         )}
-      </div>
-    </div>
+      </Stack>
+    </Group>
   )
 }
 
@@ -184,139 +210,148 @@ function SessionTab({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <Stack h="100%" gap={0}>
       {/* Session tabs bar */}
-      <div className="flex items-center gap-1 px-2 py-1.5 border-b bg-sidebar flex-shrink-0 overflow-x-auto">
+      <Group gap="xs" px="xs" py="xs" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)', backgroundColor: 'var(--mantine-color-gray-0)', flexShrink: 0, overflowX: 'auto' }}>
         {sessions.map(s => (
-          <button
+          <Button
             key={s.id}
+            variant={s.id === activeSessionId ? 'light' : 'subtle'}
+            size="compact-xs"
             onClick={() => setActiveSessionId(s.id)}
-            className={cn(
-              'flex items-center gap-1 px-2.5 py-1 rounded-md text-xs whitespace-nowrap transition-colors',
-              s.id === activeSessionId
-                ? 'bg-accent text-accent-foreground font-medium'
-                : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
-            )}
+            leftSection={<MessageSquare size={12} />}
           >
-            <MessageSquare className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate max-w-[100px]">{s.title}</span>
+            <span style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {s.title}
+            </span>
             {s.messageCount > 0 && (
-              <Badge variant="outline" className="ml-1 text-[10px] px-1 py-0 h-4">
+              <Badge size="xs" variant="outline" ml={4}>
                 {s.messageCount}
               </Badge>
             )}
-          </button>
+          </Button>
         ))}
 
-        <button
+        <ActionIcon
+          size="xs"
+          variant="subtle"
           onClick={handleAddSession}
           disabled={addingSession}
-          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:bg-accent/50 hover:text-foreground transition-colors disabled:opacity-50"
           title="新建会话"
         >
-          <Plus className="h-3 w-3" />
-        </button>
-      </div>
+          <Plus size={12} />
+        </ActionIcon>
+      </Group>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-hidden flex flex-col">
+      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {activeSession ? (
           <>
-            <ScrollArea className="flex-1" ref={scrollRef}>
-              <div className="py-2">
+            <ScrollArea style={{ flex: 1 }} ref={scrollRef}>
+              <Stack gap={0} py="xs">
                 {messages.length === 0 && !streamingContent ? (
-                  <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
-                    <MessageSquare className="h-8 w-8 mb-2 opacity-30" />
-                    <p className="text-sm">还没有消息</p>
-                    <p className="text-xs mt-1">发送消息开始对话</p>
-                  </div>
+                  <Stack align="center" justify="center" style={{ height: 192 }} c="dimmed">
+                    <MessageSquare size={32} style={{ opacity: 0.3 }} />
+                    <Text size="sm">还没有消息</Text>
+                    <Text size="xs">发送消息开始对话</Text>
+                  </Stack>
                 ) : (
                   <>
                     {messages.map(msg => (
                       <MessageBubble key={msg.id} msg={msg} />
                     ))}
-                    {/* AI 流式回复预览 */}
+                    {/* AI streaming preview */}
                     {streamingContent && (
-                      <div className="flex gap-3 px-4 py-2">
-                        <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-full bg-accent flex items-center justify-center">
-                          <Bot className="h-3.5 w-3.5 text-green-500" />
+                      <Group gap="md" px="md" py="xs">
+                        <div style={{
+                          flexShrink: 0,
+                          width: 28,
+                          height: 28,
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--mantine-color-gray-1)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <Bot size={14} style={{ color: 'var(--mantine-color-green-5)' }} />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-medium text-foreground">AI</span>
-                            <span className="text-xs text-muted-foreground">思考中</span>
-                            <span className="inline-block w-1.5 h-4 bg-foreground/60 animate-pulse rounded-sm" />
-                          </div>
-                          <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+                        <Stack gap={4} style={{ flex: 1, minWidth: 0 }}>
+                          <Group gap="sm">
+                            <Text size="xs" fw={500}>AI</Text>
+                            <Text size="xs" c="dimmed">思考中</Text>
+                          </Group>
+                          <Text size="sm" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', lineHeight: 1.6 }}>
                             {streamingContent}
-                          </div>
-                        </div>
-                      </div>
+                          </Text>
+                        </Stack>
+                      </Group>
                     )}
-                    {/* 等待 AI 首 token */}
+                    {/* Waiting for first token */}
                     {isStreaming && !streamingContent && (
-                      <div className="flex gap-3 px-4 py-2">
-                        <div className="flex-shrink-0 mt-0.5 w-7 h-7 rounded-full bg-accent flex items-center justify-center">
-                          <Bot className="h-3.5 w-3.5 text-green-500" />
+                      <Group gap="md" px="md" py="xs">
+                        <div style={{
+                          flexShrink: 0,
+                          width: 28,
+                          height: 28,
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--mantine-color-gray-1)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <Bot size={14} style={{ color: 'var(--mantine-color-green-5)' }} />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-medium text-foreground">AI</span>
-                            <span className="text-xs text-muted-foreground">思考中</span>
-                            <span className="flex gap-0.5">
-                              <span className="w-1 h-1 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:0ms]" />
-                              <span className="w-1 h-1 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:150ms]" />
-                              <span className="w-1 h-1 rounded-full bg-muted-foreground/40 animate-bounce [animation-delay:300ms]" />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+                        <Group gap="sm">
+                          <Text size="xs" fw={500}>AI</Text>
+                          <Text size="xs" c="dimmed">思考中...</Text>
+                        </Group>
+                      </Group>
                     )}
                   </>
                 )}
-              </div>
+              </Stack>
             </ScrollArea>
 
             {/* Input bar */}
-            <div className="flex-shrink-0 border-t p-3 bg-sidebar">
-              <div className="flex gap-2 items-end">
+            <div style={{ flexShrink: 0, borderTop: '1px solid var(--mantine-color-gray-3)', padding: 12, backgroundColor: 'var(--mantine-color-gray-0)' }}>
+              <Group gap="sm" align="flex-end">
                 <Textarea
                   value={input}
-                  onChange={e => setInput(e.target.value)}
+                  onChange={(e) => setInput(e.currentTarget.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="输入消息... (Enter 发送，Shift+Enter 换行)"
                   rows={2}
-                  className="flex-1 resize-none text-sm"
+                  style={{ flex: 1 }}
                 />
-                <Button
-                  size="icon"
+                <ActionIcon
+                  size="lg"
+                  variant="filled"
                   onClick={handleSend}
                   disabled={!input.trim() || sending}
-                  className="flex-shrink-0 h-auto"
                 >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
+                  <Send size={16} />
+                </ActionIcon>
+              </Group>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
-            <MessageSquare className="h-8 w-8 mb-2 opacity-30" />
-            <p className="text-sm">暂无会话</p>
+          <Stack align="center" justify="center" style={{ flex: 1 }} c="dimmed">
+            <MessageSquare size={32} style={{ opacity: 0.3 }} />
+            <Text size="sm">暂无会话</Text>
             <Button
               variant="outline"
-              size="sm"
-              className="mt-3"
+              size="compact-sm"
+              mt="sm"
               onClick={handleAddSession}
               disabled={addingSession}
+              leftSection={<Plus size={14} />}
             >
-              <Plus className="h-4 w-4 mr-1" />
               新建会话
             </Button>
-          </div>
+          </Stack>
         )}
       </div>
-    </div>
+    </Stack>
   )
 }
 
@@ -349,111 +384,108 @@ function ArtifactsTab({ taskId, workspacePath }: { taskId: string; workspacePath
 
   const handlePreview = (artifact: any) => {
     if (!artifact.path) return
-    // 使用 Electron 的 shell 模块打开文件
     if ((window as any).api?.openFile) {
       (window as any).api.openFile(artifact.path)
     } else {
-      // 降级方案：在新窗口中显示文件内容
       alert(`预览功能即将推出\n文件路径: ${artifact.path}`)
     }
   }
 
   const handleDownload = (artifact: any) => {
     if (!artifact.path) return
-    // 使用 Electron 的 dialog 模块保存文件
     if ((window as any).api?.saveFile) {
       (window as any).api.saveFile(artifact.path)
     } else {
-      // 降级方案：提示用户
       alert(`下载功能即将推出\n文件路径: ${artifact.path}`)
     }
   }
 
   const getChangeTypeBadge = (type?: string) => {
     if (!type) return null
-    const config = {
-      added: { label: '新增', class: 'bg-green-500/10 text-green-600 border-green-500/20' },
-      modified: { label: '修改', class: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
-      deleted: { label: '删除', class: 'bg-red-500/10 text-red-600 border-red-500/20' },
+    const config: Record<string, { label: string; color: string }> = {
+      added: { label: '新增', color: 'green' },
+      modified: { label: '修改', color: 'blue' },
+      deleted: { label: '删除', color: 'red' },
     }
-    const c = config[type as keyof typeof config]
+    const c = config[type]
     if (!c) return null
-    return (
-      <Badge variant="outline" className={cn('text-xs', c.class)}>
-        {c.label}
-      </Badge>
-    )
+    return <Badge size="xs" color={c.color} variant="light">{c.label}</Badge>
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full text-muted-foreground">
-        <RefreshCw className="h-5 w-5 animate-spin mr-2" />
-        加载中...
-      </div>
+      <Group justify="center" h="100%" c="dimmed">
+        <RefreshCw size={20} style={scanning ? { animation: 'spin 1s linear infinite' } : undefined} />
+        <Text size="sm">加载中...</Text>
+      </Group>
     )
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-destructive">
-        <XCircle className="h-8 w-8 mb-2" />
-        <p className="text-sm">{error}</p>
-      </div>
+      <Stack align="center" justify="center" h="100%" c="red">
+        <XCircle size={32} />
+        <Text size="sm">{error}</Text>
+      </Stack>
     )
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <Stack h="100%" gap={0}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-medium">制品列表</h3>
+      <Group justify="space-between" px="md" py="sm" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+        <Group gap="sm">
+          <Text size="sm" fw={500}>制品列表</Text>
           {artifacts.length > 0 && (
-            <Badge variant="secondary" className="text-xs">
-              {artifacts.length}
-            </Badge>
+            <Badge size="xs" variant="light">{artifacts.length}</Badge>
           )}
-        </div>
-        <div className="flex items-center gap-2">
+        </Group>
+        <Group gap="sm">
           {scanResult && (
-            <span className={cn(
-              'text-xs',
-              scanResult.includes('错误') ? 'text-destructive' : 'text-green-600'
-            )}>
+            <Text size="xs" c={scanResult.includes('错误') ? 'red' : 'green'}>
               {scanResult}
-            </span>
+            </Text>
           )}
           <Button
             variant="outline"
-            size="sm"
+            size="compact-sm"
             onClick={handleScanChanges}
             disabled={scanning || !workspacePath}
-            className="gap-1.5"
+            leftSection={<GitBranch size={16} style={scanning ? { animation: 'spin 1s linear infinite' } : undefined} />}
           >
-            <GitBranch className={cn('h-4 w-4', scanning && 'animate-spin')} />
             {scanning ? '扫描中...' : '扫描变更'}
           </Button>
-        </div>
-      </div>
+        </Group>
+      </Group>
 
       {/* Artifacts list */}
-      <ScrollArea className="flex-1">
+      <ScrollArea style={{ flex: 1 }}>
         {artifacts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
-            <FileBox className="h-8 w-8 mb-2 opacity-30" />
-            <p className="text-sm">暂无制品</p>
-            <p className="text-xs mt-1">点击"扫描变更"检测文件变更</p>
-          </div>
+          <Stack align="center" justify="center" style={{ height: 192 }} c="dimmed">
+            <FileBox size={32} style={{ opacity: 0.3 }} />
+            <Text size="sm">暂无制品</Text>
+            <Text size="xs">点击"扫描变更"检测文件变更</Text>
+          </Stack>
         ) : (
-          <div className="p-4 space-y-2">
+          <Stack gap="sm" p="md">
             {artifacts.map(a => (
-              <div
-                key={a.id}
-                className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent/30 transition-colors"
-              >
+              <Group key={a.id} gap="md" p="md" style={{
+                borderRadius: 8,
+                border: '1px solid var(--mantine-color-gray-3)',
+                '&:hover': { backgroundColor: 'var(--mantine-color-gray-0)' },
+              }}>
                 {/* File icon */}
-                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent/50 flex items-center justify-center text-lg">
+                <div style={{
+                  flexShrink: 0,
+                  width: 40,
+                  height: 40,
+                  borderRadius: 8,
+                  backgroundColor: 'var(--mantine-color-gray-1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 18,
+                }}>
                   {a.type === 'screenshot' ? '🖼️' :
                    a.type === 'code' ? '📄' :
                    a.type === 'report' ? '📊' :
@@ -461,58 +493,42 @@ function ArtifactsTab({ taskId, workspacePath }: { taskId: string; workspacePath
                 </div>
 
                 {/* File info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium truncate">{a.name}</p>
+                <Stack gap={4} style={{ flex: 1, minWidth: 0 }}>
+                  <Group gap="sm">
+                    <Text size="sm" fw={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {a.name}
+                    </Text>
                     {getChangeTypeBadge(a.gitChangeType)}
-                  </div>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-muted-foreground">
-                      {formatFileSize(a.size)}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(a.createdAt).toLocaleString('zh-CN')}
-                    </span>
-                    {a.isNew && (
-                      <Badge variant="secondary" className="text-xs">新文件</Badge>
-                    )}
-                  </div>
+                  </Group>
+                  <Group gap="md">
+                    <Text size="xs" c="dimmed">{formatFileSize(a.size)}</Text>
+                    <Text size="xs" c="dimmed">{new Date(a.createdAt).toLocaleString('zh-CN')}</Text>
+                    {a.isNew && <Badge size="xs" variant="light">新文件</Badge>}
+                  </Group>
                   {a.description && (
-                    <p className="text-xs text-muted-foreground mt-1 truncate">{a.description}</p>
+                    <Text size="xs" c="dimmed" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {a.description}
+                    </Text>
                   )}
-                </div>
+                </Stack>
 
                 {/* Actions */}
-                <div className="flex items-center gap-1 flex-shrink-0">
-                  {a.path && (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handlePreview(a)}
-                        title="预览"
-                        className="h-8 w-8"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDownload(a)}
-                        title="下载"
-                        className="h-8 w-8"
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
+                {a.path && (
+                  <Group gap="xs" style={{ flexShrink: 0 }}>
+                    <ActionIcon variant="subtle" size="sm" onClick={() => handlePreview(a)} title="预览">
+                      <Eye size={16} />
+                    </ActionIcon>
+                    <ActionIcon variant="subtle" size="sm" onClick={() => handleDownload(a)} title="下载">
+                      <Download size={16} />
+                    </ActionIcon>
+                  </Group>
+                )}
+              </Group>
             ))}
-          </div>
+          </Stack>
         )}
       </ScrollArea>
-    </div>
+    </Stack>
   )
 }
 
@@ -536,13 +552,17 @@ function DetailsTab({ task, workspaceName }: { task: Task; workspaceName?: strin
   const rows: { label: string; value: React.ReactNode }[] = [
     { label: '任务标题', value: task.title },
     { label: '工作空间', value: workspaceName ?? task.workspaceId },
-    { label: '状态', value: <span className="flex items-center gap-1.5">
-      <span className={cn('h-2 w-2 rounded-full', `bg-${STATUS_CONFIG[task.status]?.color}-500`)} />
-      {STATUS_CONFIG[task.status]?.label ?? task.status}
-    </span> },
-    { label: '优先级', value: <span className={cn('text-xs px-1.5 py-0.5 rounded', PRIORITY_LABEL[task.priority]?.color)}>
-      {PRIORITY_LABEL[task.priority]?.label ?? task.priority}
-    </span> },
+    { label: '状态', value: (
+      <Group gap="xs">
+        <Badge size="xs" color={STATUS_CONFIG[task.status]?.color} variant="filled" circle />
+        <Text size="sm">{STATUS_CONFIG[task.status]?.label ?? task.status}</Text>
+      </Group>
+    )},
+    { label: '优先级', value: (
+      <Badge size="xs" color={PRIORITY_LABEL[task.priority]?.color} variant="light">
+        {PRIORITY_LABEL[task.priority]?.label ?? task.priority}
+      </Badge>
+    )},
     { label: '创建时间', value: formatDate(task.createdAt) },
     { label: '开始时间', value: formatDate(task.startedAt) },
     { label: '结束时间', value: formatDate(task.finishedAt) },
@@ -553,15 +573,15 @@ function DetailsTab({ task, workspaceName }: { task: Task; workspaceName?: strin
   ]
 
   return (
-    <ScrollArea className="h-full">
-      <div className="p-4 space-y-3">
+    <ScrollArea h="100%">
+      <Stack gap="sm" p="md">
         {rows.map(row => (
-          <div key={row.label} className="flex gap-4">
-            <span className="text-xs text-muted-foreground w-20 flex-shrink-0 pt-0.5">{row.label}</span>
-            <span className="text-sm text-foreground flex-1">{row.value}</span>
-          </div>
+          <Group key={row.label} gap="md">
+            <Text size="xs" c="dimmed" style={{ width: 80, flexShrink: 0 }}>{row.label}</Text>
+            <Text size="sm" style={{ flex: 1 }}>{row.value}</Text>
+          </Group>
         ))}
-      </div>
+      </Stack>
     </ScrollArea>
   )
 }
@@ -599,9 +619,7 @@ export function TaskDetailPage() {
   // Load task if not in local state
   useEffect(() => {
     if (!task && taskId) {
-      // Try to fetch from API
       ;(window as any).api.taskGet(taskId).then(() => {
-        // Task loaded via useTasks refetch
       }).catch(() => {}).finally(() => setLoading(false))
     } else {
       setLoading(false)
@@ -631,119 +649,106 @@ export function TaskDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full text-muted-foreground">
-        <Clock className="h-5 w-5 animate-spin mr-2" />
-        加载中...
-      </div>
+      <Group justify="center" h="100%" c="dimmed">
+        <Clock size={20} style={{ animation: 'spin 1s linear infinite' }} />
+        <Text size="sm">加载中...</Text>
+      </Group>
     )
   }
 
   if (!task) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-3">
-        <XCircle className="h-10 w-10 opacity-30" />
-        <p className="text-lg font-medium">任务不存在</p>
+      <Stack align="center" justify="center" h="100%" c="dimmed" gap="md">
+        <XCircle size={40} style={{ opacity: 0.3 }} />
+        <Text size="lg" fw={500}>任务不存在</Text>
         <Button variant="outline" onClick={() => navigate(-1)}>
           返回
         </Button>
-      </div>
+      </Stack>
     )
   }
 
   const statusConfig = STATUS_CONFIG[task.status]
 
   return (
-    <div className="flex flex-col h-full">
+    <Stack h="100%" gap={0}>
       {/* Header */}
-      <div className="flex-shrink-0 border-b bg-sidebar">
-        <div className="flex items-center gap-3 px-4 py-3">
+      <div style={{ flexShrink: 0, borderBottom: '1px solid var(--mantine-color-gray-3)', backgroundColor: 'var(--mantine-color-gray-0)' }}>
+        <Group gap="md" px="md" py="sm">
           {/* Back button */}
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
+          <ActionIcon variant="subtle" onClick={() => navigate(-1)} title="返回">
+            <ArrowLeft size={16} />
+          </ActionIcon>
 
-          <Separator orientation="vertical" className="h-5" />
+          <Divider orientation="vertical" />
 
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <Badge variant={statusConfig.variant as any} color={statusConfig.color} className="gap-1 text-xs flex-shrink-0">
+          <Stack gap={4} style={{ flex: 1, minWidth: 0 }}>
+            <Group gap="sm">
+              <Badge size="sm" color={statusConfig.color} variant="light">
                 {statusConfig.label}
               </Badge>
-            </div>
+            </Group>
             {workspace && (
-              <div className="flex items-center gap-1 mt-0.5">
-                <ChevronRight className="h-3 w-3 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground truncate">{workspace.name}</span>
-              </div>
+              <Group gap={4}>
+                <ChevronRight size={12} style={{ color: 'var(--mantine-color-dimmed)' }} />
+                <Text size="xs" c="dimmed" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {workspace.name}
+                </Text>
+              </Group>
             )}
-          </div>
+          </Stack>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          <Group gap="xs" style={{ flexShrink: 0 }}>
             {task.status === 'pending' && (
-              <Button size="sm" variant="default" className="gap-1.5" onClick={handleStart}>
-                <PlayCircle className="h-4 w-4" />
+              <Button size="compact-sm" variant="filled" leftSection={<PlayCircle size={16} />} onClick={handleStart}>
                 开始
               </Button>
             )}
             {task.status === 'running' && (
               <>
-                <Button size="sm" variant="outline" className="gap-1.5 text-green-600" onClick={handleComplete}>
-                  <CheckCircle2 className="h-4 w-4" />
+                <Button size="compact-sm" variant="outline" color="green" leftSection={<CheckCircle2 size={16} />} onClick={handleComplete}>
                   完成
                 </Button>
-                <Button size="sm" variant="outline" className="gap-1.5 text-red-600" onClick={handleFail}>
-                  <XCircle className="h-4 w-4" />
+                <Button size="compact-sm" variant="outline" color="red" leftSection={<XCircle size={16} />} onClick={handleFail}>
                   失败
                 </Button>
-                <Button size="sm" variant="ghost" className="gap-1.5 text-muted-foreground" onClick={handleCancel}>
-                  <X className="h-4 w-4" />
+                <Button size="compact-sm" variant="subtle" color="gray" leftSection={<X size={16} />} onClick={handleCancel}>
                   取消
                 </Button>
               </>
             )}
             {(task.status === 'completed' || task.status === 'failed' || task.status === 'cancelled') && (
-              <span className="text-xs text-muted-foreground px-2">
+              <Text size="xs" c="dimmed" px="sm">
                 已结束 · {task.finishedAt && new Date(task.finishedAt).toLocaleString('zh-CN')}
-              </span>
+              </Text>
             )}
-          </div>
-        </div>
+          </Group>
+        </Group>
 
         {/* Tab bar */}
-        <div className="flex items-center gap-1 px-4">
-          {([
-            { key: 'sessions', label: '对话', icon: MessageSquare },
-            { key: 'files', label: '文件变更', icon: File },
-            { key: 'artifacts', label: '制品', icon: FileBox },
-            { key: 'logs', label: '日志', icon: Info },
-            { key: 'details', label: '详情', icon: Info },
-          ] as { key: Tab; label: string; icon: any }[]).map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => {
-                setActiveTab(tab.key)
-                navigate(`/tasks/${task.id}/${tab.key}`)
-              }}
-              className={cn(
-                'flex items-center gap-1.5 px-3 py-2 text-sm border-b-2 transition-colors',
-                activeTab === tab.key
-                  ? 'border-blue-500 text-foreground font-medium'
-                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
-              )}
-            >
-              <tab.icon className="h-4 w-4" />
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <Tabs value={activeTab} onChange={(v) => {
+          setActiveTab(v as Tab)
+          navigate(`/tasks/${task.id}/${v}`)
+        }}>
+          <Tabs.List style={{ paddingLeft: 16 }}>
+            {([
+              { key: 'sessions' as Tab, label: '对话', icon: MessageSquare },
+              { key: 'files' as Tab, label: '文件变更', icon: File },
+              { key: 'artifacts' as Tab, label: '制品', icon: FileBox },
+              { key: 'logs' as Tab, label: '日志', icon: Info },
+              { key: 'details' as Tab, label: '详情', icon: Info },
+            ]).map(tab => (
+              <Tabs.Tab key={tab.key} value={tab.key} leftSection={<tab.icon size={16} />}>
+                {tab.label}
+              </Tabs.Tab>
+            ))}
+          </Tabs.List>
+        </Tabs>
       </div>
 
       {/* Tab content */}
-      <div className="flex-1 overflow-hidden">
+      <div style={{ flex: 1, overflow: 'hidden' }}>
         {activeTab === 'sessions' && (
           <SessionTab
             taskId={task.id}
@@ -765,6 +770,6 @@ export function TaskDetailPage() {
           <DetailsTab task={task} workspaceName={workspace?.name} />
         )}
       </div>
-    </div>
+    </Stack>
   )
 }

@@ -5,7 +5,7 @@ import { CreateWorkspaceDialog } from '@/components/workspace/CreateWorkspaceDia
 import { RightPanel } from './RightPanel'
 import { useWorkspaces, useActiveWorkspace } from '@/hooks/useWorkspace'
 import { useActiveTask } from '@/hooks/useTask'
-import { Separator } from '@/components/ui/separator'
+import { Box } from '@mantine/core'
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -20,22 +20,30 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <>
-      <div className="flex h-screen w-screen overflow-hidden bg-background">
+      <Box
+        display="flex"
+        style={{ height: '100vh', width: '100vw', overflow: 'hidden', background: 'var(--mantine-color-body)' }}
+      >
         {/* Left: Icon bar (56px) */}
         <SidebarIconBar onNewTask={() => setCreateOpen(true)} />
 
         {/* Middle: Workspace panel (280px) */}
-        <div className="w-[280px] flex-shrink-0 border-r border-border bg-sidebar overflow-hidden">
+        <Box
+          w={280}
+          style={{
+            flexShrink: 0,
+            borderRight: '1px solid var(--mantine-color-border, #373a40)',
+            background: 'var(--mantine-color-sidebar, #1a1b1e)',
+            overflow: 'hidden',
+          }}
+        >
           <WorkspacePanel />
-        </div>
-        <Separator orientation="vertical" className="h-full" />
+        </Box>
 
         {/* Main content: fills remaining space */}
-        <div className="flex-1 overflow-hidden relative">
+        <Box style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
           {children}
-        </div>
-
-        <Separator orientation="vertical" className="h-full" />
+        </Box>
 
         {/* Right: Tool panel (320px, collapsible) */}
         <RightPanel
@@ -44,7 +52,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           workspacePath={workspace?.rootPath}
           taskId={activeTask?.id}
         />
-      </div>
+      </Box>
 
       <CreateWorkspaceDialog
         open={createOpen}

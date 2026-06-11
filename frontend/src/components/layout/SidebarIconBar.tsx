@@ -1,9 +1,10 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Hexagon, Plus, MessageSquare, Users, Zap, MoreHorizontal, Settings, User } from 'lucide-react'
 import { 
   Stack, 
   ActionIcon, 
   Tooltip,
+  Box,
 } from '@mantine/core'
 
 interface IconBarProps {
@@ -18,21 +19,36 @@ const NAV_ITEMS = [
 ]
 
 export function SidebarIconBar({ onNewTask }: IconBarProps) {
+  const location = useLocation()
+
   return (
     <Stack 
       h="100%" 
       w={56} 
-      bg="sidebar" 
+      bg="var(--mantine-color-sidebar, #1a1b1e)" 
       px="xs" 
       py="md" 
       justify="space-between"
-      className="border-r border-border"
+      style={{ borderRight: '1px solid var(--mantine-color-border, #373a40)' }}
     >
       {/* Top: Logo */}
       <Stack align="center" gap="xs">
-        <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center text-white font-bold text-sm">
+        <Box
+          w={32}
+          h={32}
+          style={{
+            borderRadius: '0.75rem',
+            background: 'var(--mantine-color-blue-5, #339af0)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: '0.875rem',
+          }}
+        >
           C
-        </div>
+        </Box>
 
         {/* New task button */}
         <Tooltip label="新建任务" position="right">
@@ -41,31 +57,49 @@ export function SidebarIconBar({ onNewTask }: IconBarProps) {
             color="blue"
             variant="filled"
             onClick={onNewTask}
-            className="mb-2"
+            mb="xs"
           >
             <Plus size={18} />
           </ActionIcon>
         </Tooltip>
 
-        <div className="w-8 h-px border-t border-border my-1" />
+        <Box 
+          w={32} 
+          h={1} 
+          style={{ 
+            borderTop: '1px solid var(--mantine-color-border, #373a40)' 
+          }} 
+          my="xs" 
+        />
 
         {/* Nav items */}
-        {NAV_ITEMS.map(({ icon: Icon, label, path }) => (
-          <NavLink
-            key={path}
-            to={path}
-            className={({ isActive }) => 
-              `flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${
-                isActive 
-                  ? 'bg-accent text-accent-foreground' 
-                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-              }`
-            }
-            title={label}
-          >
-            <Icon size={20} />
-          </NavLink>
-        ))}
+        {NAV_ITEMS.map(({ icon: Icon, label, path }) => {
+          const isActive = location.pathname === path || 
+            (path !== '/' && location.pathname.startsWith(path))
+          
+          return (
+            <NavLink
+              key={path}
+              to={path}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 40,
+                height: 40,
+                borderRadius: '0.75rem',
+                transition: 'colors 0.15s',
+                background: isActive ? 'var(--mantine-color-accent, #25262b)' : 'transparent',
+                color: isActive 
+                  ? 'var(--mantine-color-accent-foreground, #c1c2c5)' 
+                  : 'var(--mantine-color-dimmed, #909296)',
+              }}
+              title={label}
+            >
+              <Icon size={20} />
+            </NavLink>
+          )
+        })}
       </Stack>
 
       {/* Bottom: More + Settings + User */}

@@ -1,8 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { RefreshCw, Download, Trash2 } from 'lucide-react'
+import { 
+  ScrollArea, 
+  Button, 
+  Group, 
+  Text, 
+  Badge, 
+  Checkbox,
+  Stack,
+} from '@mantine/core'
 import type { Task } from '@/types/workspace'
 
 // ---------------------------------------------------------------
@@ -36,11 +42,11 @@ const MOCK_LOGS: LogEntry[] = [
   { id: '11', timestamp: new Date().toISOString(), level: 'info', source: 'test', message: '[Test] ✓ 15/15 测试通过' },
 ]
 
-const LEVEL_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  info: { label: '信息', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/5' },
-  warn: { label: '警告', color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-500/5' },
-  error: { label: '错误', color: 'text-red-600 dark:text-red-400', bg: 'bg-red-500/5' },
-  debug: { label: '调试', color: 'text-muted-foreground', bg: 'bg-muted/20' },
+const LEVEL_CONFIG: Record<string, { label: string; color: string }> = {
+  info: { label: '信息', color: 'blue' },
+  warn: { label: '警告', color: 'yellow' },
+  error: { label: '错误', color: 'red' },
+  debug: { label: '调试', color: 'gray' },
 }
 
 export function LogsTab({ task }: LogsTabProps) {
@@ -108,53 +114,51 @@ export function LogsTab({ task }: LogsTabProps) {
   }, {} as Record<string, number>)
 
   return (
-    <div className="h-full flex flex-col">
+    <Stack h="100%" gap={0}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-medium">运行日志</h3>
+      <Group justify="space-between" px="md" py="sm" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+        <Group gap="sm">
+          <Text size="sm" fw={500}>运行日志</Text>
           {logs.length > 0 && (
-            <span className="text-xs text-muted-foreground">
+            <Text size="xs" c="dimmed">
               {logs.length} 条日志
-            </span>
+            </Text>
           )}
-        </div>
-        <div className="flex items-center gap-1.5">
+        </Group>
+        <Group gap="xs">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="subtle"
+            size="compact-sm"
             onClick={handleDownloadLogs}
             disabled={logs.length === 0}
-            className="h-7 px-2 gap-1"
-            title="下载日志"
+            leftSection={<Download size={14} />}
           >
-            <Download className="h-3.5 w-3.5" />
+            下载
           </Button>
           <Button
-            variant="ghost"
-            size="sm"
+            variant="subtle"
+            size="compact-sm"
+            color="red"
             onClick={handleClearLogs}
             disabled={logs.length === 0}
-            className="h-7 px-2 gap-1 text-destructive hover:text-destructive"
-            title="清空日志"
+            leftSection={<Trash2 size={14} />}
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            清空
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="compact-sm"
             onClick={loadLogs}
             disabled={loading}
-            className="h-7 px-2 gap-1"
+            leftSection={<RefreshCw size={14} className={loading ? 'animate-spin' : ''} />}
           >
-            <RefreshCw className={cn('h-3.5 w-3.5', loading && 'animate-spin')} />
             刷新
           </Button>
-        </div>
-      </div>
+        </Group>
+      </Group>
 
       {/* Filter bar */}
-      <div className="flex items-center gap-1 px-4 py-1.5 border-b bg-muted/20">
+      <Group gap="xs" px="md" py="xs" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)', backgroundColor: 'var(--mantine-color-gray-0)' }}>
         {[
           { key: 'all', label: '全部', count: logs.length },
           { key: 'info', label: '信息', count: levelCounts.info || 0 },
@@ -162,98 +166,103 @@ export function LogsTab({ task }: LogsTabProps) {
           { key: 'error', label: '错误', count: levelCounts.error || 0 },
           { key: 'debug', label: '调试', count: levelCounts.debug || 0 },
         ].map(f => (
-          <button
+          <Button
             key={f.key}
+            variant={filter === f.key ? 'filled' : 'subtle'}
+            size="compact-xs"
+            color={filter === f.key ? 'blue' : 'gray'}
             onClick={() => setFilter(f.key)}
-            className={cn(
-              'px-2 py-0.5 rounded text-xs transition-colors',
-              filter === f.key
-                ? 'bg-accent text-accent-foreground font-medium'
-                : 'text-muted-foreground hover:bg-accent/50'
-            )}
           >
             {f.label}
             {f.count > 0 && (
-              <span className={cn(
-                'ml-1 px-1 rounded-full text-[10px]',
-                f.key === 'error' && 'bg-red-500/10 text-red-600',
-                f.key === 'warn' && 'bg-yellow-500/10 text-yellow-600',
-                f.key === 'info' && 'bg-blue-500/10 text-blue-600',
-                f.key === 'debug' && 'bg-muted text-muted-foreground',
-                f.key === 'all' && 'bg-accent text-accent-foreground'
-              )}>
+              <Badge 
+                size="xs" 
+                color={f.key === 'all' ? 'blue' : LEVEL_CONFIG[f.key]?.color || 'gray'}
+                style={{ marginLeft: 4 }}
+              >
                 {f.count}
-              </span>
+              </Badge>
             )}
-          </button>
+          </Button>
         ))}
-        <div className="ml-auto flex items-center gap-1">
-          <input
-            type="checkbox"
-            id="autoscroll"
-            checked={autoScroll}
-            onChange={e => setAutoScroll(e.target.checked)}
-            className="h-3 w-3"
+        <div style={{ marginLeft: 'auto' }}>
+          <Checkbox 
+            label="自动滚动" 
+            checked={autoScroll} 
+            onChange={(e) => setAutoScroll(e.currentTarget.checked)}
+            size="xs"
           />
-          <label htmlFor="autoscroll" className="text-xs text-muted-foreground cursor-pointer">
-            自动滚动
-          </label>
         </div>
-      </div>
+      </Group>
 
       {/* Log entries */}
-      <ScrollArea className="flex-1" ref={scrollRef}>
+      <ScrollArea style={{ flex: 1 }} ref={scrollRef}>
         {filteredLogs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
-            <p className="text-sm">
+          <Stack align="center" py="xl" c="dimmed">
+            <Text size="sm">
               {loading ? '加载中...' : filter === 'all' ? '暂无日志' : `无${filter}级别日志`}
-            </p>
-          </div>
+            </Text>
+          </Stack>
         ) : (
-          <div className="font-mono text-xs">
+          <div style={{ fontFamily: 'monospace', fontSize: '12px' }}>
             {filteredLogs.map(entry => {
               const config = LEVEL_CONFIG[entry.level] || LEVEL_CONFIG.info
               return (
-                <div
-                  key={entry.id}
-                  className={cn(
-                    'flex items-start gap-2 px-4 py-0.5 hover:bg-accent/30 transition-colors',
-                    config.bg
-                  )}
+                <Group 
+                  key={entry.id} 
+                  gap="sm" 
+                  px="md" 
+                  py={2}
+                  style={{ 
+                    borderBottom: '1px solid var(--mantine-color-gray-1)',
+                    '&:hover': {
+                      backgroundColor: 'var(--mantine-color-gray-0)',
+                    }
+                  }}
                 >
                   {/* Timestamp */}
-                  <span className="text-muted-foreground/70 flex-shrink-0 w-20 text-right">
+                  <Text size="xs" c="dimmed" style={{ width: 80, textAlign: 'right', flexShrink: 0 }}>
                     {new Date(entry.timestamp).toLocaleTimeString('zh-CN', {
                       hour: '2-digit',
                       minute: '2-digit',
                       second: '2-digit',
                     })}
-                  </span>
+                  </Text>
 
                   {/* Level badge */}
-                  <span className={cn('flex-shrink-0 w-10 font-medium', config.color)}>
+                  <Badge 
+                    size="xs" 
+                    color={config.color}
+                    style={{ width: 40, flexShrink: 0 }}
+                  >
                     {config.label}
-                  </span>
+                  </Badge>
 
                   {/* Source */}
-                  <span className="flex-shrink-0 w-16 text-muted-foreground/80 truncate">
+                  <Text size="xs" c="dimmed" style={{ width: 64, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     [{entry.source}]
-                  </span>
+                  </Text>
 
                   {/* Message */}
-                  <span className={cn(
-                    'flex-1 min-w-0 break-words',
-                    entry.level === 'error' && 'text-red-600 dark:text-red-400',
-                    entry.level === 'warn' && 'text-yellow-600 dark:text-yellow-400',
-                  )}>
+                  <Text 
+                    size="xs" 
+                    style={{ 
+                      flex: 1, 
+                      overflow: 'hidden', 
+                      textOverflow: 'ellipsis',
+                      color: entry.level === 'error' ? 'var(--mantine-color-red-6)' : 
+                            entry.level === 'warn' ? 'var(--mantine-color-yellow-6)' : 
+                            'inherit',
+                    }}
+                  >
                     {entry.message}
-                  </span>
-                </div>
+                  </Text>
+                </Group>
               )
             })}
           </div>
         )}
       </ScrollArea>
-    </div>
+    </Stack>
   )
 }

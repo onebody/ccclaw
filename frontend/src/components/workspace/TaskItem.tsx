@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { PlayCircle, CheckCircle2, XCircle, Clock } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { Badge, Group, Text, ActionIcon } from '@mantine/core'
 import { useTasks } from '@/hooks/useTask'
 import type { Task } from '@/types/workspace'
-import { Group, Text, ActionIcon } from '@mantine/core'
 
 type TaskStatus = Task['status']
 
@@ -48,7 +47,11 @@ const STATUS_CONFIG: Record<TaskStatus, {
 function TaskStatusBadge({ status }: { status: Task['status'] }) {
   const config = STATUS_CONFIG[status]
   return (
-    <Badge variant={config.variant} color={config.color} className="gap-1 text-xs px-1.5 py-0">
+    <Badge 
+      variant="light" 
+      color={config.color as any}
+      size="xs"
+    >
       {config.label}
     </Badge>
   )
@@ -86,18 +89,22 @@ export function TaskItem({ task, workspaceId }: TaskItemProps) {
 
   return (
     <Group 
-      className="cursor-pointer hover:bg-accent/60" 
       onClick={handleClick}
       gap="xs"
       p="xs"
+      wrap="nowrap"
+      style={{ cursor: 'pointer' }}
+      className="task-item"
     >
       <TaskStatusBadge status={task.status} />
       
-      <Text size="sm" className="flex-1 truncate">{task.title}</Text>
+      <Text size="sm" style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {task.title}
+      </Text>
       
       <Text size="xs" c="dimmed">{formatDate(task.createdAt)}</Text>
       
-      <Group gap={4} className="opacity-0 group-hover:opacity-100">
+      <Group gap={4} className="task-item-actions">
         {task.status === 'pending' && (
           <ActionIcon 
             size="sm" 

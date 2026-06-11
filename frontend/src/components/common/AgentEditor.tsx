@@ -1,24 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { AgentConfig, AgentCreateInput, AgentStatus } from '@/types/agent';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Modal, Stack, Group, TextInput, Textarea, Select, Slider, NumberInput, Text, Button } from '@mantine/core';
 
 interface AgentEditorProps {
   open: boolean;
@@ -48,7 +30,7 @@ export function AgentEditor({
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [provider, setProvider] = useState<'openai' | 'anthropic' | 'google' | 'local'>('openai');
+  const [provider, setProvider] = useState<string | null>('openai');
   const [modelId, setModelId] = useState('');
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(4096);
@@ -97,7 +79,7 @@ export function AgentEditor({
       name,
       description,
       model: {
-        provider,
+        provider: (provider || 'openai') as 'openai' | 'anthropic' | 'google' | 'local',
         modelId,
       },
       systemPrompt,
@@ -122,115 +104,96 @@ export function AgentEditor({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{isEdit ? '编辑 Agent' : '创建 Agent'}</DialogTitle>
-          <DialogDescription>
-            {isEdit ? '修改 Agent 配置' : '创建一个新的 Agent'}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="name">名称 *</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="输入 Agent 名称"
+    <Modal
+      opened={open}
+      onClose={onCancel}
+      title={isEdit ? '编辑 Agent' : '创建 Agent'}
+      size="xl"
+    >
+      <Stack gap="md">
+        <TextInput
+          label="名称 *"
+          placeholder="输入 Agent 名称"
+          value={name}
+          onChange={(e) => setName(e.currentTarget.value)}
+          error={errors.name}
+          required
+        />
+
+        <Textarea
+          label="描述"
+          placeholder="输入 Agent 描述"
+          value={description}
+          onChange={(e) => setDescription(e.currentTarget.value)}
+          minRows={3}
+        />
+
+        <Group grow>
+          <Select
+            label="提供商 *"
+            placeholder="选择提供商"
+            data={providerOptions}
+            value={provider}
+            onChange={setProvider}
+            required
+          />
+
+          <TextInput
+            label="模型 ID *"
+            placeholder="如: gpt-4"
+            value={modelId}
+            onChange={(e) => setModelId(e.currentTarget.value)}
+            error={errors.modelId}
+            required
+          />
+        </Group>
+
+        <Textarea
+          label="系统提示词"
+          placeholder="输入系统提示词"
+          value={systemPrompt}
+          onChange={(e) => setSystemPrompt(e.currentTarget.value)}
+          minRows={4}
+        />
+
+        <Group grow align="flex-start">
+          <Stack gap={4}>
+            <Text size="sm" fw={500}>温度: {temperature}</Text>
+            <Slider
+              min={0}
+              max={2}
+              step={0.1}
+              value={temperature}
+              onChange={setTemperature}
+              marks={[
+                { value: 0, label: '0' },
+                { value: 1, label: '1' },
+                { value: 2, label: '2' },
+              ]}
             />
-            {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
-          </div>
+            {errors.temperature && (
+              <Text size="xs" c="red">{errors.temperature}</Text>
+            )}
+          </Stack>
 
-          <div className="grid gap-2">
-            <Label htmlFor="description">描述</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="输入 Agent 描述"
-              rows={3}
-            />
-          </div>
+          <NumberInput
+            label="最大 Token"
+            value={maxTokens}
+            onChange={(v) => setMaxTokens(Number(v))}
+            min={1}
+            max={128000}
+          />
+        </Group>
+      </Stack>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="provider">提供商 *</Label>
-              <Select
-                value={provider}
-                onValueChange={(v) => setProvider(v as 'openai' | 'anthropic' | 'google' | 'local')}
-              >
-                <SelectTrigger id="provider">
-                  <SelectValue placeholder="选择提供商" />
-                </SelectTrigger>
-                <SelectContent>
-                  {providerOptions.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="modelId">模型 ID *</Label>
-              <Input
-                id="modelId"
-                value={modelId}
-                onChange={(e) => setModelId(e.target.value)}
-                placeholder="如: gpt-4"
-              />
-              {errors.modelId && <p className="text-sm text-red-500">{errors.modelId}</p>}
-            </div>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="systemPrompt">系统提示词</Label>
-            <Textarea
-              id="systemPrompt"
-              value={systemPrompt}
-              onChange={(e) => setSystemPrompt(e.target.value)}
-              placeholder="输入系统提示词"
-              rows={4}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="temperature">温度: {temperature}</Label>
-              <Input
-                id="temperature"
-                type="range"
-                min={0}
-                max={2}
-                step={0.1}
-                value={temperature}
-                onChange={(e) => setTemperature(parseFloat(e.target.value))}
-              />
-              {errors.temperature && <p className="text-sm text-red-500">{errors.temperature}</p>}
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="maxTokens">最大 Token</Label>
-              <Input
-                id="maxTokens"
-                type="number"
-                value={maxTokens}
-                onChange={(e) => setMaxTokens(parseInt(e.target.value))}
-              />
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>
-            取消
-          </Button>
-          <Button onClick={handleSave}>
-            {isEdit ? '更新' : '创建'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      <Group justify="flex-end" mt="xl">
+        <Button variant="default" onClick={onCancel}>
+          取消
+        </Button>
+        <Button onClick={handleSave}>
+          {isEdit ? '更新' : '创建'}
+        </Button>
+      </Group>
+    </Modal>
   );
 }

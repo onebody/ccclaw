@@ -1,7 +1,5 @@
 import { useState, useCallback } from 'react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, Group, Text, Button, ActionIcon, Stack, TextInput } from '@mantine/core'
 import {
   FolderOpen,
   GitBranch,
@@ -42,8 +40,6 @@ function FileBrowser({ workspacePath }: { workspacePath?: string }) {
     setLoading(true)
     try {
       // TODO: 通过 IPC 调用主进程的文件系统读取
-      // const nodes = await window.api.readDirectory(dirPath)
-      // setFileTree(nodes)
     } catch (err) {
       console.error('Failed to load directory:', err)
     } finally {
@@ -65,50 +61,57 @@ function FileBrowser({ workspacePath }: { workspacePath?: string }) {
   }
 
   const getFileIcon = (name: string, isDirectory: boolean) => {
-    if (isDirectory) return <FolderOpen className="h-4 w-4 text-blue-500" />
+    if (isDirectory) return <FolderOpen size={16} style={{ color: 'var(--mantine-color-blue-5)' }} />
     
     const ext = name.split('.').pop()?.toLowerCase()
     if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext || ''))
-      return <Image className="h-4 w-4 text-green-500" />
+      return <Image size={16} style={{ color: 'var(--mantine-color-green-5)' }} />
     if (['ts', 'tsx', 'js', 'jsx', 'vue', 'svelte'].includes(ext || ''))
-      return <Code2 className="h-4 w-4 text-yellow-500" />
+      return <Code2 size={16} style={{ color: 'var(--mantine-color-yellow-5)' }} />
     if (['json', 'yaml', 'yml', 'toml'].includes(ext || ''))
-      return <FileJson className="h-4 w-4 text-orange-500" />
+      return <FileJson size={16} style={{ color: 'var(--mantine-color-orange-5)' }} />
     if (['md', 'txt', 'rst'].includes(ext || ''))
-      return <FileText className="h-4 w-4 text-gray-500" />
+      return <FileText size={16} style={{ color: 'var(--mantine-color-gray-5)' }} />
     if (['csv', 'xlsx', 'xls'].includes(ext || ''))
-      return <FileSpreadsheet className="h-4 w-4 text-emerald-500" />
-    return <File className="h-4 w-4 text-muted-foreground" />
+      return <FileSpreadsheet size={16} style={{ color: 'var(--mantine-color-teal-5)' }} />
+    return <File size={16} style={{ color: 'var(--mantine-color-dimmed)' }} />
   }
 
   const renderNode = (node: FileNode, depth: number = 0) => (
     <div key={node.path}>
-      <div
-        className={cn(
-          "flex items-center gap-2 px-2 py-1 hover:bg-accent/50 rounded cursor-pointer text-sm",
-          "transition-colors"
-        )}
-        style={{ paddingLeft: `${depth * 16 + 8}px` }}
+      <Group 
+        gap="xs" 
+        px="xs" 
+        py={4}
+        style={{ 
+          cursor: 'pointer', 
+          borderRadius: 4,
+          paddingLeft: `${depth * 16 + 8}px`,
+        }}
         onClick={() => node.isDirectory && toggleDir(node.path)}
       >
         {node.isDirectory && (
           <ChevronRight
-            className={cn(
-              "h-3.5 w-3.5 flex-shrink-0 transition-transform",
-              expandedDirs.has(node.path) && "rotate-90"
-            )}
+            size={14}
+            style={{
+              flexShrink: 0,
+              transition: 'transform 0.2s',
+              transform: expandedDirs.has(node.path) ? 'rotate(90deg)' : 'rotate(0deg)',
+            }}
           />
         )}
-        <span className="flex-shrink-0">{getFileIcon(node.name, node.isDirectory)}</span>
-        <span className="truncate">{node.name}</span>
+        <div style={{ flexShrink: 0 }}>{getFileIcon(node.name, node.isDirectory)}</div>
+        <Text size="sm" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+          {node.name}
+        </Text>
         {!node.isDirectory && node.size !== undefined && (
-          <span className="ml-auto text-xs text-muted-foreground flex-shrink-0">
+          <Text size="xs" c="dimmed" style={{ flexShrink: 0, marginLeft: 'auto' }}>
             {node.size < 1024 ? `${node.size}B` :
              node.size < 1024 * 1024 ? `${(node.size / 1024).toFixed(1)}KB` :
              `${(node.size / (1024 * 1024)).toFixed(1)}MB`}
-          </span>
+          </Text>
         )}
-      </div>
+      </Group>
       {node.isDirectory && expandedDirs.has(node.path) && node.children?.map(child =>
         renderNode(child, depth + 1)
       )}
@@ -117,43 +120,42 @@ function FileBrowser({ workspacePath }: { workspacePath?: string }) {
 
   if (!workspacePath) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-4">
-        <FolderOpen className="h-8 w-8 mb-2 opacity-30" />
-        <p className="text-sm">未选择工作空间</p>
-      </div>
+      <Stack align="center" justify="center" h="100%" c="dimmed" p="md">
+        <FolderOpen size={32} style={{ opacity: 0.3 }} />
+        <Text size="sm">未选择工作空间</Text>
+      </Stack>
     )
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="px-3 py-2 border-b">
-        <h4 className="text-sm font-medium">文件浏览器</h4>
-        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+    <Stack h="100%" gap={0}>
+      <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+        <Text size="sm" fw={500}>文件浏览器</Text>
+        <Text size="xs" c="dimmed" mt={2} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {workspacePath}
-        </p>
+        </Text>
       </div>
-      <div className="flex-1 overflow-auto">
+      <div style={{ flex: 1, overflow: 'auto' }}>
         {loading ? (
-          <div className="flex items-center justify-center p-4">
-            <span className="text-sm text-muted-foreground">加载中...</span>
-          </div>
+          <Group justify="center" p="md">
+            <Text size="sm" c="dimmed">加载中...</Text>
+          </Group>
         ) : fileTree.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-8 text-muted-foreground">
-            <p className="text-sm">暂无文件</p>
+          <Stack align="center" p="xl" c="dimmed">
+            <Text size="sm">暂无文件</Text>
             <Button
-              variant="ghost"
-              size="sm"
-              className="mt-2"
+              variant="subtle"
+              size="compact-sm"
               onClick={() => loadDirectory(workspacePath)}
             >
               加载文件树
             </Button>
-          </div>
+          </Stack>
         ) : (
-          <div className="py-1">{fileTree.map(node => renderNode(node))}</div>
+          <div style={{ padding: 4 }}>{fileTree.map(node => renderNode(node))}</div>
         )}
       </div>
-    </div>
+    </Stack>
   )
 }
 
@@ -189,80 +191,81 @@ function GitPanel({ workspacePath, taskId }: { workspacePath?: string; taskId?: 
 
   if (!workspacePath) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-4">
-        <GitBranch className="h-8 w-8 mb-2 opacity-30" />
-        <p className="text-sm">未选择工作空间</p>
-      </div>
+      <Stack align="center" justify="center" h="100%" c="dimmed" p="md">
+        <GitBranch size={32} style={{ opacity: 0.3 }} />
+        <Text size="sm">未选择工作空间</Text>
+      </Stack>
     )
   }
 
-  const renderFileList = (title: string, files: string[], colorClass: string) => {
+  const renderFileList = (title: string, files: string[], color: string) => {
     if (!files || files.length === 0) return null
     return (
-      <div className="mb-3">
-        <h5 className={cn("text-xs font-medium mb-1", colorClass)}>{title} ({files.length})</h5>
-        <div className="space-y-0.5">
-          {files.map(f => (
-            <div key={f} className="text-xs px-2 py-0.5 rounded hover:bg-accent/50 cursor-pointer truncate">
-              {f}
-            </div>
-          ))}
-        </div>
-      </div>
+      <Stack gap="xs" mb="sm">
+        <Text size="xs" fw={500} c={color}>{title} ({files.length})</Text>
+        {files.map(f => (
+          <Text 
+            key={f} 
+            size="xs" 
+            px="xs" 
+            py={2} 
+            style={{ borderRadius: 4, cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          >
+            {f}
+          </Text>
+        ))}
+      </Stack>
     )
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="px-3 py-2 border-b flex items-center justify-between">
-        <h4 className="text-sm font-medium">Git 面板</h4>
+    <Stack h="100%" gap={0}>
+      <Group justify="space-between" px="md" py="xs" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+        <Text size="sm" fw={500}>Git 面板</Text>
         <Button
-          variant="ghost"
-          size="sm"
+          variant="subtle"
+          size="compact-sm"
           onClick={loadGitStatus}
           disabled={loading}
-          className="h-7 px-2"
         >
           {loading ? '加载中...' : '刷新'}
         </Button>
-      </div>
-      <div className="flex-1 overflow-auto p-3">
+      </Group>
+      <div style={{ flex: 1, overflow: 'auto', padding: 12 }}>
         {gitStatus ? (
           <>
-            {renderFileList('已修改', gitStatus.modified || [], 'text-yellow-600')}
-            {renderFileList('新建', gitStatus.created || [], 'text-green-600')}
-            {renderFileList('已删除', gitStatus.deleted || [], 'text-red-600')}
-            {renderFileList('冲突', gitStatus.conflicted || [], 'text-orange-600')}
+            {renderFileList('已修改', gitStatus.modified || [], 'yellow')}
+            {renderFileList('新建', gitStatus.created || [], 'green')}
+            {renderFileList('已删除', gitStatus.deleted || [], 'red')}
+            {renderFileList('冲突', gitStatus.conflicted || [], 'orange')}
             {gitStatus.renamed && gitStatus.renamed.length > 0 && (
-              <div className="mb-3">
-                <h5 className="text-xs font-medium mb-1 text-blue-600">
-                  重命名 ({gitStatus.renamed.length})
-                </h5>
+              <Stack gap="xs" mb="sm">
+                <Text size="xs" fw={500} c="blue">重命名 ({gitStatus.renamed.length})</Text>
                 {gitStatus.renamed.map(r => (
-                  <div key={r.from} className="text-xs px-2 py-0.5 rounded hover:bg-accent/50">
+                  <Text key={r.from} size="xs" px="xs" py={2} style={{ borderRadius: 4 }}>
                     {r.from} → {r.to}
-                  </div>
+                  </Text>
                 ))}
-              </div>
+              </Stack>
             )}
             {!gitStatus.modified?.length &&
              !gitStatus.created?.length &&
              !gitStatus.deleted?.length &&
              !gitStatus.renamed?.length &&
              !gitStatus.conflicted?.length && (
-              <p className="text-sm text-muted-foreground text-center py-4">
+              <Text size="sm" c="dimmed" ta="center" py="md">
                 工作区干净，无变更
-              </p>
+              </Text>
             )}
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
-            <GitBranch className="h-8 w-8 mb-2 opacity-30" />
-            <p className="text-sm">点击刷新查看 Git 状态</p>
-          </div>
+          <Stack align="center" justify="center" py="xl" c="dimmed">
+            <GitBranch size={32} style={{ opacity: 0.3 }} />
+            <Text size="sm">点击刷新查看 Git 状态</Text>
+          </Stack>
         )}
       </div>
-    </div>
+    </Stack>
   )
 }
 
@@ -281,8 +284,6 @@ function TerminalPanel({ workspacePath }: { workspacePath?: string }) {
     if (!command.trim() || !workspacePath) return
     setIsRunning(true)
     try {
-      // TODO: 通过 IPC 调用主进程执行命令
-      // const result = await window.api.runCommand(workspacePath, command)
       setHistory(prev => [...prev, { cmd: command, output: `(已执行: ${command})`, isError: false }])
       setCommand('')
     } catch (err: any) {
@@ -294,52 +295,56 @@ function TerminalPanel({ workspacePath }: { workspacePath?: string }) {
 
   if (!workspacePath) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-4">
-        <Terminal className="h-8 w-8 mb-2 opacity-30" />
-        <p className="text-sm">未选择工作空间</p>
-      </div>
+      <Stack align="center" justify="center" h="100%" c="dimmed" p="md">
+        <Terminal size={32} style={{ opacity: 0.3 }} />
+        <Text size="sm">未选择工作空间</Text>
+      </Stack>
     )
   }
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="px-3 py-2 border-b">
-        <h4 className="text-sm font-medium">终端</h4>
-        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+    <Stack h="100%" gap={0}>
+      <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+        <Text size="sm" fw={500}>终端</Text>
+        <Text size="xs" c="dimmed" mt={2} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {workspacePath}
-        </p>
+        </Text>
       </div>
-      <div className="flex-1 overflow-auto p-3 font-mono text-sm bg-black/5 dark:bg-black/20">
+      <div style={{ flex: 1, overflow: 'auto', padding: 12, fontFamily: 'monospace', fontSize: 13, backgroundColor: 'var(--mantine-color-gray-0)' }}>
         {history.map((item, idx) => (
-          <div key={idx} className="mb-2">
-            <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-              <span>$</span>
-              <span>{item.cmd}</span>
-            </div>
-            <div className={cn(
-              "pl-4 whitespace-pre-wrap",
-              item.isError ? "text-red-500" : "text-foreground/80"
-            )}>
+          <Stack key={idx} gap={2} mb="sm">
+            <Group gap="sm">
+              <Text size="sm" c="green" ff="monospace">$</Text>
+              <Text size="sm" ff="monospace">{item.cmd}</Text>
+            </Group>
+            <Text 
+              size="sm" 
+              pl="md" 
+              c={item.isError ? 'red' : 'dimmed'}
+              ff="monospace"
+              style={{ whiteSpace: 'pre-wrap' }}
+            >
               {item.output}
-            </div>
-          </div>
+            </Text>
+          </Stack>
         ))}
         {isRunning && (
-          <div className="text-muted-foreground">执行中...</div>
+          <Text size="sm" c="dimmed">执行中...</Text>
         )}
       </div>
-      <div className="p-2 border-t flex gap-2">
-        <span className="text-green-600 dark:text-green-400 font-mono text-sm flex-shrink-0">$</span>
-        <input
-          className="flex-1 bg-transparent outline-none text-sm font-mono"
+      <Group gap="sm" p="sm" style={{ borderTop: '1px solid var(--mantine-color-gray-3)' }}>
+        <Text size="sm" c="green" ff="monospace" style={{ flexShrink: 0 }}>$</Text>
+        <TextInput
+          variant="unstyled"
           value={command}
-          onChange={e => setCommand(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleRunCommand()}
+          onChange={(e) => setCommand(e.currentTarget.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleRunCommand() }}
           placeholder="输入命令..."
           disabled={isRunning}
+          style={{ flex: 1, fontFamily: 'monospace', fontSize: 13 }}
         />
-      </div>
-    </div>
+      </Group>
+    </Stack>
   )
 }
 
@@ -355,33 +360,35 @@ function AgentConfig() {
   ]
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="px-3 py-2 border-b">
-        <h4 className="text-sm font-medium">Agent 配置</h4>
+    <Stack h="100%" gap={0}>
+      <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--mantine-color-gray-3)' }}>
+        <Text size="sm" fw={500}>Agent 配置</Text>
       </div>
-      <div className="flex-1 overflow-auto p-3 space-y-2">
-        <p className="text-xs text-muted-foreground mb-2">
+      <div style={{ flex: 1, overflow: 'auto', padding: 12 }}>
+        <Text size="xs" c="dimmed" mb="sm">
           选择当前任务使用的 Agent
-        </p>
-        {availableAgents.map(agent => (
-          <div
-            key={agent.id}
-            className={cn(
-              "p-3 rounded-lg border cursor-pointer transition-colors",
-              agentId === agent.id
-                ? "border-primary bg-primary/5"
-                : "border-border hover:bg-accent/30"
-            )}
-            onClick={() => setAgentId(agent.id)}
-          >
-            <div className="font-medium text-sm">{agent.name}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              {agent.description}
+        </Text>
+        <Stack gap="sm">
+          {availableAgents.map(agent => (
+            <div
+              key={agent.id}
+              onClick={() => setAgentId(agent.id)}
+              style={{
+                padding: 12,
+                borderRadius: 8,
+                border: agentId === agent.id ? '2px solid var(--mantine-color-blue-5)' : '1px solid var(--mantine-color-gray-3)',
+                backgroundColor: agentId === agent.id ? 'var(--mantine-color-blue-0)' : 'transparent',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              <Text size="sm" fw={500}>{agent.name}</Text>
+              <Text size="xs" c="dimmed" mt={2}>{agent.description}</Text>
             </div>
-          </div>
-        ))}
+          ))}
+        </Stack>
       </div>
-    </div>
+    </Stack>
   )
 }
 
@@ -399,63 +406,70 @@ export function RightPanel({ isOpen, onToggle, workspacePath, taskId }: RightPan
   return (
     <>
       {/* Toggle button */}
-      <Button
-        variant="ghost"
-        size="icon"
+      <ActionIcon
+        variant="default"
+        size="lg"
         onClick={onToggle}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-10 h-16 w-5 rounded-l-md rounded-r-none border border-r-0 bg-background hover:bg-accent"
         title={isOpen ? '收起面板' : '展开面板'}
+        style={{
+          position: 'fixed',
+          right: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 10,
+          height: 48,
+          width: 20,
+          borderRadius: '6px 0 0 6px',
+          borderRight: 'none',
+        }}
       >
-        {isOpen ? (
-          <ChevronRight className="h-4 w-4" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" />
-        )}
-      </Button>
+        {isOpen ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+      </ActionIcon>
 
       {/* Panel */}
       <div
-        className={cn(
-          "h-full border-l border-border bg-sidebar overflow-hidden transition-all duration-300",
-          isOpen ? "w-[320px] opacity-100" : "w-0 opacity-0"
-        )}
+        style={{
+          height: '100%',
+          borderLeft: '1px solid var(--mantine-color-gray-3)',
+          backgroundColor: 'var(--mantine-color-body)',
+          overflow: 'hidden',
+          transition: 'all 0.3s',
+          width: isOpen ? 320 : 0,
+          opacity: isOpen ? 1 : 0,
+        }}
       >
         {isOpen && (
-          <Tabs defaultValue="files" className="h-full flex flex-col">
-            <TabsList className="w-full justify-start px-2 pt-2 bg-transparent">
-              <TabsTrigger value="files" className="text-xs gap-1">
-                <FolderOpen className="h-3.5 w-3.5" />
-                文件
-              </TabsTrigger>
-              <TabsTrigger value="git" className="text-xs gap-1">
-                <GitBranch className="h-3.5 w-3.5" />
-                Git
-              </TabsTrigger>
-              <TabsTrigger value="terminal" className="text-xs gap-1">
-                <Terminal className="h-3.5 w-3.5" />
-                终端
-              </TabsTrigger>
-              <TabsTrigger value="agent" className="text-xs gap-1">
-                <Settings className="h-3.5 w-3.5" />
-                Agent
-              </TabsTrigger>
-            </TabsList>
+          <Tabs defaultValue="files" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Tabs.List style={{ paddingLeft: 8, paddingTop: 8 }}>
+              <Tabs.Tab value="files" leftSection={<FolderOpen size={14} />}>
+                <Text size="xs">文件</Text>
+              </Tabs.Tab>
+              <Tabs.Tab value="git" leftSection={<GitBranch size={14} />}>
+                <Text size="xs">Git</Text>
+              </Tabs.Tab>
+              <Tabs.Tab value="terminal" leftSection={<Terminal size={14} />}>
+                <Text size="xs">终端</Text>
+              </Tabs.Tab>
+              <Tabs.Tab value="agent" leftSection={<Settings size={14} />}>
+                <Text size="xs">Agent</Text>
+              </Tabs.Tab>
+            </Tabs.List>
 
-            <TabsContent value="files" className="flex-1 overflow-hidden mt-0">
+            <Tabs.Panel value="files" style={{ flex: 1, overflow: 'hidden' }}>
               <FileBrowser workspacePath={workspacePath} />
-            </TabsContent>
+            </Tabs.Panel>
 
-            <TabsContent value="git" className="flex-1 overflow-hidden mt-0">
+            <Tabs.Panel value="git" style={{ flex: 1, overflow: 'hidden' }}>
               <GitPanel workspacePath={workspacePath} taskId={taskId} />
-            </TabsContent>
+            </Tabs.Panel>
 
-            <TabsContent value="terminal" className="flex-1 overflow-hidden mt-0">
+            <Tabs.Panel value="terminal" style={{ flex: 1, overflow: 'hidden' }}>
               <TerminalPanel workspacePath={workspacePath} />
-            </TabsContent>
+            </Tabs.Panel>
 
-            <TabsContent value="agent" className="flex-1 overflow-hidden mt-0">
+            <Tabs.Panel value="agent" style={{ flex: 1, overflow: 'hidden' }}>
               <AgentConfig />
-            </TabsContent>
+            </Tabs.Panel>
           </Tabs>
         )}
       </div>

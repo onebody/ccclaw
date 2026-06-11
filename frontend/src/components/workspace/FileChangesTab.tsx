@@ -1,9 +1,15 @@
-// @ts-nocheck
 import { useState } from 'react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Badge,
+  Button,
+  ScrollArea,
+  Group,
+  Stack,
+  Text,
+  Box,
+  Divider,
+  SegmentedControl,
+} from '@mantine/core'
 import {
   GitBranch,
   FileText,
@@ -40,7 +46,7 @@ interface GitDiffFile {
 }
 
 // ----------------------------------------------------------------
-// Git diff types (from backend)
+// FileChangesTab props
 // ----------------------------------------------------------------
 
 interface FileChangesTabProps {
@@ -49,14 +55,45 @@ interface FileChangesTabProps {
 }
 
 // ----------------------------------------------------------------
+// Status config
+// ----------------------------------------------------------------
+
+const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
+  added:    { label: '+ 新增',    color: 'green' },
+  modified: { label: '~ 修改',    color: 'blue' },
+  deleted:  { label: '- 删除',    color: 'red' },
+  renamed:  { label: '→ 重命名',  color: 'grape' },
+}
+
+const STATUS_ICON_COLOR: Record<string, string> = {
+  added:    'var(--mantine-color-green-5)',
+  modified: 'var(--mantine-color-blue-5)',
+  deleted:  'var(--mantine-color-red-5)',
+  renamed:  'var(--mantine-color-grape-5)',
+}
+
+const DIFF_BG: Record<string, string> = {
+  added:   'var(--mantine-color-green-0)',
+  removed: 'var(--mantine-color-red-0)',
+}
+
+const DIFF_COLOR: Record<string, string> = {
+  added:   'var(--mantine-color-green-7)',
+  removed: 'var(--mantine-color-red-7)',
+}
+
+const spinStyle = { animation: 'spin 1s linear infinite' }
+
+// ----------------------------------------------------------------
 // FileChangesTab - 文件变更标签页
 // ----------------------------------------------------------------
-export function FileChangesTab({ _taskId, workspacePath }: FileChangesTabProps) {
+export function FileChangesTab({ taskId: _taskId, workspacePath }: FileChangesTabProps) {
+  void _taskId
   const [diffFiles, setDiffFiles] = useState<GitDiffFile[]>([])
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [, setError] = useState<string | null>(null)
   const [activeFile, setActiveFile] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<'staged' | 'unstaged'>('unstaged')
+  const [viewMode, setViewMode] = useState<string>('unstaged')
 
   const loadDiff = async () => {
     if (!workspacePath) {
@@ -74,7 +111,6 @@ export function FileChangesTab({ _taskId, workspacePath }: FileChangesTabProps) 
       setDiffFiles([
         {
           path: 'src/main.ts',
-          oldPath: null,
           status: 'modified',
           hunks: [
             {
@@ -82,6 +118,7 @@ export function FileChangesTab({ _taskId, workspacePath }: FileChangesTabProps) 
               oldLines: 5,
               newStart: 10,
               newLines: 7,
+              header: '@@ -10,5 +10,7 @@',
               lines: [
                 { type: 'context', oldLine: 10, newLine: 10, content: '  const app = express()' },
                 { type: 'context', oldLine: 11, newLine: 11, content: '  app.use(cors())' },
@@ -96,7 +133,6 @@ export function FileChangesTab({ _taskId, workspacePath }: FileChangesTabProps) 
         },
         {
           path: 'src/utils/helper.ts',
-          oldPath: null,
           status: 'added',
           hunks: [
             {
@@ -104,6 +140,7 @@ export function FileChangesTab({ _taskId, workspacePath }: FileChangesTabProps) 
               oldLines: 0,
               newStart: 1,
               newLines: 15,
+              header: '@@ -0,0 +1,15 @@',
               lines: [
                 { type: 'added', oldLine: null, newLine: 1, content: 'export function formatDate(date: Date): string {' },
                 { type: 'added', oldLine: null, newLine: 2, content: '  return date.toISOString()' },
@@ -122,220 +159,215 @@ export function FileChangesTab({ _taskId, workspacePath }: FileChangesTabProps) 
         },
         {
           path: 'src/old/deprecated.ts',
-          oldPath: null,
           status: 'deleted',
           hunks: [],
         },
       ])
-    } catch (err: any) {
-      setError(err.message || '加载失败')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '加载失败')
     } finally {
       setLoading(false)
     }
   }
 
-  const getStatusBadge = (status: string) => {
-    const config = {
-      added: { label: '+ 新增', class: 'bg-green-500/10 text-green-600 border-green-500/30' },
-      modified: { label: '~ 修改', class: 'bg-blue-500/10 text-blue-600 border-blue-500/30' },
-      deleted: { label: '- 删除', class: 'bg-red-500/10 text-red-600 border-red-500/30' },
-      renamed: { label: '→ 重命名', class: 'bg-purple-500/10 text-purple-600 border-purple-500/30' },
-    }
-    const c = config[status as keyof typeof config]
-    if (!c) return null
-    return (
-      <Badge variant="outline" className={cn('text-xs', c.class)}>
-        {c.label}
-      </Badge>
-    )
-  }
-
-  const getLanguageFromPath = (path: string) => {
-    const ext = path.split('.').pop()?.toLowerCase()
-    const map: Record<string, string> = {
-      ts: 'typescript', js: 'javascript', tsx: 'typescript', jsx: 'javascript',
-      py: 'python', rb: 'ruby', java: 'java', go: 'go', rs: 'rust',
-      json: 'json', yaml: 'yaml', yml: 'yaml', md: 'markdown',
-      css: 'css', scss: 'scss', html: 'html', xml: 'xml',
-    }
-    return map[ext || ''] || 'text'
-  }
-
   const activeFileData = diffFiles.find(f => f.path === activeFile)
 
+  // --- Empty workspace state ---
   if (!workspacePath) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-4">
-        <GitBranch className="h-8 w-8 mb-2 opacity-30" />
-        <p className="text-sm">未选择工作空间</p>
-      </div>
+      <Stack align="center" justify="center" h="100%" p="md" c="dimmed">
+        <GitBranch size={32} style={{ marginBottom: 8, opacity: 0.3 }} />
+        <Text size="sm">未选择工作空间</Text>
+      </Stack>
     )
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <Stack h="100%" gap={0}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-medium">文件变更</h3>
+      <Group justify="space-between" px="md" py="sm" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)' }} wrap="nowrap">
+        <Group gap="xs">
+          <Text size="sm" fw={500}>文件变更</Text>
           {diffFiles.length > 0 && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="light" size="xs">
               {diffFiles.length}
             </Badge>
           )}
-        </div>
-        <div className="flex items-center gap-2">
+        </Group>
+
+        <Group gap="xs">
           {/* View mode toggle */}
-          <div className="flex items-center border rounded-md overflow-hidden">
-            <button
-              className={cn(
-                'px-2 py-1 text-xs transition-colors',
-                viewMode === 'unstaged'
-                  ? 'bg-accent text-accent-foreground'
-                  : 'hover:bg-accent/50 text-muted-foreground'
-              )}
-              onClick={() => setViewMode('unstaged')}
-            >
-              工作区
-            </button>
-            <button
-              className={cn(
-                'px-2 py-1 text-xs transition-colors border-l',
-                viewMode === 'staged'
-                  ? 'bg-accent text-accent-foreground'
-                  : 'hover:bg-accent/50 text-muted-foreground'
-              )}
-              onClick={() => setViewMode('staged')}
-            >
-              暂存区
-            </button>
-          </div>
+          <SegmentedControl
+            size="xs"
+            value={viewMode}
+            onChange={setViewMode}
+            data={[
+              { label: '工作区', value: 'unstaged' },
+              { label: '暂存区', value: 'staged' },
+            ]}
+          />
+
+          {/* Refresh button */}
           <Button
             variant="outline"
-            size="sm"
+            size="compact-sm"
             onClick={loadDiff}
             disabled={loading}
-            className="gap-1.5"
+            leftSection={<RefreshCw size={14} style={loading ? spinStyle : undefined} />}
           >
-            <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
             {loading ? '加载中...' : '刷新'}
           </Button>
-        </div>
-      </div>
+        </Group>
+      </Group>
 
       {/* Content: file list + diff view */}
-      <div className="flex-1 flex overflow-hidden">
+      <Group style={{ flex: 1, overflow: 'hidden' }} gap={0} wrap="nowrap" align="stretch">
         {/* File list sidebar */}
-        <div className="w-[240px] flex-shrink-0 border-r overflow-auto">
+        <Box w={240} style={{ flexShrink: 0, borderRight: '1px solid var(--mantine-color-gray-3)', overflow: 'auto' }}>
           {diffFiles.length === 0 && !loading ? (
-            <div className="flex flex-col items-center justify-center p-4 text-muted-foreground">
-              <p className="text-xs">无变更文件</p>
-              <Button variant="ghost" size="sm" className="mt-2" onClick={loadDiff}>
+            <Stack align="center" p="md" c="dimmed">
+              <Text size="xs">无变更文件</Text>
+              <Button variant="subtle" size="compact-sm" onClick={loadDiff}>
                 加载变更
               </Button>
-            </div>
+            </Stack>
           ) : (
-            <div className="py-1">
+            <Stack gap={0} py={4}>
               {diffFiles.map(file => (
-                <button
+                <Box
                   key={file.path}
+                  component="button"
                   onClick={() => setActiveFile(file.path)}
-                  className={cn(
-                    'w-full text-left px-3 py-1.5 text-xs transition-colors flex items-center gap-2',
-                    activeFile === file.path
-                      ? 'bg-accent text-accent-foreground'
-                      : 'hover:bg-accent/30 text-muted-foreground hover:text-foreground'
-                  )}
+                  px="sm"
+                  py={6}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    border: 'none',
+                    background: activeFile === file.path
+                      ? 'var(--mantine-color-accent, #25262b)'
+                      : 'transparent',
+                    color: activeFile === file.path
+                      ? 'var(--mantine-color-accent-foreground, #c1c2c5)'
+                      : 'var(--mantine-color-dimmed, #909296)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    transition: 'background-color 0.15s',
+                  }}
                 >
-                  {file.status === 'added' && <Plus className="h-3 w-3 text-green-500 flex-shrink-0" />}
-                  {file.status === 'modified' && <FileText className="h-3 w-3 text-blue-500 flex-shrink-0" />}
-                  {file.status === 'deleted' && <Minus className="h-3 w-3 text-red-500 flex-shrink-0" />}
-                  <span className="truncate flex-1">{file.path.split('/').pop()}</span>
-                </button>
+                  {file.status === 'added' && <Plus size={12} style={{ color: STATUS_ICON_COLOR.added, flexShrink: 0 }} />}
+                  {file.status === 'modified' && <FileText size={12} style={{ color: STATUS_ICON_COLOR.modified, flexShrink: 0 }} />}
+                  {file.status === 'deleted' && <Minus size={12} style={{ color: STATUS_ICON_COLOR.deleted, flexShrink: 0 }} />}
+                  <Box style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {file.path.split('/').pop()}
+                  </Box>
+                </Box>
               ))}
-            </div>
+            </Stack>
           )}
-        </div>
+        </Box>
 
-        <Separator orientation="vertical" className="h-full" />
+        <Divider orientation="vertical" />
 
         {/* Diff view */}
-        <div className="flex-1 overflow-hidden">
+        <Box style={{ flex: 1, overflow: 'hidden' }}>
           {activeFileData ? (
-            <ScrollArea className="h-full">
-              <div className="p-1">
+            <ScrollArea h="100%">
+              <Box p={4}>
                 {/* File header */}
-                <div className="flex items-center gap-2 px-3 py-2 border-b mb-2">
-                  <span className="text-xs font-medium truncate">{activeFileData.path}</span>
-                  {getStatusBadge(activeFileData.status)}
+                <Group gap="xs" px="sm" py="xs" wrap="nowrap" style={{ borderBottom: '1px solid var(--mantine-color-gray-3)', marginBottom: 8 }}>
+                  <Text size="xs" fw={500} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {activeFileData.path}
+                  </Text>
+                  <Badge variant="outline" size="xs" color={STATUS_CONFIG[activeFileData.status]?.color}>
+                    {STATUS_CONFIG[activeFileData.status]?.label}
+                  </Badge>
                   {activeFileData.oldPath && (
-                    <span className="text-xs text-muted-foreground">
+                    <Text size="xs" c="dimmed">
                       {activeFileData.oldPath} → {activeFileData.path}
-                    </span>
+                    </Text>
                   )}
-                </div>
+                </Group>
 
                 {/* Diff hunks */}
-                {activeFileData.hunks.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p className="text-xs">{activeFileData.status === 'deleted' ? '文件已删除' : '空文件'}</p>
-                  </div>
+                {activeFileData.hunks && activeFileData.hunks.length === 0 ? (
+                  <Box ta="center" py="xl" c="dimmed">
+                    <Text size="xs">{activeFileData.status === 'deleted' ? '文件已删除' : '空文件'}</Text>
+                  </Box>
                 ) : (
-                  <div className="font-mono text-xs">
-                    {activeFileData.hunks.map((hunk, hunkIdx) => (
-                      <div key={hunkIdx} className="mb-2">
+                  <Box style={{ fontFamily: 'var(--mantine-font-family-monospace, monospace)', fontSize: 12 }}>
+                    {activeFileData.hunks?.map((hunk, hunkIdx) => (
+                      <Box key={hunkIdx} mb={8}>
                         {/* Hunk header */}
-                        <div className="px-3 py-0.5 bg-muted/50 text-muted-foreground">
-                          @@ -{hunk.oldStart},{hunk.oldLines} +{hunk.newStart},{hunk.newLines} @@
-                        </div>
+                        <Group px="sm" py={2} c="dimmed" wrap="nowrap" style={{ backgroundColor: 'var(--mantine-color-gray-1)' }}>
+                          <Text size="xs" ff="monospace">
+                            @@ -{hunk.oldStart},{hunk.oldLines} +{hunk.newStart},{hunk.newLines} @@
+                          </Text>
+                        </Group>
+
                         {/* Diff lines */}
                         {hunk.lines.map((line, lineIdx) => (
-                          <div
+                          <Group
                             key={lineIdx}
-                            className={cn(
-                              'flex items-start px-1 py-0',
-                              line.type === 'added' && 'bg-green-500/10',
-                              line.type === 'removed' && 'bg-red-500/10',
-                            )}
+                            px={4} py={0}
+                            gap={0}
+                            wrap="nowrap"
+                            style={{
+                              backgroundColor: line.type === 'added' ? DIFF_BG.added
+                                : line.type === 'removed' ? DIFF_BG.removed
+                                : undefined,
+                            }}
                           >
                             {/* Line numbers */}
-                            <span className="w-10 text-right pr-2 select-none text-muted-foreground/50 flex-shrink-0">
+                            <Text size="xs" w={40} ta="right" pr={8} c="dimmed" style={{ opacity: 0.5, userSelect: 'none', flexShrink: 0 }}>
                               {line.oldLine ?? ''}
-                            </span>
-                            <span className="w-10 text-right pr-2 select-none text-muted-foreground/50 flex-shrink-0">
+                            </Text>
+                            <Text size="xs" w={40} ta="right" pr={8} c="dimmed" style={{ opacity: 0.5, userSelect: 'none', flexShrink: 0 }}>
                               {line.newLine ?? ''}
-                            </span>
-                            <span className="w-4 text-center flex-shrink-0">
-                              {line.type === 'added' && <span className="text-green-500">+</span>}
-                              {line.type === 'removed' && <span className="text-red-500">-</span>}
-                              {line.type === 'context' && <span className="text-muted-foreground"> </span>}
-                            </span>
-                            <span
-                              className={cn(
-                                'flex-1 whitespace-pre font-mono',
-                                line.type === 'added' && 'text-green-600 dark:text-green-400',
-                                line.type === 'removed' && 'text-red-600 dark:text-red-400',
-                                line.type === 'context' && 'text-foreground/70'
-                              )}
+                            </Text>
+
+                            {/* Operator indicator */}
+                            <Box w={16} ta="center" style={{ flexShrink: 0 }}>
+                              {line.type === 'added' && <Text size="xs" c={DIFF_COLOR.added} span>+</Text>}
+                              {line.type === 'removed' && <Text size="xs" c={DIFF_COLOR.removed} span>-</Text>}
+                              {line.type === 'context' && <Text size="xs" c="dimmed" span> </Text>}
+                            </Box>
+
+                            {/* Content */}
+                            <Text
+                              size="xs"
+                              span
+                              style={{
+                                flex: 1,
+                                whiteSpace: 'pre',
+                                fontFamily: 'var(--mantine-font-family-monospace, monospace)',
+                                color: line.type === 'added' ? DIFF_COLOR.added
+                                  : line.type === 'removed' ? DIFF_COLOR.removed
+                                  : undefined,
+                                opacity: line.type === 'context' ? 0.7 : undefined,
+                              }}
                             >
                               {line.content}
-                            </span>
-                          </div>
+                            </Text>
+                          </Group>
                         ))}
-                      </div>
+                      </Box>
                     ))}
-                  </div>
+                  </Box>
                 )}
-              </div>
+              </Box>
             </ScrollArea>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-              <FileText className="h-8 w-8 mb-2 opacity-30" />
-              <p className="text-sm">选择文件查看变更</p>
-            </div>
+            <Stack align="center" justify="center" h="100%" c="dimmed">
+              <FileText size={32} style={{ marginBottom: 8, opacity: 0.3 }} />
+              <Text size="sm">选择文件查看变更</Text>
+            </Stack>
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Group>
+    </Stack>
   )
 }
