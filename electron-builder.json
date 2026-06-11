@@ -1,11 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "electronVersion": "33.2.0",
   "appId": "com.ccclawai.ccclaw",
   "productName": "Ccclaw",
   "asar": true,
-  "forceCodeSigning": true,
-  "afterAllArtifactBuild": "scripts/after-all-artifact-build.cjs",
-  "afterSign": "scripts/after-sign-notarize.cjs",
+  "forceCodeSigning": false,
   "directories": {
     "output": "release/${env.CCCLAW_DISPLAY_VERSION}"
   },
