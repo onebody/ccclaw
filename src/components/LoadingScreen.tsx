@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Flex } from '@mantine/core'
 import logoSrc from '@/assets/logo.png'
 
 interface LoadingScreenProps {
@@ -39,7 +40,12 @@ export default function LoadingScreen({
   const indeterminate = progress === undefined
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center app-bg-primary">
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      style={{ position: 'fixed', inset: 0, zIndex: 50, backgroundColor: 'var(--app-bg-primary)' }}
+    >
       {/* Logo with gentle bounce */}
       {showLogo && (
         <img
@@ -51,7 +57,7 @@ export default function LoadingScreen({
       )}
 
       {/* Brand name */}
-      <div className="ls-brand-name app-text-primary" style={{ fontSize: 14, letterSpacing: '0.15em', fontWeight: 300, marginTop: 16 }}>
+      <div className="ls-brand-name" style={{ fontSize: 14, letterSpacing: '0.15em', fontWeight: 300, marginTop: 16, color: 'var(--app-text-primary)' }}>
         Ccclaw
       </div>
 
@@ -59,8 +65,8 @@ export default function LoadingScreen({
       {status && (
         <div
           key={status}
-          className="ls-fade-in app-text-muted"
-          style={{ fontSize: 13, marginTop: 20 }}
+          className="ls-fade-in"
+          style={{ fontSize: 13, marginTop: 20, color: 'var(--app-text-muted)' }}
         >
           {status}
         </div>
@@ -84,13 +90,13 @@ export default function LoadingScreen({
       {/* Tips */}
       {tips?.length ? (
         <div
-          className="app-text-faint"
           style={{
             fontSize: 12,
             marginTop: 24,
             height: 20,
             textAlign: 'center',
             maxWidth: 320,
+            color: 'var(--app-text-faint)',
           }}
         >
           <span
@@ -151,6 +157,6 @@ export default function LoadingScreen({
           100% { width: 10%; margin-left: 90%; }
         }
       `}</style>
-    </div>
+    </Flex>
   )
 }
